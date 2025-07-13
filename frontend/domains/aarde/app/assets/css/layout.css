@@ -1,0 +1,24 @@
+@import "tailwindcss" theme(static);
+@import "@nuxt/ui";
+
+
+/* localization */
+
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+
+/* fixes */
+
+body {
+  @apply !overflow-y-auto !ps-0;
+}
+
+table thead tr th {
+  @apply text-start whitespace-nowrap;
+}

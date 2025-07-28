@@ -4,7 +4,7 @@
 
 const applications = ref([
   {
-    icon: 'i-lucide:user',
+    pito: 'my-documents',
     name: 'Who Am I?',
     to: '/who-am-i',
   },
@@ -26,9 +26,9 @@ const applications = ref([
       "
       :to="app.to">
 
-      <u-icon
-        :name="app.icon"
-        class="size-8"
+      <img
+        :src="`/pitos/${app.pito}.png`"
+        class="size-11"
       />
 
       <span class="text-sm font-medium text-center">

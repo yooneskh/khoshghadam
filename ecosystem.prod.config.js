@@ -5,6 +5,7 @@ module.exports = [
     script: 'bun',
     args: 'run ./server/index.mjs',
     env: {
+      NODE_ENV: 'production',
       PORT: 48500,
     },
   },

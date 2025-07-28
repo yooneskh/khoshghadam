@@ -7,3 +7,8 @@ definePageMeta({
 });
 
 </script>
+
+
+<template>
+
+</template>

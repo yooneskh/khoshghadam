@@ -15,7 +15,7 @@ useSeoMeta({
 
 
 <template>
-  <window-base icon="i-lucide-user">
+  <window-base pito="my-documents" title="Who Am I?">
     
     <h1 class="text-4xl font-bold px-3 my-3">
       Hello, I am Yoones.

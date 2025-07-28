@@ -3,7 +3,7 @@
 /* interface */
 
 const props = defineProps({
-  icon: String,
+  pito: String,
   title: String,
 });
 
@@ -92,7 +92,7 @@ const effectiveY = computed(() => {
   <div
     class="
       fixed
-      top-0 left-0 w-screen h-screen
+      top-0 left-0 w-screen h-[calc(100dvh-var(--window-task-bar-height))]
       lg:left-(--window-x) lg:top-(--window-y) lg:w-(--window-width) lg:h-(--window-height)
       z-1
       flex flex-col
@@ -109,6 +109,7 @@ const effectiveY = computed(() => {
       '--window-y': `${effectiveY}px`,
       '--window-width': `${effectiveWidth}px`,
       '--window-height': `${effectiveHeight}px`,
+      '--window-task-bar-height': `${taskBarHeight}px`,
     }">
 
     <header
@@ -123,11 +124,10 @@ const effectiveY = computed(() => {
       "
       @dblclick="isMaximized = !isMaximized;">
 
-      <u-icon
-        v-if="props.icon"
-        :name="props.icon"
-        size="1.2rem"
-        class="text-white me-1"
+      <img
+        v-if="props.pito"
+        :src="`/pitos/${props.pito}.png`"
+        class="size-6"
       />
 
       <span class="text-white text-sm font-semibold">

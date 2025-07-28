@@ -12,7 +12,6 @@
 
     <div
       class="
-        max-lg:!hidden
         absolute bottom-0 left-0 right-0 h-10
         flex items-center gap-3 pe-3
         bg-[#2262dd]

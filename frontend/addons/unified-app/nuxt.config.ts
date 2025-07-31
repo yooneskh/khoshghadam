@@ -1,8 +1,8 @@
+import { normalizePathToCwd } from './app/utils/normalize-path';
 
 
 export default defineNuxtConfig({
 
-  future: { compatibilityVersion: 4 },
   devtools: { enabled: false },
 
   experimental: {
@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   ],
 
   css: [
-    '~/domains/aarde/app/assets/css/layout.css',
+    normalizePathToCwd(import.meta.url, './app/assets/css/layout.css'),
   ],
 
   ui: {

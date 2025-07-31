@@ -1,10 +1,20 @@
+<script setup>
+
+import BackgroundImage from '../assets/images/desktop-background.jpg';
+
+</script>
+
+
 <template>
   <div
     class="
-      h-screen w-screen
-      bg-[url(~/domains/public/app/assets/images/desktop-background.jpg)] bg-cover bg-center
+      h-[100dvh] w-screen
+      bg-cover bg-center
       relative
-    ">
+    "
+    :style="{
+      backgroundImage: `url(${BackgroundImage})`
+    }">
 
     <applications-grid />
 

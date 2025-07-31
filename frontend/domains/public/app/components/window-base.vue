@@ -59,9 +59,9 @@ const effectiveX = computed(() => {
     return 0;
   }
 
-  return radMax([
+  return Math.max(...[
     0,
-    radMin([
+    Math.min(...[
       x.value,
       windowWidth.value - width.value,
     ]),
@@ -75,9 +75,9 @@ const effectiveY = computed(() => {
     return 0;
   }
 
-  return radMax([
+  return Math.max(...[
     0,
-    radMin([
+    Math.min(...[
       y.value,
       windowHeight.value - height.value - taskBarHeight,
     ]),

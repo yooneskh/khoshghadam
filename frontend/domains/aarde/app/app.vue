@@ -10,7 +10,7 @@ useHead({
 });
 
 useSeoMeta({
-  'description': 'My fullstack platform made with Vue, Nuxt and Bun',
+  'description': 'Portfolio reimagined as an operating system! My creative showcase of web development skills using Vue, Nuxt and Bun',
 });
 
 </script>

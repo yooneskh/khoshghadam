@@ -2,7 +2,7 @@ ssh $zxc mkdir -p /home/yooneskh/khoshghadam
 
 (
   (
-    cd ./frontend/ && bun run build && rsync -rvzh --delete ./.output/* $zxc:/home/yooneskh/khoshghadam/frontend/
+    cd ./frontend/ && bun run build --preset=bun && rsync -rvzh --delete ./.output/* $zxc:/home/yooneskh/khoshghadam/frontend/
   ) & 
   (
     scp ./ecosystem.prod.config.js $zxc:/home/yooneskh/khoshghadam/

@@ -6,7 +6,7 @@ module.exports = [
     args: 'run ./server/index.mjs',
     env: {
       NODE_ENV: 'production',
-      PORT: 48500,
+      PORT: 33500,
     },
   },
 ];

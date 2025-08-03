@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@vueuse/nuxt',
     'nuxt-radash',
+    'nuxt-jsonld',
   ],
 
   css: [
@@ -25,6 +26,10 @@ export default defineNuxtConfig({
 
   radash: {
     prefix: 'rad',
+  },
+
+  'nuxt-jsonld': {
+    disableOptionsAPI: true,
   },
 
   extends: [

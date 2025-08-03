@@ -12,10 +12,11 @@
   },
   "dependencies": {
     "@formkit/tempo": "0.1.2",
-    "@iconify-json/lucide": "1.2.59",
+    "@iconify-json/lucide": "1.2.60",
     "@nuxt/ui": "3.3.0",
     "nuxt": "4.0.2",
     "nuxt-gtag": "3.0.3",
+    "nuxt-jsonld": "2.2.1",
     "vue": "3.5.18",
     "vue-router": "4.5.1"
   },
@@ -24,5 +25,8 @@
     "@vueuse/nuxt": "13.6.0",
     "nuxt-radash": "1.0.0",
     "typescript": "5.9.2"
+  },
+  "patchedDependencies": {
+    "nuxt-radash@1.0.0": "patches/nuxt-radash@1.0.0.patch"
   }
 }

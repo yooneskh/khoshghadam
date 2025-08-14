@@ -8,7 +8,7 @@ definePageMeta({
 
 useSeoMeta({
   title: 'Who Am I?',
-  description: 'Learn more about Yoones, a FullStack Software Engineer with 13 years of experience.',
+  description: 'Learn more about Yoones, a FullStack Platform Developer with 13 years of experience.',
 });
 
 </script>
@@ -22,7 +22,7 @@ useSeoMeta({
     </h1>
 
     <p class="px-3 my-3">
-      I am a <strong>FullStack Software Engineer</strong> of <strong>13 years</strong> who likes to create. Let's create the future together.
+      I am a <strong>FullStack Platform Developer</strong> of <strong>13 years</strong> who likes to create. Let's create the future together.
     </p>
 
     <p class="px-3 my-3">

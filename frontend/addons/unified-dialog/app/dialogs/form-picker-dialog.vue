@@ -87,7 +87,6 @@ async function handleSubmit() {
 
           <u-button
             variant="soft"
-            color="neutral"
             label="Cancel"
             v-bind="radOmit(props.cancelButton, [ 'onClick' ])"
             loading-auto

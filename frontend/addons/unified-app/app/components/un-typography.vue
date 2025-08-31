@@ -44,7 +44,7 @@ const shouldShow = computed(() => {
 <template>
   <div v-if="shouldShow">
 
-    <div v-if="props.title || props.icon" class="flex gap-2">
+    <div v-if="props.title || props.subtitle || props.icon || slots.append" class="flex gap-2">
       <u-icon
         v-if="props.icon"
         :name="props.icon"
@@ -66,7 +66,15 @@ const shouldShow = computed(() => {
       </template>
     </div>
 
-    <p v-if="props.text" class="text-[1em] mt-2" :class="props.textClasses">
+    <p
+      v-if="props.text"
+      class="text-[1em]"
+      :class="[
+        {
+          'mt-2': props.title || props.subtitle,
+        },
+        props.textClasses
+      ]">
       {{ props.text }}
     </p>
 

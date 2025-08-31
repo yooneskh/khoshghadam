@@ -62,9 +62,9 @@ function handleMoveItem(index, direction) {
 
       <u-button
         variant="soft"
+        size="xs"
         icon="i-lucide-plus"
         label="New Item"
-        size="xs"
         class="ms-3"
         @click="handleAddItem()"
       />

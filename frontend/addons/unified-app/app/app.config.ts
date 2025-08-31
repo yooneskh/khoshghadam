@@ -3,15 +3,24 @@
 export default defineAppConfig({
   ui: {
 
-    card: {
+    button: {
+      defaultVariants: {
+        color: 'neutral',
+      },
       slots: {
-        body: 'p-3 sm:p-3',
+        base: 'cursor-pointer',
       },
     },
 
-    button: {
+    badge: {
+      defaultVariants: {
+        color: 'neutral',
+      },
+    },
+
+    card: {
       slots: {
-        base: 'cursor-pointer',
+        body: 'p-3 sm:p-3',
       },
     },
 

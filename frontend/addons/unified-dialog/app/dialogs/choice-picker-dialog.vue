@@ -29,7 +29,6 @@ const props = defineProps({
     default: () => [
       {
         variant: 'soft',
-        color: 'neutral',
         label: 'Cancel',
         value: false,
       }

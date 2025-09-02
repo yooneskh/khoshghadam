@@ -4,11 +4,11 @@
 
 /* localization */
 
-.rtl {
+@utility rtl {
   direction: rtl;
 }
 
-.ltr {
+@utility ltr {
   direction: ltr;
 }
 

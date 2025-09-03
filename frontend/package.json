@@ -13,21 +13,24 @@
   "dependencies": {
     "@formkit/tempo": "0.1.2",
     "@iconify-json/lucide": "1.2.66",
-    "@nuxt/ui": "3.3.2",
+    "@nuxt/ui": "3.3.3",
     "@nuxtjs/sitemap": "7.4.3",
-    "nuxt": "4.0.3",
+    "nuxt": "4.1.0",
     "nuxt-gtag": "4.0.0",
     "nuxt-jsonld": "2.2.1",
-    "vue": "3.5.20",
+    "vue": "3.5.21",
     "vue-router": "4.5.1"
   },
   "devDependencies": {
-    "@vueuse/core": "13.8.0",
-    "@vueuse/nuxt": "13.8.0",
+    "@vueuse/core": "13.9.0",
+    "@vueuse/nuxt": "13.9.0",
     "nuxt-radash": "1.0.0",
     "typescript": "5.9.2"
   },
   "patchedDependencies": {
     "nuxt-radash@1.0.0": "patches/nuxt-radash@1.0.0.patch"
+  },
+  "overrides": {
+    "vite": "npm:rolldown-vite@latest"
   }
 }

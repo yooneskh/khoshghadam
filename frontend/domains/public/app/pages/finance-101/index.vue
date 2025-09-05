@@ -17,9 +17,15 @@ useSeoMeta({
 <template>
   <window-base pito="event-viewer" title="Finance 101">
     
-    <h1 class="text-4xl font-bold px-3 my-3">
-      Finance 101
-    </h1>
+    <entries-grid
+      :items="[
+        {
+          pito: 'event-viewer',
+          name: 'Compound Interest',
+          to: '/finance-101/compound-interest',
+        },
+      ]"
+    />
 
   </window-base>
 </template>

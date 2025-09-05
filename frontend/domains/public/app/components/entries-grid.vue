@@ -1,19 +1,13 @@
 <script setup>
 
-/* apps */
+/* interface */
 
-const applications = ref([
-  {
-    pito: 'my-documents',
-    name: 'Who Am I?',
-    to: '/who-am-i',
+const props = defineProps({
+  items: {
+    type: Array,
+    required: true,
   },
-  {
-    pito: 'event-viewer',
-    name: 'Finance 101',
-    to: '/finance-101',
-  },
-]);
+});
 
 </script>
 
@@ -22,22 +16,21 @@ const applications = ref([
   <div class="flex flex-row items-start flex-wrap gap-4 p-4">
 
     <nuxt-link
-      v-for="app in applications" :key="app.name"
+      v-for="item in props.items" :key="item.name"
       class="
         flex flex-col items-center gap-1
         w-20 p-2
-        text-white
         hover:bg-blue-500/40
       "
-      :to="app.to">
+      :to="item.to">
 
       <img
-        :src="`/pitos/${app.pito}.png`"
+        :src="`/pitos/${item.pito}.png`"
         class="size-11"
       />
 
       <span class="text-sm font-medium text-center">
-        {{ app.name }}
+        {{ item.name }}
       </span>
 
     </nuxt-link>

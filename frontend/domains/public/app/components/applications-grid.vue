@@ -8,6 +8,11 @@ const applications = ref([
     name: 'Who Am I?',
     to: '/who-am-i',
   },
+  {
+    pito: 'event-viewer',
+    name: 'Finance 101',
+    to: '/finance-101',
+  },
 ]);
 
 </script>

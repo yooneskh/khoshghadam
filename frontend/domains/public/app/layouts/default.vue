@@ -16,7 +16,21 @@ import BackgroundImage from '../assets/images/desktop-background.jpg';
       backgroundImage: `url(${BackgroundImage})`
     }">
 
-    <applications-grid />
+    <entries-grid
+      :items="[
+        {
+          pito: 'my-documents',
+          name: 'Who Am I?',
+          to: '/who-am-i',
+        },
+        {
+          pito: 'event-viewer',
+          name: 'Finance 101',
+          to: '/finance-101',
+        },
+      ]"
+      class="text-white"
+    />
 
     <slot />
 

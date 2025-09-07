@@ -24,6 +24,11 @@ useSeoMeta({
           name: 'Compound Interest',
           to: '/finance-101/compound-interest',
         },
+        {
+          pito: 'calculator',
+          name: 'Compound Interest Calculator',
+          to: '/finance-101/compound-interest-calculator',
+        },
       ]"
     />
 

@@ -24,7 +24,7 @@ import BackgroundImage from '../assets/images/desktop-background.jpg';
           to: '/who-am-i',
         },
         {
-          pito: 'event-viewer',
+          pito: 'briefcase',
           name: 'Finance 101',
           to: '/finance-101',
         },

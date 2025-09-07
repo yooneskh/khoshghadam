@@ -18,6 +18,24 @@ export default defineAppConfig({
       },
     },
 
+    input: {
+      defaultVariants: {
+        color: 'neutral',
+      },
+    },
+
+    select: {
+      defaultVariants: {
+        color: 'neutral',
+      },
+    },
+
+    calendar: {
+      defaultVariants: {
+        color: 'neutral',
+      },
+    },
+
     card: {
       slots: {
         body: 'p-3 sm:p-3',

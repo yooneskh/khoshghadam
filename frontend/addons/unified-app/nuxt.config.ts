@@ -1,4 +1,3 @@
-import { defineNuxtConfig } from 'nuxt/config';
 import { normalizePathToCwd } from './app/utils/normalize-path';
 
 

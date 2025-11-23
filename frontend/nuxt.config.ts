@@ -9,10 +9,4 @@ export default defineNuxtConfig({
     name: 'Khoshghadam',
   },
 
-  extends: [
-    './domains/public',
-    './domains/aarde',
-    './addons/unified-app',
-  ],
-
 });

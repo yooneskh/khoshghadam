@@ -16,7 +16,7 @@ useSeoMeta({
 
 <template>
   <window-base pito="my-documents" title="Who Am I?">
-    
+
     <h1 class="text-4xl font-bold px-3 my-3">
       Hello, I am Yoones.
     </h1>
@@ -29,10 +29,6 @@ useSeoMeta({
       Contact me at <strong>yooneskh[at]gmail[dot]com</strong>
       or <nuxt-link to="https://github.com/yooneskh" target="_blank" class="underline text-blue-500">github</nuxt-link>
       or <nuxt-link to="https://twitter.com/yooneskh" target="_blank" class="underline text-blue-500">twitter</nuxt-link>.
-    </p>
-
-    <p class="px-3 my-3">
-      Everything you see on this platform is <strong>handcrafted</strong> by me.
     </p>
 
     <hr />

@@ -1,3 +1,5 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
 @import 'nuxt-unified-ui/nuxt-ui-fixes.css';
+
+@source '../../../../../node_modules/nuxt-unified-ui/';

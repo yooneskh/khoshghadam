@@ -41,10 +41,7 @@ useJsonld({
 
 
 <template>
-  <u-app
-    :tooltip="{
-      delayDuration: 0,
-    }">
+  <u-app>
 
     <nuxt-route-announcer />
     <nuxt-loading-indicator />

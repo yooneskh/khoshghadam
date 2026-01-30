@@ -3,10 +3,7 @@
 /* interface */
 
 const props = defineProps({
-  items: {
-    type: Array,
-    required: true,
-  },
+  items: Array,
 });
 
 </script>

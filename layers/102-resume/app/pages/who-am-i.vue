@@ -3,7 +3,7 @@
 /* page */
 
 definePageMeta({
-  name: 'public.who-am-i',
+  name: 'resume.who-am-i',
 });
 
 useSeoMeta({

@@ -3,7 +3,7 @@
 /* page */
 
 definePageMeta({
-  name: 'public.home',
+  name: 'desktop.home',
 });
 
 </script>

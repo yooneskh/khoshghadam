@@ -259,12 +259,11 @@ const effectiveY = computed(() => {
       lg:left-(--window-x) lg:top-(--window-y) lg:w-(--window-width) lg:h-(--window-height)
       z-1
       flex flex-col
-      bg-white
+      bg-default
       border-3 border-[#0019CF]
     "
     :class="{
       'rounded-t-lg': !isMaximized,
-      '': isMaximized,
     }"
     :style="{
       '--window-x': `${effectiveX}px`,
@@ -315,7 +314,7 @@ const effectiveY = computed(() => {
         h-10 shrink-0
         bg-[#0059F4]
         flex items-center gap-1
-        text-white
+        text-inverted
         p-1 ps-2
         cursor-pointer
       "
@@ -327,7 +326,7 @@ const effectiveY = computed(() => {
         class="size-6"
       />
 
-      <span class="text-white text-sm font-semibold">
+      <span class="text-sm text-inverted font-semibold">
         {{ props.title }}
       </span>
 

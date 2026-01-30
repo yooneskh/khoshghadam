@@ -13,6 +13,7 @@ useSeoMeta({
   'description': 'Portfolio reimagined as the Nostalgia OS! My creative showcase of web development skills using Vue, Nuxt and Bun!',
 });
 
+
 useJsonld({
   "@context": "https://schema.org",
   "@type": "WebSite",

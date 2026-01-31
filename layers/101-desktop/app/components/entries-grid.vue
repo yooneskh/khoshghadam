@@ -17,7 +17,7 @@ const props = defineProps({
       class="
         flex flex-col items-center gap-1
         w-20 p-2
-        hover:bg-blue-500/40
+        hover:bg-blue-500/50
       "
       :to="item.to">
 

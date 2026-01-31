@@ -8,6 +8,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@aws-sdk/credential-providers": "3.980.0",
     "@nuxtjs/sitemap": "7.6.0",
     "mongodb": "7.0.0",
     "nuxt": "4.3.0",

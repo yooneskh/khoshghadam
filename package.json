@@ -8,7 +8,6 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@aws-sdk/credential-providers": "3.980.0",
     "@nuxtjs/sitemap": "7.6.0",
     "mongodb": "7.0.0",
     "nuxt": "4.3.0",
@@ -17,6 +16,10 @@
     "nuxt-unified-ui": "0.2.32",
     "vue": "3.5.27",
     "vue-router": "5.0.1"
+  },
+  "devDependencies": {
+    "@aws-sdk/credential-providers": "3.980.0",
+    "@mongodb-js/zstd": "7.0.0"
   },
   "overrides": {
     "vite": "8.0.0-beta.11"

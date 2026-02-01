@@ -6,7 +6,7 @@ export default defineEventHandler(async event => {
   const users = db.collection('users');
 
   return users.insertOne({
-    _id: '1' as any,
+    _id: '2' as any,
     username: 'yooneskh',
     password: 'password',
     createdAt: Date.now(),

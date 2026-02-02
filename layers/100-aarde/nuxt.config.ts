@@ -10,6 +10,7 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-gtag',
     'nuxt-jsonld',
+    '@nuxtjs/sitemap',
   ],
 
   gtag: {

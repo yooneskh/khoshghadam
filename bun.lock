@@ -6,6 +6,7 @@
       "name": "khoshghadam-frontend",
       "dependencies": {
         "@nuxtjs/sitemap": "7.6.0",
+        "@quentinadam/uuidv7": "0.1.4",
         "@vercel/analytics": "1.6.1",
         "@vercel/speed-insights": "1.3.1",
         "mongodb": "7.0.0",
@@ -405,6 +406,8 @@
     "@poppinss/dumper": ["@poppinss/dumper@0.6.5", "", { "dependencies": { "@poppinss/colors": "^4.1.5", "@sindresorhus/is": "^7.0.2", "supports-color": "^10.0.0" } }, "sha512-NBdYIb90J7LfOI32dOewKI1r7wnkiH6m920puQ3qHUeZkxNkQiFnXVWoE6YtFSv6QOiPPf7ys6i+HWWecDz7sw=="],
 
     "@poppinss/exception": ["@poppinss/exception@1.2.3", "", {}, "sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw=="],
+
+    "@quentinadam/uuidv7": ["@quentinadam/uuidv7@0.1.4", "", {}, "sha512-XbUAQWpRTl5rvSKvcUFVmXh0Df949/TZdoqLuxiAverYvN9wj92575sFieqyDhzE1D5UnNw4nDrvNB5EJbbOpA=="],
 
     "@remirror/core-constants": ["@remirror/core-constants@3.0.0", "", {}, "sha512-42aWfPrimMfDKDi4YegyS7x+/0tlzaqwPQCULLanv3DMIlu96KTJR0fM5isWX2UViOqlGnX6YFgqWepcX+XMNg=="],
 

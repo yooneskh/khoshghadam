@@ -6,6 +6,7 @@ const config = useAppConfig();
 /* seo */
 
 import { Analytics } from '@vercel/analytics/nuxt';
+import { SpeedInsights } from '@vercel/speed-insights/nuxt';
 
 
 useHead({
@@ -55,6 +56,7 @@ useJsonld({
     </nuxt-layout>
 
     <analytics />
+    <speed-insights />
 
   </u-app>
 </template>

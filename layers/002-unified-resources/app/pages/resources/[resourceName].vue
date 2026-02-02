@@ -22,27 +22,27 @@ const { data: resources, refresh: refreshResources } = useUFetch(
   computed(() => `/${resourceName.value}`),
 );
 
+const { data: schema } = useUFetch(
+  computed(() => `/${resourceName.value}/schema`),
+);
+
 
 async function handleResourceCreate() {
   await launchFormPickerDialog({
     title: 'Create Resource',
     subtitle: radCapitalize(resourceName.value),
     text: 'Are you sure you want to create this resource?',
-    fields: [
-      {
-        key: 'username',
-        identifier: 'input',
-        label: 'Username',
-      },
-    ],
+    fields: Object.keys(schema.value ?? {}).map(it => ({
+      key: it,
+      identifier: 'input',
+      label: radCapitalize(it),
+    })),
     submitButton: {
       onClick: async form => {
 
         await ufetch(`/${resourceName.value}`, {
           method: 'post',
-          body: {
-            username: form.username,
-          },
+          body: form,
         });
 
 
@@ -62,13 +62,11 @@ async function handleResourceUpdate(resource) {
     title: 'Update Resource',
     subtitle: resource._id,
     text: 'Update information and click submit to save.',
-    fields: [
-      {
-        key: 'username',
-        identifier: 'input',
-        label: 'Username',
-      },
-    ],
+    fields: Object.keys(schema.value ?? {}).map(it => ({
+      key: it,
+      identifier: 'input',
+      label: radCapitalize(it),
+    })),
     initialForm: {
       username: resource.username,
     },
@@ -77,9 +75,7 @@ async function handleResourceUpdate(resource) {
 
         await ufetch(`/${resourceName.value}/${resource._id}`, {
           method: 'patch',
-          body: {
-            username: form.username,
-          },
+          body: form,
         });
 
 

@@ -5,6 +5,9 @@ const config = useAppConfig();
 
 /* seo */
 
+import { Analytics } from '@vercel/analytics/nuxt';
+
+
 useHead({
   titleTemplate: t => `${t ? `${t} - ` : ''}${config.brand.title}`,
 });
@@ -50,6 +53,8 @@ useJsonld({
     <nuxt-layout>
       <nuxt-page />
     </nuxt-layout>
+
+    <analytics />
 
   </u-app>
 </template>

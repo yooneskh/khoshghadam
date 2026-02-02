@@ -1,25 +1,37 @@
 import type { H3Event } from 'h3';
+import { type, Type } from 'arktype';
 import generateUUIDv7 from '@quentinadam/uuidv7';
 
 
-export interface UnifiedResourceController {
-  list: (args: { filter?: any; sort?: any; skip?: any; limit?: any; }) => Promise<any[]>;
-  find: (args: { resourceId?: string; filter?: any; }) => Promise<any | undefined>;
-  retrieve: (args: { resourceId?: string; filter?: any; }) => Promise<any>;
-  create: (args: { document: any; }) => Promise<any>;
-  update: (args: { resourceId?: string; document: any; }) => Promise<any>;
-  delete: (args: { resourceId?: string; }) => Promise<any>;
+interface DocumentCreated {
+  _id: string;
+  createdAt: number;
+  updatedAt?: number;
 }
 
 
-export function createUnifiedResourceController(props: { event: H3Event; collectionName: string; }): UnifiedResourceController {
+export interface UnifiedResourceController<T> {
+  schema: () => any;
+  list: (args: { filter?: any; sort?: any; skip?: any; limit?: any; }) => Promise<(T & DocumentCreated)[]>;
+  find: (args: { resourceId?: string; filter?: any; }) => Promise<(T & DocumentCreated) | undefined>;
+  retrieve: (args: { resourceId?: string; filter?: any; }) => Promise<(T & DocumentCreated)>;
+  create: (args: { document: any; }) => Promise<(T & DocumentCreated)>;
+  update: (args: { resourceId?: string; document: any; }) => Promise<(T & DocumentCreated)>;
+  delete: (args: { resourceId?: string; }) => Promise<(T & DocumentCreated)>;
+}
+
+
+export function createUnifiedResourceController<T>(props: { event: H3Event; collectionName: string; type: Type<T>; }): UnifiedResourceController<T> {
   return {
+    schema: () => {
+      return (props.type.toJsonSchema() as any)?.properties;
+    },
     list: async (args) => {
 
       const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
 
 
-      return collection.find(args.filter).sort(args.sort).skip(args.skip).limit(args.limit).toArray();
+      return collection.find(args.filter).sort(args.sort).skip(args.skip).limit(args.limit).toArray() as unknown as (T & DocumentCreated)[];
 
     },
     find: async (args) => {
@@ -34,7 +46,7 @@ export function createUnifiedResourceController(props: { event: H3Event; collect
       }
 
 
-      return document;
+      return document as unknown as (T & DocumentCreated);
 
     },
     retrieve: async (args) => {
@@ -49,7 +61,7 @@ export function createUnifiedResourceController(props: { event: H3Event; collect
       }
 
 
-      return document;
+      return document as unknown as (T & DocumentCreated);
 
     },
     create: async (args) => {
@@ -64,9 +76,16 @@ export function createUnifiedResourceController(props: { event: H3Event; collect
       };
 
 
+      const validatedDocument = props.type(document);
+
+      if (validatedDocument instanceof type.errors) {
+        throw new Error('document is invalid: ' + validatedDocument.summary);
+      }
+
+
       await collection.insertOne(document);
 
-      return document;
+      return validatedDocument as unknown as (T & DocumentCreated);
 
     },
     update: async (args) => {
@@ -87,10 +106,28 @@ export function createUnifiedResourceController(props: { event: H3Event; collect
         updatedAt: Date.now(),
       };
 
+      delete updatedDocument._id;
+      delete updatedDocument.createdAt;
+      delete updatedDocument.updatedAt;
 
-      await collection.updateOne({ _id: args.resourceId as any }, { $set: updatedDocument });
 
-      return updatedDocument;
+      const validatedDocument = props.type(updatedDocument);
+
+      if (validatedDocument instanceof type.errors) {
+        throw new Error('document is invalid: ' + validatedDocument.summary);
+      }
+
+
+      const finalDocument = {
+        _id: document._id,
+        ...updatedDocument,
+        createdAt: document.createdAt,
+        updatedAt: Date.now(),
+      };
+
+      await collection.updateOne({ _id: args.resourceId as any }, { $set: finalDocument });
+
+      return finalDocument as unknown as (T & DocumentCreated);
 
     },
     delete: async (args) => {
@@ -107,7 +144,7 @@ export function createUnifiedResourceController(props: { event: H3Event; collect
 
       await collection.deleteOne({ _id: document._id });
 
-      return document;
+      return document as unknown as (T & DocumentCreated);
 
     },
   };

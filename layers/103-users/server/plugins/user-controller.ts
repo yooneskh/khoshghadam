@@ -9,6 +9,9 @@ declare module 'h3' {
 
 export default defineNitroPlugin(nitroApp => {
   nitroApp.hooks.hook('request', event => {
-    event.context.users = createUnifiedResourceController(event, 'users');
+    event.context.users = createUnifiedResourceController({
+      event,
+      collectionName: 'users',
+    });
   });
 });

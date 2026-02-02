@@ -12,11 +12,11 @@ export interface UnifiedResourceController {
 }
 
 
-export function createUnifiedResourceController(event: H3Event, collectionName: string): UnifiedResourceController {
+export function createUnifiedResourceController(props: { event: H3Event; collectionName: string; }): UnifiedResourceController {
   return {
     list: async (args) => {
 
-      const collection = await loadDbClient(event).then(it => it.collection(collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
 
 
       return collection.find(args.filter).sort(args.sort).skip(args.skip).limit(args.limit).toArray();
@@ -24,7 +24,7 @@ export function createUnifiedResourceController(event: H3Event, collectionName: 
     },
     find: async (args) => {
 
-      const collection = await loadDbClient(event).then(it => it.collection(collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
 
 
       const document = await (args.resourceId ? collection.findOne({ _id: args.resourceId as any }) : collection.findOne(args.filter));
@@ -39,7 +39,7 @@ export function createUnifiedResourceController(event: H3Event, collectionName: 
     },
     retrieve: async (args) => {
 
-      const collection = await loadDbClient(event).then(it => it.collection(collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
 
 
       const document = await (args.resourceId ? collection.findOne({ _id: args.resourceId as any }) : collection.findOne(args.filter));
@@ -54,7 +54,7 @@ export function createUnifiedResourceController(event: H3Event, collectionName: 
     },
     create: async (args) => {
 
-      const collection = await loadDbClient(event).then(it => it.collection(collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
 
 
       const document = {
@@ -71,7 +71,7 @@ export function createUnifiedResourceController(event: H3Event, collectionName: 
     },
     update: async (args) => {
 
-      const collection = await loadDbClient(event).then(it => it.collection(collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
 
 
       const document = await collection.findOne({ _id: args.resourceId as any });
@@ -95,7 +95,7 @@ export function createUnifiedResourceController(event: H3Event, collectionName: 
     },
     delete: async (args) => {
 
-      const collection = await loadDbClient(event).then(it => it.collection(collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
 
 
       const document = await collection.findOne({ _id: args.resourceId as any });

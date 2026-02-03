@@ -3,12 +3,12 @@ import { type } from 'arktype';
 
 declare module 'h3' {
   interface H3EventContext {
-    users: UnifiedResourceController<typeof parse.infer>;
+    users: UnifiedResourceController<typeof user.infer>;
   }
 }
 
 
-const parse = type({
+const user = type({
   'username': 'string',
   'password': 'string',
 });
@@ -19,7 +19,7 @@ export default defineNitroPlugin(nitroApp => {
     event.context.users = createUnifiedResourceController({
       event,
       collectionName: 'users',
-      type: parse,
+      type: user,
     });
   });
 });

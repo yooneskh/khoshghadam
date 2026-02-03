@@ -9,6 +9,9 @@ import { Analytics } from '@vercel/analytics/nuxt';
 import { SpeedInsights } from '@vercel/speed-insights/nuxt';
 
 
+const isDev = import.meta.dev;
+
+
 useHead({
   titleTemplate: t => `${t ? `${t} - ` : ''}${config.brand.title}`,
 });
@@ -55,8 +58,10 @@ useJsonld({
       <nuxt-page />
     </nuxt-layout>
 
-    <analytics />
-    <speed-insights />
+    <template v-if="!isDev">
+      <analytics />
+      <speed-insights />
+    </template>
 
   </u-app>
 </template>

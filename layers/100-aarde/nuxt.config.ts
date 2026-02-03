@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   ],
 
   gtag: {
-    id: 'G-P80YWT2RDF',
+    id: import.meta.dev ? undefined : 'G-P80YWT2RDF',
   },
 
   extends: [

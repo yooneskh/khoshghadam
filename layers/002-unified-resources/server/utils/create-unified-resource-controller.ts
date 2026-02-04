@@ -1,6 +1,5 @@
 import type { H3Event } from 'h3';
 import { type, Type } from 'arktype';
-import generateUUIDv7 from '@quentinadam/uuidv7';
 
 
 interface DocumentCreated {
@@ -15,8 +14,8 @@ export interface UnifiedResourceController<T> {
   list: (args: { filter?: any; sort?: any; skip?: any; limit?: any; }) => Promise<(T & DocumentCreated)[]>;
   find: (args: { resourceId?: string; filter?: any; }) => Promise<(T & DocumentCreated) | undefined>;
   retrieve: (args: { resourceId?: string; filter?: any; }) => Promise<(T & DocumentCreated)>;
-  create: (args: { document: any; }) => Promise<(T & DocumentCreated)>;
-  update: (args: { resourceId?: string; document: any; }) => Promise<(T & DocumentCreated)>;
+  create: (args: { document: T; }) => Promise<(T & DocumentCreated)>;
+  update: (args: { resourceId?: string; document: Partial<T>; }) => Promise<(T & DocumentCreated)>;
   delete: (args: { resourceId?: string; }) => Promise<(T & DocumentCreated)>;
 }
 
@@ -71,7 +70,7 @@ export function createUnifiedResourceController<T>(props: { event: H3Event; coll
 
       const document = {
         ...args.document,
-        _id: generateUUIDv7(),
+        _id: generateUuid() as any,
         createdAt: Date.now(),
       };
 
@@ -100,15 +99,10 @@ export function createUnifiedResourceController<T>(props: { event: H3Event; coll
       }
 
 
-      const updatedDocument = {
-        ...document,
-        ...args.document,
-        updatedAt: Date.now(),
-      };
-
-      delete updatedDocument._id;
-      delete updatedDocument.createdAt;
-      delete updatedDocument.updatedAt;
+      const updatedDocument = Object.fromEntries(
+        Object.entries({ ...document, ...args.document, updatedAt: Date.now() })
+          .filter(entry => !['_id', 'createdAt', 'updatedAt'].includes(entry[0]))
+      );
 
 
       const validatedDocument = props.type(updatedDocument);

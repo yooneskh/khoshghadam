@@ -21,4 +21,8 @@ export default defineNuxtConfig({
     'nuxt-unified-ui',
   ],
 
+  sitemap: {
+    zeroRuntime: true,
+  },
+
 });

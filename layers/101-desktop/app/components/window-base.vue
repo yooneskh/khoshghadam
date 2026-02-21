@@ -29,8 +29,8 @@ const taskBarHeight = 40;
 
 const { x, y } = useDraggable(elHeader, {
   initialValue: {
-    x: windowWidth.value / 2 - width.value / 2,
-    y: windowHeight.value / 2 - height.value / 2,
+    x: 200,
+    y: 100,
   },
 });
 

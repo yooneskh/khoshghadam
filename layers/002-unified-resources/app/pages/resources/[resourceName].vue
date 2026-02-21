@@ -3,7 +3,7 @@
 /* page */
 
 definePageMeta({
-  name: 'unified-mongo.resources',
+  name: 'unified-resources.resources',
 });
 
 useHead({

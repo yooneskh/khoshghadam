@@ -10,5 +10,5 @@ definePageMeta({
 
 
 <template>
-
+  <div />
 </template>

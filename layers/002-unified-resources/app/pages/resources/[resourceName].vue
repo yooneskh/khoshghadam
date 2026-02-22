@@ -6,9 +6,11 @@ definePageMeta({
   name: 'unified-resources.resources',
 });
 
+const route = useRoute();
+
 
 const resourceName = computed(() => {
-  return useRoute().params.resourceName;
+  return route.params.resourceName;
 });
 
 const resourceTitle = computed(() => {
@@ -46,6 +48,9 @@ async function handleResourceCreate() {
       label: radTitle(it),
     })),
     submitButton: {
+      color: 'primary',
+      icon: 'lucide:plus',
+      label: `Create ${resourceTitle.value.singular}`,
       onClick: async form => {
 
         await ufetch(`/${resourceName.value}`, {
@@ -61,7 +66,7 @@ async function handleResourceCreate() {
         });
 
       }
-    }
+    },
   });
 }
 
@@ -79,6 +84,9 @@ async function handleResourceUpdate(resource) {
       username: resource.username,
     },
     submitButton: {
+      color: 'primary',
+      icon: 'lucide:pencil',
+      label: `Update ${resourceTitle.value.singular}`,
       onClick: async form => {
 
         await ufetch(`/${resourceName.value}/${resource._id}`, {
@@ -105,7 +113,9 @@ async function handleResourceDelete(resource) {
     text: `Are you sure you want to delete this ${resourceTitle.value.singular}?`,
     startButtons: [
       {
-        label: 'Delete',
+        color: 'error',
+        icon: 'lucide:trash',
+        label: `Delete ${resourceTitle.value.singular}`,
         onClick: async () => {
 
           await ufetch(`/${resourceName.value}/${resource._id}`, {
@@ -113,11 +123,11 @@ async function handleResourceDelete(resource) {
           });
 
 
+          await refreshResources();
+
           toastSuccess({
             title: `${resourceTitle.value.singular} deleted`,
           });
-
-          await refreshResources();
 
         },
       },
@@ -138,22 +148,25 @@ async function handleResourceDelete(resource) {
         {
           variant: 'subtle',
           label: `Create a ${resourceTitle.singular}`,
-          onClick: () => handleResourceCreate(),
+          onClick: handleResourceCreate,
         },
       ]"
     />
 
-    <div class="grid grid-cols-2 gap-3 p-3">
+    <div class="grid grid-cols-2 gap-3 px-3 pb-3">
       <template v-for="resource of resources" :key="resource._id">
         <un-card
           :title="`${resource._id.slice(0, 4)}...${resource._id.slice(-4)}`"
           :append-actions="[
             {
-              label: 'Update',
+              variant: 'subtle',
+              icon: 'lucide:pencil',
               onClick: () => handleResourceUpdate(resource),
             },
             {
-              label: 'Delete',
+              variant: 'subtle',
+              color: 'error',
+              icon: 'lucide:trash',
               onClick: () => handleResourceDelete(resource),
             },
           ]">

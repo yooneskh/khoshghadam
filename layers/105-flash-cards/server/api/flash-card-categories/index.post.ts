@@ -1,0 +1,7 @@
+
+
+export default defineEventHandler(async event => {
+  return event.context.flashCardCategories.create({
+    document: await readBody(event),
+  });
+});

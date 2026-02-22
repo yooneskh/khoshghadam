@@ -1,5 +1,8 @@
 
 
 export default defineEventHandler(async event => {
-  return event.context.users.schema();
+  return handleUnifiedSchemaRoute({
+    event,
+    controller: event.context.users,
+  });
 });

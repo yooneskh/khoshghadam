@@ -6,13 +6,21 @@ definePageMeta({
   name: 'unified-resources.resources',
 });
 
-useHead({
-  title: 'Resources',
-});
-
 
 const resourceName = computed(() => {
   return useRoute().params.resourceName;
+});
+
+const resourceTitle = computed(() => {
+  return {
+    plural: wordToPlural(radTitle(resourceName.value)),
+    singular: wordToSingular(radTitle(resourceName.value)),
+  };
+});
+
+
+useHead({
+  title: computed(() => `${resourceTitle.value.plural} - Resources`),
 });
 
 
@@ -29,13 +37,13 @@ const { data: schema } = useUFetch(
 
 async function handleResourceCreate() {
   await launchFormPickerDialog({
-    title: 'Create Resource',
-    subtitle: radCapitalize(resourceName.value),
-    text: 'Are you sure you want to create this resource?',
+    title: `Create ${resourceTitle.value.singular}`,
+    subtitle: 'Create a new resource',
+    text: `Fill in the form below to create a new ${resourceTitle.value.singular}.`,
     fields: Object.keys(schema.value ?? {}).map(it => ({
       key: it,
       identifier: 'input',
-      label: radCapitalize(it),
+      label: radTitle(it),
     })),
     submitButton: {
       onClick: async form => {
@@ -49,7 +57,7 @@ async function handleResourceCreate() {
         await refreshResources();
 
         toastSuccess({
-          title: 'Resource created',
+          title: `${resourceTitle.value.singular} created`,
         });
 
       }
@@ -59,13 +67,13 @@ async function handleResourceCreate() {
 
 async function handleResourceUpdate(resource) {
   await launchFormPickerDialog({
-    title: 'Update Resource',
+    title: `Update ${resourceTitle.value.singular}`,
     subtitle: resource._id,
-    text: 'Update information and click submit to save.',
+    text: `Update the information and click submit to save.`,
     fields: Object.keys(schema.value ?? {}).map(it => ({
       key: it,
       identifier: 'input',
-      label: radCapitalize(it),
+      label: radTitle(it),
     })),
     initialForm: {
       username: resource.username,
@@ -82,7 +90,7 @@ async function handleResourceUpdate(resource) {
         await refreshResources();
 
         toastSuccess({
-          title: 'Resource updated',
+          title: `${resourceTitle.value.singular} updated`,
         });
 
       },
@@ -92,9 +100,9 @@ async function handleResourceUpdate(resource) {
 
 async function handleResourceDelete(resource) {
   await launchChoicePickerDialog({
-    title: 'Delete Resource',
+    title: `Delete ${resourceTitle.value.singular}`,
     subtitle: resource._id,
-    text: 'Are you sure you want to delete this resource?',
+    text: `Are you sure you want to delete this ${resourceTitle.value.singular}?`,
     startButtons: [
       {
         label: 'Delete',
@@ -106,7 +114,7 @@ async function handleResourceDelete(resource) {
 
 
           toastSuccess({
-            title: 'Resource deleted',
+            title: `${resourceTitle.value.singular} deleted`,
           });
 
           await refreshResources();
@@ -121,14 +129,15 @@ async function handleResourceDelete(resource) {
 
 
 <template>
-  <window-base pito="my-documents" :title="radCapitalize(resourceName)">
+  <window-base pito="my-documents" :title="`${resourceTitle.singular} Resources`">
 
     <un-card
-      :title="`Manage ${resourceName}`"
+      :title="`Manage ${resourceTitle.plural}`"
       class="m-3"
       :append-actions="[
         {
-          label: 'Create',
+          variant: 'subtle',
+          label: `Create a ${resourceTitle.singular}`,
           onClick: () => handleResourceCreate(),
         },
       ]"

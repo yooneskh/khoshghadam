@@ -7,6 +7,7 @@
       "dependencies": {
         "@nuxtjs/sitemap": "7.6.0",
         "@quentinadam/uuidv7": "0.1.4",
+        "@theothergothamdev/pluralize-ts": "1.1.0",
         "@vercel/analytics": "1.6.1",
         "@vercel/speed-insights": "1.3.1",
         "arktype": "2.1.29",
@@ -556,6 +557,8 @@
     "@tanstack/vue-table": ["@tanstack/vue-table@8.21.3", "", { "dependencies": { "@tanstack/table-core": "8.21.3" }, "peerDependencies": { "vue": ">=3.2" } }, "sha512-rusRyd77c5tDPloPskctMyPLFEQUeBzxdQ+2Eow4F7gDPlPOB1UnnhzfpdvqZ8ZyX2rRNGmqNnQWm87OI2OQPw=="],
 
     "@tanstack/vue-virtual": ["@tanstack/vue-virtual@3.13.18", "", { "dependencies": { "@tanstack/virtual-core": "3.13.18" }, "peerDependencies": { "vue": "^2.7.0 || ^3.0.0" } }, "sha512-6pT8HdHtTU5Z+t906cGdCroUNA5wHjFXsNss9gwk7QAr1VNZtz9IQCs2Nhx0gABK48c+OocHl2As+TMg8+Hy4A=="],
+
+    "@theothergothamdev/pluralize-ts": ["@theothergothamdev/pluralize-ts@1.1.0", "", {}, "sha512-rrCx8SIVYkf256g85EUMGe1XNyAT+wbSzySPojwfY3z164WijAF6kWvp8jc7zS3xOyxhXCgco9kjuZmosW1TEA=="],
 
     "@tiptap/core": ["@tiptap/core@3.20.0", "", { "peerDependencies": { "@tiptap/pm": "^3.20.0" } }, "sha512-aC9aROgia/SpJqhsXFiX9TsligL8d+oeoI8W3u00WI45s0VfsqjgeKQLDLF7Tu7hC+7F02teC84SAHuup003VQ=="],
 

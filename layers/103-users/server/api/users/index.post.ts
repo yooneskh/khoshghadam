@@ -1,7 +1,8 @@
 
 
 export default defineEventHandler(async event => {
-  return event.context.users.create({
-    document: await readBody(event),
+  return handleUnifiedCreateRoute({
+    event,
+    controller: event.context.users,
   });
 });

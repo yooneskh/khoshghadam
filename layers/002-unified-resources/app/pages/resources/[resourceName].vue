@@ -32,9 +32,9 @@ const { data: resources, refresh: refreshResources } = useUFetch(
   computed(() => `/${resourceName.value}`),
 );
 
-const { data: schema } = useUFetch(
-  computed(() => `/${resourceName.value}/schema`),
-);
+const { fields } = useResourceFormFields({
+  resource: resourceName,
+});
 
 
 async function handleResourceCreate() {
@@ -42,11 +42,7 @@ async function handleResourceCreate() {
     title: `Create ${resourceTitle.value.singular}`,
     subtitle: 'Create a new resource',
     text: `Fill in the form below to create a new ${resourceTitle.value.singular}.`,
-    fields: Object.keys(schema.value ?? {}).map(it => ({
-      key: it,
-      identifier: 'input',
-      label: radTitle(it),
-    })),
+    fields: fields.value,
     submitButton: {
       color: 'primary',
       icon: 'lucide:plus',
@@ -75,11 +71,7 @@ async function handleResourceUpdate(resource) {
     title: `Update ${resourceTitle.value.singular}`,
     subtitle: resource._id,
     text: `Update the information and click submit to save.`,
-    fields: Object.keys(schema.value ?? {}).map(it => ({
-      key: it,
-      identifier: 'input',
-      label: radTitle(it),
-    })),
+    fields: fields.value,
     initialForm: {
       username: resource.username,
     },

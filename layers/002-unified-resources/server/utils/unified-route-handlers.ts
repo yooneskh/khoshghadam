@@ -1,46 +1,55 @@
-import type { H3Event } from 'h3';
 import { UnifiedResourceController } from './create-unified-resource-controller';
 
 
 interface IUnifiedRouteHandlerArgs {
-  event: H3Event;
-  controller: UnifiedResourceController<any>;
+  resource: string;
 }
 
-export async function handleUnifiedSchemaRoute(args: IUnifiedRouteHandlerArgs) {
-  return args.controller.schema();
-}
 
-export async function handleUnifiedListRoute(args: IUnifiedRouteHandlerArgs) {
-  return args.controller.list({
-    filter: {},
-    sort: {},
-    skip: 0,
-    limit: 10,
-  });
-}
+export function createResourceRouter(args: IUnifiedRouteHandlerArgs) {
 
-export async function handleUnifiedRetrieveRoute(args: IUnifiedRouteHandlerArgs) {
-  return args.controller.retrieve({
-    resourceId: getRouterParam(args.event, 'resourceId'),
-  });
-}
+  const router = createRouter();
 
-export async function handleUnifiedCreateRoute(args: IUnifiedRouteHandlerArgs) {
-  return args.controller.create({
-    document: await readBody(args.event),
-  });
-}
 
-export async function handleUnifiedUpdateRoute(args: IUnifiedRouteHandlerArgs) {
-  return args.controller.update({
-    resourceId: getRouterParam(args.event, 'resourceId'),
-    document: await readBody(args.event),
-  });
-}
+  router.get('/schema', defineEventHandler(async event => {
+    return (event.context[args.resource] as UnifiedResourceController<any>).schema();
+  }));
 
-export async function handleUnifiedDeleteRoute(args: IUnifiedRouteHandlerArgs) {
-  return args.controller.delete({
-    resourceId: getRouterParam(args.event, 'resourceId'),
-  });
+  router.get('/', defineEventHandler(async event => {
+    return (event.context[args.resource] as UnifiedResourceController<any>).list({
+      filter: {},
+      sort: {},
+      skip: 0,
+      limit: 10,
+    });
+  }));
+
+  router.get('/:resourceId', defineEventHandler(async event => {
+    return (event.context[args.resource] as UnifiedResourceController<any>).retrieve({
+      resourceId: getRouterParam(event, 'resourceId'),
+    });
+  }));
+  
+  router.post('/', defineEventHandler(async event => {
+    return (event.context[args.resource] as UnifiedResourceController<any>).create({
+      document: await readBody(event),
+    });
+  }));
+  
+  router.patch('/:resourceId', defineEventHandler(async event => {
+    return (event.context[args.resource] as UnifiedResourceController<any>).update({
+      resourceId: getRouterParam(event, 'resourceId'),
+      document: await readBody(event),
+    });
+  }));
+
+  router.delete('/:resourceId', defineEventHandler(async event => {
+    return (event.context[args.resource] as UnifiedResourceController<any>).delete({
+      resourceId: getRouterParam(event, 'resourceId'),
+    });
+  }));
+
+
+  return defineLazyEventHandler(() => router.handler);
+
 }

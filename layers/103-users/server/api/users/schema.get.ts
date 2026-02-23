@@ -1,8 +1,8 @@
 
 
 export default defineEventHandler(async event => {
-  return handleResourceRetrieve({
-    resource: 'flashCardCategories',
+  return handleResourceSchema({
+    resource: 'users',
     event,
   });
 });

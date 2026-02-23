@@ -1,7 +1,8 @@
 
 
 export default defineEventHandler(async event => {
-  return event.context.flashCards.delete({
-    resourceId: getRouterParam(event, 'resourceId'),
+  return handleResourceDelete({
+    resource: 'flashCards',
+    event,
   });
 });

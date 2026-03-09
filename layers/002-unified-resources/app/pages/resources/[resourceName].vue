@@ -6,8 +6,8 @@ definePageMeta({
   name: 'unified-resources.resources',
 });
 
-const route = useRoute();
 
+const route = useRoute();
 
 const resourceName = computed(() => {
   return route.params.resourceName;
@@ -22,7 +22,9 @@ const resourceTitle = computed(() => {
 
 
 useHead({
-  title: computed(() => `${resourceTitle.value.plural} - Resources`),
+  title: computed(() => {
+    return `${resourceTitle.value.plural} - Resources`;
+  }),
 });
 
 
@@ -31,6 +33,7 @@ useHead({
 const { data: resources, refresh: refreshResources } = useUFetch(
   computed(() => `/${resourceName.value}`),
 );
+
 
 const { fields } = useResourceFormFields({
   resource: resourceName,
@@ -131,7 +134,9 @@ async function handleResourceDelete(resource) {
 
 
 <template>
-  <window-base pito="my-documents" :title="`${resourceTitle.singular} Resources`">
+  <window-base
+    pito="my-documents"
+    :title="`${resourceTitle.singular} Resources`">
 
     <un-card
       :title="`Manage ${resourceTitle.plural}`"

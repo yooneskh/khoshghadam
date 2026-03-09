@@ -1,15 +1,8 @@
 <script setup>
 
-const config = useAppConfig();
-
-
 /* seo */
 
-import { Analytics } from '@vercel/analytics/nuxt';
-import { SpeedInsights } from '@vercel/speed-insights/nuxt';
-
-
-const isDev = import.meta.dev;
+const config = useAppConfig();
 
 
 useHead({
@@ -57,11 +50,6 @@ useJsonld({
     <nuxt-layout>
       <nuxt-page />
     </nuxt-layout>
-
-    <template v-if="!isDev">
-      <analytics />
-      <speed-insights />
-    </template>
 
   </u-app>
 </template>

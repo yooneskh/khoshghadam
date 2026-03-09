@@ -29,7 +29,7 @@ const taskBarHeight = 40;
 
 const { x, y } = useDraggable(elHeader, {
   initialValue: {
-    x: 200,
+    x: 100,
     y: 100,
   },
 });
@@ -103,7 +103,9 @@ function handleResizeMove(event) {
   }
 
   if (direction.includes('w')) {
+
     const proposedWidth = resizeStartData.value.windowWidth - deltaX;
+
     if (proposedWidth >= minWidth.value) {
       newWidth = proposedWidth;
       newX = resizeStartData.value.windowX + deltaX;
@@ -112,6 +114,7 @@ function handleResizeMove(event) {
       newWidth = minWidth.value;
       newX = resizeStartData.value.windowX + resizeStartData.value.windowWidth - minWidth.value;
     }
+
   }
 
   if (direction.includes('s')) {
@@ -119,7 +122,9 @@ function handleResizeMove(event) {
   }
 
   if (direction.includes('n')) {
+
     const proposedHeight = resizeStartData.value.windowHeight - deltaY;
+
     if (proposedHeight >= minHeight.value) {
       newHeight = proposedHeight;
       newY = resizeStartData.value.windowY + deltaY;
@@ -128,6 +133,7 @@ function handleResizeMove(event) {
       newHeight = minHeight.value;
       newY = resizeStartData.value.windowY + resizeStartData.value.windowHeight - minHeight.value;
     }
+
   }
 
 
@@ -197,55 +203,51 @@ onBeforeUnmount(() => {
 /* dimensions */
 
 const effectiveWidth = computed(() => {
-
   if (isMaximized.value) {
     return windowWidth.value;
   }
-
-  return width.value;
-
+  else {
+    return width.value;
+  }
 });
 
 const effectiveHeight = computed(() => {
-
   if (isMaximized.value) {
     return windowHeight.value - taskBarHeight;
   }
-
-  return height.value;
-
+  else {
+    return height.value;
+  }
 });
 
 const effectiveX = computed(() => {
-
   if (isMaximized.value) {
     return 0;
   }
-
-  return Math.max(...[
-    0,
-    Math.min(...[
-      x.value,
-      windowWidth.value - width.value,
-    ]),
-  ]);
-
+  else {
+    return Math.max(...[
+      0,
+      Math.min(...[
+        x.value,
+        windowWidth.value - width.value,
+      ]),
+    ]);
+  }
 });
 
 const effectiveY = computed(() => {
-
   if (isMaximized.value) {
     return 0;
   }
-
-  return Math.max(...[
-    0,
-    Math.min(...[
-      y.value,
-      windowHeight.value - height.value - taskBarHeight,
-    ]),
-  ]);
-
+  else {
+    return Math.max(...[
+      0,
+      Math.min(...[
+        y.value,
+        windowHeight.value - height.value - taskBarHeight,
+      ]),
+    ]);
+  }
 });
 
 </script>
@@ -320,11 +322,12 @@ const effectiveY = computed(() => {
       "
       @dblclick="isMaximized = !isMaximized;">
 
-      <img
-        v-if="props.pito"
-        :src="`/pitos/${props.pito}.png`"
-        class="size-6"
-      />
+      <template v-if="props.pito">
+        <img
+          :src="`/pitos/${props.pito}.png`"
+          class="size-6"
+        />
+      </template>
 
       <span class="text-sm text-inverted font-semibold">
         {{ props.title }}
@@ -338,7 +341,7 @@ const effectiveY = computed(() => {
         color="info"
         size="sm"
         class="max-lg:hidden"
-        @click="isMaximized = !isMaximized"
+        @click="isMaximized = !isMaximized;"
       />
 
       <u-button
@@ -354,7 +357,6 @@ const effectiveY = computed(() => {
     <div class="h-0 grow overflow-y-auto">
       <slot />
     </div>
-
 
   </div>
 </template>

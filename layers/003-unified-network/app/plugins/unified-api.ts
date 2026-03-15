@@ -21,7 +21,7 @@ export default defineNuxtPlugin(() => {
 
   const $api = $fetch.create({
     baseURL: '/api',
-    onRequest: async ({ options }) => {
+    onRequest: async () => {
 
     },
     onRequestError: async ({ options, request, response }) => {

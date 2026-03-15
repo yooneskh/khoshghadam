@@ -225,13 +225,13 @@ const effectiveX = computed(() => {
     return 0;
   }
   else {
-    return Math.max(...[
+    return Math.max(
       0,
-      Math.min(...[
+      Math.min(
         x.value,
         windowWidth.value - width.value,
-      ]),
-    ]);
+      ),
+    );
   }
 });
 
@@ -240,13 +240,13 @@ const effectiveY = computed(() => {
     return 0;
   }
   else {
-    return Math.max(...[
+    return Math.max(
       0,
-      Math.min(...[
+      Math.min(
         y.value,
         windowHeight.value - height.value - taskBarHeight,
-      ]),
-    ]);
+      ),
+    );
   }
 });
 

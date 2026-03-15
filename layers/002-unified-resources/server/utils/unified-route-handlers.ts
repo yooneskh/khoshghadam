@@ -17,8 +17,8 @@ export function handleResourceList(args: ResourceHandlerArgs) {
   return (args.event.context[args.resource] as UnifiedResourceController<any>).list({
     filter: extractFilterFromEvent(args.event),
     sort: extractSortFromEvent(args.event),
-    skip: Number(getQuery(args.event)?.skip ?? 0) ?? 0,
-    limit: Number(getQuery(args.event)?.limit ?? 50) ?? 50,
+    skip: Number(getQuery(args.event)?.skip ?? 0) || 0,
+    limit: Number(getQuery(args.event)?.limit ?? 50) || 50,
   });
 }
 

@@ -2,7 +2,8 @@ import { type } from 'arktype';
 
 
 const user = type({
-  'username': 'string',
+  'name': 'string > 0',
+  'username': 'string > 0',
   'password': 'string',
 });
 

@@ -22,6 +22,12 @@ export function handleResourceList(args: ResourceHandlerArgs) {
   });
 }
 
+export function handleResourceCount(args: ResourceHandlerArgs) {
+  return (args.event.context[args.resource] as UnifiedResourceController<any>).count({
+    filter: extractFilterFromEvent(args.event),
+  });
+}
+
 export function handleResourceRetrieve(args: ResourceHandlerArgs) {
   return (args.event.context[args.resource] as UnifiedResourceController<any>).retrieve({
     resourceId: getRouterParam(args.event, 'resourceId'),

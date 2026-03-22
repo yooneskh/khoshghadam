@@ -12,6 +12,7 @@ interface DocumentCreated {
 export interface UnifiedResourceController<T> {
   schema: () => any;
   list: (args: { filter?: any; sort?: any; skip?: any; limit?: any; }) => Promise<(T & DocumentCreated)[]>;
+  count: (args: { filter?: any; }) => Promise<number>;
   find: (args: { resourceId?: string; filter?: any; }) => Promise<(T & DocumentCreated) | undefined>;
   retrieve: (args: { resourceId?: string; filter?: any; }) => Promise<(T & DocumentCreated)>;
   create: (args: { document: T; }) => Promise<(T & DocumentCreated)>;
@@ -31,6 +32,14 @@ export function createUnifiedResourceController<T>(props: { event: H3Event; coll
 
 
       return collection.find(args.filter).sort(args.sort).skip(args.skip).limit(args.limit).toArray() as unknown as (T & DocumentCreated)[];
+
+    },
+    count: async (args) => {
+
+      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
+
+
+      return collection.countDocuments(args.filter);
 
     },
     find: async (args) => {

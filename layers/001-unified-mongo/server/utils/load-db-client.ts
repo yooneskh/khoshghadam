@@ -18,7 +18,7 @@ export async function loadDbClient(event: H3Event) {
   client = new MongoClient(config.database.url, {
     maxPoolSize: 1,
     minPoolSize: 0,
-    serverSelectionTimeoutMS: 5000,
+    serverSelectionTimeoutMS: 20_000,
   } as any);
 
   await client.connect();

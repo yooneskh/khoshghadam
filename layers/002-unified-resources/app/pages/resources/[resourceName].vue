@@ -30,8 +30,22 @@ useHead({
 
 /* resource */
 
-const { data: resources, refresh: refreshResources } = useUFetch(
+const itemsPerPage = ref(5);
+const currentPage = ref(1);
+
+
+const { data: resourcesData, pending: isResourcesLoading, refresh: refreshResources } = useUFetch(
   computed(() => `/${resourceName.value}`),
+  {
+    query: {
+      'skip': computed(() => (currentPage.value - 1) * itemsPerPage.value),
+      'limit': computed(() => itemsPerPage.value),
+    },
+  },
+);
+
+const { data: resourcesCountData, refresh: refreshResourcesCount } = useUFetch(
+  computed(() => `/${resourceName.value}/count`),
 );
 
 
@@ -59,9 +73,10 @@ async function handleResourceCreate() {
 
 
         await refreshResources();
+        await refreshResourcesCount();
 
         toastSuccess({
-          title: `${resourceTitle.value.singular} created`,
+          title: `${resourceTitle.value.singular} created successfully.`,
         });
 
       }
@@ -75,9 +90,7 @@ async function handleResourceUpdate(resource) {
     subtitle: resource._id,
     text: `Update the information and click submit to save.`,
     fields: fields.value,
-    initialForm: {
-      username: resource.username,
-    },
+    initialForm: radOmit(resource, ['_id', 'createdAt', 'updatedAt']),
     submitButton: {
       color: 'primary',
       icon: 'lucide:pencil',
@@ -91,9 +104,10 @@ async function handleResourceUpdate(resource) {
 
 
         await refreshResources();
+        await refreshResourcesCount();
 
         toastSuccess({
-          title: `${resourceTitle.value.singular} updated`,
+          title: `${resourceTitle.value.singular} updated successfully.`,
         });
 
       },
@@ -119,9 +133,10 @@ async function handleResourceDelete(resource) {
 
 
           await refreshResources();
+          await refreshResourcesCount();
 
           toastSuccess({
-            title: `${resourceTitle.value.singular} deleted`,
+            title: `${resourceTitle.value.singular} deleted successfully.`,
           });
 
         },
@@ -143,34 +158,38 @@ async function handleResourceDelete(resource) {
       class="m-3"
       :append-actions="[
         {
-          variant: 'subtle',
+          icon: 'lucide:plus',
           label: `Create a ${resourceTitle.singular}`,
           onClick: handleResourceCreate,
         },
       ]"
     />
 
-    <div class="grid grid-cols-2 gap-3 px-3 pb-3">
-      <template v-for="resource of resources" :key="resource._id">
-        <un-card
-          :title="`${resource._id.slice(0, 4)}...${resource._id.slice(-4)}`"
-          :append-actions="[
-            {
-              variant: 'subtle',
-              icon: 'lucide:pencil',
-              onClick: () => handleResourceUpdate(resource),
-            },
-            {
-              variant: 'subtle',
-              color: 'error',
-              icon: 'lucide:trash',
-              onClick: () => handleResourceDelete(resource),
-            },
-          ]">
-          <pre>{{ resource }}</pre>
-        </un-card>
-      </template>
-    </div>
+    <un-table
+      :columns="fields.map(it => ({
+        accessorKey: it.key,
+        header: it.label,
+      }))"
+      :loading="isResourcesLoading"
+      :data="resourcesData"
+      :total-items="resourcesCountData"
+      v-model:items-per-page="itemsPerPage"
+      v-model:current-page="currentPage"
+      class="mx-3 mb-3 border border-default rounded-lg"
+      :actions="[
+        {
+          tooltip: 'Edit',
+          icon: 'lucide:pencil',
+          onClick: handleResourceUpdate,
+        },
+        {
+          color: 'error',
+          tooltip: 'Delete',
+          icon: 'lucide:trash',
+          onClick: handleResourceDelete,
+        },
+      ]"
+    />
 
   </window-base>
 </template>

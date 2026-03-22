@@ -262,7 +262,7 @@ const effectiveY = computed(() => {
       z-1
       flex flex-col
       bg-default
-      border-3 border-[#0019CF]
+      overflow-clip
     "
     :class="{
       'rounded-t-lg': !isMaximized,
@@ -354,7 +354,11 @@ const effectiveY = computed(() => {
 
     </header>
 
-    <div class="h-0 grow overflow-y-auto">
+    <div
+      class="h-0 grow overflow-y-auto"
+      :class="{
+        'border-x-3 border-b-3 border-[#0059F4]': !isMaximized,
+      }">
       <slot />
     </div>
 

@@ -49,8 +49,16 @@ export function handleResourceDelete(args: ResourceHandlerArgs) {
 
 
 function extractFilterFromEvent(event: H3Event) {
+
+  const filter = getQuery(event)?.filter ?? '';
+
+  if (!filter) {
+    return undefined;
+  }
+
+
   return (
-    String(getQuery(event)?.filter ?? '')
+    String(filter)
       .split(',')
       .map(it => it.split(':'))
       .reduce((acc, it) => {
@@ -94,11 +102,20 @@ function extractFilterFromEvent(event: H3Event) {
 
       }, {} as Record<string, any>)
   );
+
 }
 
 function extractSortFromEvent(event: H3Event) {
+
+  const sort = getQuery(event)?.sort ?? '';
+
+  if (!sort) {
+    return undefined;
+  }
+
+
   return (
-    String(getQuery(event)?.sort ?? '')
+    String(sort)
       .split(',')
       .map(it => it.split(':'))
       .reduce((acc, it) => {
@@ -112,4 +129,5 @@ function extractSortFromEvent(event: H3Event) {
 
       }, {} as Record<string, 1 | -1>)
   );
+
 }

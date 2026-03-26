@@ -5,8 +5,7 @@
   "scripts": {
     "postinstall": "nuxt prepare",
     "serve": "nuxt dev --port 8080",
-    "build": "nuxt build",
-    "deploy": "bun run build && wrangler deploy"
+    "build": "nuxt build"
   },
   "dependencies": {
     "@nuxtjs/sitemap": "8.0.4",
@@ -20,8 +19,5 @@
     "nuxt-jsonld": "2.2.1",
     "nuxt-unified-ui": "0.2.37",
     "vue": "3.5.31"
-  },
-  "devDependencies": {
-    "wrangler": "4.77.0"
   }
 }

@@ -1,7 +1,4 @@
-
-
 export default defineNuxtConfig({
-
   compatibilityDate: 'latest',
 
   site: {
@@ -13,6 +10,14 @@ export default defineNuxtConfig({
     alias: Object.fromEntries(
       ['@aws-sdk/credential-providers', '@mongodb-js/zstd', 'kerberos', 'snappy', 'socks', 'gcp-metadata', 'mongodb-client-encryption'].map((dep) => [dep, 'unenv/mock/empty']),
     ),
+
+    preset: "cloudflare_module",
+
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true
+    }
   },
 
+  modules: ["nitro-cloudflare-dev"]
 });

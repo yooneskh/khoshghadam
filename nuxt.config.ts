@@ -1,15 +1,5 @@
 
 
-const mongodbOptionalDeps = [
-  '@aws-sdk/credential-providers',
-  '@mongodb-js/zstd',
-  'kerberos',
-  'snappy',
-  'socks',
-  'gcp-metadata',
-  'mongodb-client-encryption',
-]
-
 export default defineNuxtConfig({
 
   compatibilityDate: 'latest',
@@ -21,7 +11,7 @@ export default defineNuxtConfig({
 
   nitro: {
     alias: Object.fromEntries(
-      mongodbOptionalDeps.map((dep) => [dep, 'unenv/mock/empty']),
+      ['@aws-sdk/credential-providers', '@mongodb-js/zstd', 'kerberos', 'snappy', 'socks', 'gcp-metadata', 'mongodb-client-encryption'].map((dep) => [dep, 'unenv/mock/empty']),
     ),
   },
 

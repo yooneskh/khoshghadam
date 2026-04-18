@@ -54,6 +54,7 @@ const fullColumns = computed(() => {
 
     <u-table
       :columns="fullColumns"
+      loading-color="neutral"
       :loading="props.loading"
       :data="props.data"
       :column-pinning="{
@@ -131,6 +132,7 @@ const fullColumns = computed(() => {
 
     <div v-if="!props.hidePagination" class="flex items-center gap-2 p-3 border-t border-default">
       <u-pagination
+        active-color="neutral"
         :total="props.totalItems"
         :items-per-page="Number(itemsPerPage)"
         :page="Number(currentPage)"

@@ -61,7 +61,6 @@ async function handleResourceCreate() {
     text: `Fill in the form below to create a new ${resourceTitle.value.singular}.`,
     fields: fields.value,
     submitButton: {
-      color: 'primary',
       icon: 'lucide:plus',
       label: `Create ${resourceTitle.value.singular}`,
       onClick: async form => {
@@ -92,7 +91,6 @@ async function handleResourceUpdate(resource) {
     fields: fields.value,
     initialForm: radOmit(resource, ['_id', 'createdAt', 'updatedAt']),
     submitButton: {
-      color: 'primary',
       icon: 'lucide:pencil',
       label: `Update ${resourceTitle.value.singular}`,
       onClick: async form => {

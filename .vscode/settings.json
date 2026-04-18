@@ -7,6 +7,6 @@
   },
   "tailwindCSS.classAttributes": ["class", "ui"],
   "tailwindCSS.experimental.classRegex": [
-    ["['\"`]([^'\"`]*)['\"`]"]
+    "(?:^|[\\s>\\{\\(])(?::|v-bind:)?[\\w-]*class[\\w-]*\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]"
   ]
 }

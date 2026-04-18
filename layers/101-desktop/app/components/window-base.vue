@@ -258,14 +258,14 @@ const effectiveY = computed(() => {
     class="
       fixed
       top-0 left-0 w-screen h-[calc(100dvh-var(--window-task-bar-height))]
-      lg:left-(--window-x) lg:top-(--window-y) lg:w-(--window-width) lg:h-(--window-height)
+      tablet:left-(--window-x) tablet:top-(--window-y) tablet:w-(--window-width) tablet:h-(--window-height)
       z-1
       flex flex-col
       bg-default
       overflow-clip
     "
     :class="{
-      'rounded-t-lg': !isMaximized,
+      'tablet:rounded-t-lg': !isMaximized,
     }"
     :style="{
       '--window-x': `${effectiveX}px`,
@@ -340,7 +340,7 @@ const effectiveY = computed(() => {
         :icon="!isMaximized ? 'lucide:maximize' : 'lucide:minimize'"
         color="info"
         size="sm"
-        class="max-lg:hidden"
+        class="max-tablet:hidden"
         @click="isMaximized = !isMaximized;"
       />
 
@@ -357,7 +357,7 @@ const effectiveY = computed(() => {
     <div
       class="h-0 grow overflow-y-auto"
       :class="{
-        'border-x-3 border-b-3 border-[#0059F4]': !isMaximized,
+        'tablet:border-x-3 tablet:border-b-3 tablet:border-[#0059F4]': !isMaximized,
       }">
       <slot />
     </div>

@@ -3,7 +3,8 @@
 /* page */
 
 definePageMeta({
-  name: 'unified-resources.resources',
+  name: 'dashboard.resources.single',
+  layout: 'dashboard',
 });
 
 
@@ -147,21 +148,18 @@ async function handleResourceDelete(resource) {
 
 
 <template>
-  <window-base
-    pito="my-documents"
-    :title="`${resourceTitle.singular} Resources`">
+  <div class="space-y-3">
 
-    <un-card
-      :title="`Manage ${resourceTitle.plural}`"
-      class="m-3"
-      :append-actions="[
-        {
-          icon: 'lucide:plus',
-          label: `Create a ${resourceTitle.singular}`,
-          onClick: handleResourceCreate,
-        },
-      ]"
-    />
+    <un-typography :title="`Manage ${resourceTitle.plural}`">
+      <template #append>
+        <u-button
+          icon="lucide:plus"
+          :label="`Create a ${resourceTitle.singular}`"
+          loading-auto
+          @click="handleResourceCreate()"
+        />
+      </template>
+    </un-typography>
 
     <un-table
       :columns="fields.map(it => ({
@@ -173,7 +171,7 @@ async function handleResourceDelete(resource) {
       :total-items="resourcesCountData"
       v-model:items-per-page="itemsPerPage"
       v-model:current-page="currentPage"
-      class="mx-3 mb-3 border border-default rounded-lg"
+      class="-mx-3 -mb-3 border-t border-default"
       :actions="[
         {
           tooltip: 'Edit',
@@ -189,5 +187,5 @@ async function handleResourceDelete(resource) {
       ]"
     />
 
-  </window-base>
+  </div>
 </template>

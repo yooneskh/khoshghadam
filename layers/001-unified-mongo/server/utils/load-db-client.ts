@@ -9,8 +9,6 @@ export async function loadDbClient(event: H3Event) {
 
   const config = useRuntimeConfig(event);
 
-  console.log(':: config', JSON.stringify(config, null, 2));
-
 
   if (client) {
     return client.db(config.database.name);

@@ -9,8 +9,7 @@ export async function loadDbClient(event: H3Event) {
 
   const config = useRuntimeConfig(event);
 
-  console.log('config', config);
-  console.log('env', ((import.meta || {}) as any).env);
+  console.log(':: config', JSON.stringify(config));
 
 
   if (client) {

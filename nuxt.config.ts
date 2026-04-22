@@ -1,4 +1,5 @@
 
+console.log(import.meta.env);
 
 export default defineNuxtConfig({
 

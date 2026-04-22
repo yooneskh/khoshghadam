@@ -12,6 +12,7 @@
     "@nuxtjs/sitemap": "8.0.13",
     "@quentinadam/uuidv7": "0.1.9",
     "@theothergothamdev/pluralize-ts": "1.1.0",
+    "@vercel/analytics": "2.0.1",
     "arktype": "2.2.0",
     "bcryptjs": "3.0.3",
     "mongodb": "7.2.0",

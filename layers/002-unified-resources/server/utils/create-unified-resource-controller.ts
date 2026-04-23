@@ -21,7 +21,7 @@ export interface UnifiedResourceController<T> {
 }
 
 
-export function createUnifiedResourceController<T>(props: { event: H3Event; collectionName: string; type: Type<T>; }): UnifiedResourceController<T> {
+export function createUnifiedResourceController<T>(props: { event: H3Event; collectionName: string; schema: any, type: Type<T>; }): UnifiedResourceController<T> {
   return {
     schema: () => {
       return (props.type.toJsonSchema() as any)?.properties;

@@ -1,7 +1,6 @@
-import { type } from 'arktype';
 
 
-const authenticationToken = type({
+const { schema, type, inferred } = parseSchema({
   'user': 'string',
   'token': 'string',
   'expiresAt': 'number',
@@ -12,7 +11,7 @@ const authenticationToken = type({
 declare module 'h3' {
   interface H3EventContext {
     authenticationTokens: {
-      dbo: UnifiedResourceController<typeof authenticationToken.infer>;
+      dbo: UnifiedResourceController<typeof inferred>;
     };
   }
 }
@@ -24,7 +23,8 @@ export default defineNitroPlugin(nitroApp => {
       dbo: createUnifiedResourceController({
         event,
         collectionName: 'authenticationTokens',
-        type: authenticationToken,
+        schema,
+        type,
       }),
     };
   });

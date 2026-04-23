@@ -1,7 +1,6 @@
-import { type } from 'arktype';
 
 
-const flashCardCategory = type({
+const { schema, type, inferred } = parseSchema({
   'name': 'string > 0',
 });
 
@@ -9,8 +8,8 @@ const flashCardCategory = type({
 declare module 'h3' {
   interface H3EventContext {
     flashCardCategories: {
-      dbo: UnifiedResourceController<typeof flashCardCategory.infer>;
-    };
+      dbo: UnifiedResourceController<typeof inferred>;
+    }
   }
 }
 
@@ -21,7 +20,8 @@ export default defineNitroPlugin(nitroApp => {
       dbo: createUnifiedResourceController({
         event,
         collectionName: 'flashCardCategories',
-        type: flashCardCategory,
+        schema,
+        type,
       }),
     };
   });

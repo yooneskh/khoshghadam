@@ -1,7 +1,6 @@
-import { type } from 'arktype';
 
 
-const user = type({
+const { schema, type, inferred } = parseSchema({
   'name': 'string > 0',
   'username': 'string > 0',
   'password': 'string',
@@ -11,7 +10,7 @@ const user = type({
 declare module 'h3' {
   interface H3EventContext {
     users: {
-      dbo: UnifiedResourceController<typeof user.infer>;
+      dbo: UnifiedResourceController<typeof inferred>;
     };
   }
 }
@@ -23,7 +22,8 @@ export default defineNitroPlugin(nitroApp => {
       dbo: createUnifiedResourceController({
         event,
         collectionName: 'users',
-        type: user,
+        schema,
+        type,
       }),
     };
   });

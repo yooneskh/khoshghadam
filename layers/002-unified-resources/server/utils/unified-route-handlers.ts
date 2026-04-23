@@ -9,12 +9,12 @@ interface ResourceHandlerArgs {
 
 
 export function handleResourceSchema(args: ResourceHandlerArgs) {
-  return (args.event.context[args.resource] as UnifiedResourceController<any>).schema();
+  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).schema();
 }
 
 
 export function handleResourceList(args: ResourceHandlerArgs) {
-  return (args.event.context[args.resource] as UnifiedResourceController<any>).list({
+  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).list({
     filter: extractFilterFromEvent(args.event),
     sort: extractSortFromEvent(args.event),
     skip: Number(getQuery(args.event)?.skip ?? 0) || 0,
@@ -23,32 +23,32 @@ export function handleResourceList(args: ResourceHandlerArgs) {
 }
 
 export function handleResourceCount(args: ResourceHandlerArgs) {
-  return (args.event.context[args.resource] as UnifiedResourceController<any>).count({
+  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).count({
     filter: extractFilterFromEvent(args.event),
   });
 }
 
 export function handleResourceRetrieve(args: ResourceHandlerArgs) {
-  return (args.event.context[args.resource] as UnifiedResourceController<any>).retrieve({
+  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).retrieve({
     resourceId: getRouterParam(args.event, 'resourceId'),
   });
 }
 
 export async function handleResourceCreate(args: ResourceHandlerArgs) {
-  return (args.event.context[args.resource] as UnifiedResourceController<any>).create({
+  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).create({
     document: await readBody(args.event),
   });
 }
 
 export async function handleResourceUpdate(args: ResourceHandlerArgs) {
-  return (args.event.context[args.resource] as UnifiedResourceController<any>).update({
+  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).update({
     resourceId: getRouterParam(args.event, 'resourceId'),
     document: await readBody(args.event),
   });
 }
 
 export function handleResourceDelete(args: ResourceHandlerArgs) {
-  return (args.event.context[args.resource] as UnifiedResourceController<any>).delete({
+  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).delete({
     resourceId: getRouterParam(args.event, 'resourceId'),
   });
 }

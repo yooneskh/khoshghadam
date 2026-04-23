@@ -3,7 +3,7 @@ import type { H3Event } from 'h3';
 
 export async function assertUser(event: H3Event) {
 
-  const authenticationToken = await event.context.authenticationTokens.find({
+  const authenticationToken = await event.context.authenticationTokens.dbo.find({
     filter: {
       token: event.headers.get('authorization'),
       expiresAt: { $gt: Date.now() },
@@ -19,7 +19,7 @@ export async function assertUser(event: H3Event) {
   }
 
 
-  const user = await event.context.users.find({
+  const user = await event.context.users.dbo.find({
     resourceId: authenticationToken.user,
   });
 

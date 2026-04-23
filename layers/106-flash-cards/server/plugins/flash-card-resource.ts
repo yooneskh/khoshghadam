@@ -13,17 +13,21 @@ const flashCard = type({
 
 declare module 'h3' {
   interface H3EventContext {
-    flashCards: UnifiedResourceController<typeof flashCard.infer>;
+    flashCards: {
+      dbo: UnifiedResourceController<typeof flashCard.infer>;
+    };
   }
 }
 
 
 export default defineNitroPlugin(nitroApp => {
   nitroApp.hooks.hook('request', event => {
-    event.context.flashCards = createUnifiedResourceController({
-      event,
-      collectionName: 'flashCards',
-      type: flashCard,
-    });
+    event.context.flashCards = {
+      dbo: createUnifiedResourceController({
+        event,
+        collectionName: 'flashCards',
+        type: flashCard,
+      }),
+    };
   });
 });

@@ -10,17 +10,21 @@ const user = type({
 
 declare module 'h3' {
   interface H3EventContext {
-    users: UnifiedResourceController<typeof user.infer>;
+    users: {
+      dbo: UnifiedResourceController<typeof user.infer>;
+    };
   }
 }
 
 
 export default defineNitroPlugin(nitroApp => {
   nitroApp.hooks.hook('request', event => {
-    event.context.users = createUnifiedResourceController({
-      event,
-      collectionName: 'users',
-      type: user,
-    });
+    event.context.users = {
+      dbo: createUnifiedResourceController({
+        event,
+        collectionName: 'users',
+        type: user,
+      }),
+    };
   });
 });

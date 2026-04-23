@@ -11,17 +11,21 @@ const authenticationToken = type({
 
 declare module 'h3' {
   interface H3EventContext {
-    authenticationTokens: UnifiedResourceController<typeof authenticationToken.infer>;
+    authenticationTokens: {
+      dbo: UnifiedResourceController<typeof authenticationToken.infer>;
+    };
   }
 }
 
 
 export default defineNitroPlugin(nitroApp => {
   nitroApp.hooks.hook('request', event => {
-    event.context.authenticationTokens = createUnifiedResourceController({
-      event,
-      collectionName: 'authenticationTokens',
-      type: authenticationToken,
-    });
+    event.context.authenticationTokens = {
+      dbo: createUnifiedResourceController({
+        event,
+        collectionName: 'authenticationTokens',
+        type: authenticationToken,
+      }),
+    };
   });
 });

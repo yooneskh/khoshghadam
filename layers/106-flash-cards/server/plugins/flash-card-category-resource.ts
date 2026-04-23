@@ -8,17 +8,21 @@ const flashCardCategory = type({
 
 declare module 'h3' {
   interface H3EventContext {
-    flashCardCategories: UnifiedResourceController<typeof flashCardCategory.infer>;
+    flashCardCategories: {
+      dbo: UnifiedResourceController<typeof flashCardCategory.infer>;
+    };
   }
 }
 
 
 export default defineNitroPlugin(nitroApp => {
   nitroApp.hooks.hook('request', event => {
-    event.context.flashCardCategories = createUnifiedResourceController({
-      event,
-      collectionName: 'flashCardCategories',
-      type: flashCardCategory,
-    });
+    event.context.flashCardCategories = {
+      dbo: createUnifiedResourceController({
+        event,
+        collectionName: 'flashCardCategories',
+        type: flashCardCategory,
+      }),
+    };
   });
 });

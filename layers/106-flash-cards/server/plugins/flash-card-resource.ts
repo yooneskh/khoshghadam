@@ -28,6 +28,11 @@ export default defineNitroPlugin(nitroApp => {
         collectionName: 'flashCards',
         schema,
         type,
+        meta: {
+          owner: {
+            ref: 'User',
+          },
+        },
       }),
     };
   });

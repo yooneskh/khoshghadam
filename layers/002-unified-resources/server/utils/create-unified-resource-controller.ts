@@ -21,6 +21,7 @@ export interface UnifiedResourceController<T> {
 }
 
 interface ResourceMeta {
+  ref?: string;
   hidden?: boolean;
 }
 

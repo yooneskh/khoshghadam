@@ -11,11 +11,23 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
     return (
       ((schema.value as any[] || [])
         .filter(it => !it.hidden)
-        .map(it => ({
-          key: it.key,
-          identifier: 'input',
-          label: radTitle(it.key),
-        }))
+        .map(it => {
+
+          const field: any = {
+            key: it.key,
+            identifier: 'input',
+            label: radTitle(it.key),
+          };
+
+
+          if (it.ref) {
+            field.identifier = 'resource';
+            field.resource = it.ref;
+          }
+
+          return field;
+
+        })
       )
     );
   });

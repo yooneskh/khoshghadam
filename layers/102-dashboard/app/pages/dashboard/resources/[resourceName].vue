@@ -31,26 +31,10 @@ useHead({
 
 /* resource */
 
-const itemsPerPage = ref(5);
-const currentPage = ref(1);
+const resourceExplorerTableEl = useTemplateRef('resourceExplorerTable');
 
 
-const { data: resourcesData, pending: isResourcesLoading, refresh: refreshResources } = useUFetch(
-  computed(() => `/${resourceName.value}`),
-  {
-    query: {
-      'skip': computed(() => (currentPage.value - 1) * itemsPerPage.value),
-      'limit': computed(() => itemsPerPage.value),
-    },
-  },
-);
-
-const { data: resourcesCountData, refresh: refreshResourcesCount } = useUFetch(
-  computed(() => `/${resourceName.value}/count`),
-);
-
-
-const { fields, columns } = useResourceMeta({
+const { fields } = useResourceMeta({
   resource: resourceName,
 });
 
@@ -72,8 +56,7 @@ async function handleResourceCreate() {
         });
 
 
-        await refreshResources();
-        await refreshResourcesCount();
+        await resourceExplorerTableEl.value.refreshResources();
 
         toastSuccess({
           title: `${resourceTitle.value.singular} created successfully.`,
@@ -102,8 +85,7 @@ async function handleResourceUpdate(resource) {
         });
 
 
-        await refreshResources();
-        await refreshResourcesCount();
+        await resourceExplorerTableEl.value.refreshResources();
 
         toastSuccess({
           title: `${resourceTitle.value.singular} updated successfully.`,
@@ -131,8 +113,7 @@ async function handleResourceDelete(resource) {
           });
 
 
-          await refreshResources();
-          await refreshResourcesCount();
+          await resourceExplorerTableEl.value.refreshResources();
 
           toastSuccess({
             title: `${resourceTitle.value.singular} deleted successfully.`,
@@ -161,13 +142,9 @@ async function handleResourceDelete(resource) {
       </template>
     </un-typography>
 
-    <un-table
-      :columns="columns"
-      :loading="isResourcesLoading"
-      :data="resourcesData"
-      :total-items="resourcesCountData"
-      v-model:items-per-page="itemsPerPage"
-      v-model:current-page="currentPage"
+    <resource-explorer-table
+      ref="resourceExplorerTable"
+      :resource="resourceName"
       class="-mx-3 -mb-3 border-t border-default"
       :actions="[
         {
@@ -181,17 +158,8 @@ async function handleResourceDelete(resource) {
           icon: 'lucide:trash',
           onClick: handleResourceDelete,
         },
-      ]">
-
-      <template #createdAt-cell="{ row }">
-        {{ formatDate(row.original.createdAt) }}
-      </template>
-
-      <template #updatedAt-cell="{ row }">
-        {{ formatDate(row.original.updatedAt) }}
-      </template>
-
-    </un-table>
+      ]"
+    />
 
   </div>
 </template>

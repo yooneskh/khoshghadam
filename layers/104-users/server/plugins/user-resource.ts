@@ -24,6 +24,11 @@ export default defineNitroPlugin(nitroApp => {
         collectionName: 'users',
         schema,
         type,
+        meta: {
+          password: {
+            hidden: true,
+          },
+        },
       }),
     };
   });

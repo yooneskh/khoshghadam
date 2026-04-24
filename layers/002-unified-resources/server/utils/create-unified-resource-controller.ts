@@ -20,11 +20,23 @@ export interface UnifiedResourceController<T> {
   delete: (args: { resourceId?: string; }) => Promise<(T & DocumentCreated)>;
 }
 
+interface ResourceMeta {
+  hidden?: boolean;
+}
 
-export function createUnifiedResourceController<T>(props: { event: H3Event; collectionName: string; schema: any, type: Type<T>; }): UnifiedResourceController<T> {
+
+export function createUnifiedResourceController<T extends object>(props: { event: H3Event; collectionName: string; schema: any, type: Type<T>; meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>> }): UnifiedResourceController<T> {
   return {
     schema: () => {
-      return (props.type.toJsonSchema() as any)?.properties;
+
+      const properties = (props.type.toJsonSchema() as any)?.properties;
+
+      return Object.keys(props.schema).map(it => ({
+        key: it,
+        ...(properties[it as any]),
+        ...((props.meta as any)?.[it] ?? {}),
+      }));
+
     },
     list: async (args) => {
 

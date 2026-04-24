@@ -50,7 +50,7 @@ const { data: resourcesCountData, refresh: refreshResourcesCount } = useUFetch(
 );
 
 
-const { fields } = useResourceFormFields({
+const { fields, columns } = useResourceMeta({
   resource: resourceName,
 });
 
@@ -162,10 +162,7 @@ async function handleResourceDelete(resource) {
     </un-typography>
 
     <un-table
-      :columns="fields.map(it => ({
-        accessorKey: it.key,
-        header: it.label,
-      }))"
+      :columns="columns"
       :loading="isResourcesLoading"
       :data="resourcesData"
       :total-items="resourcesCountData"

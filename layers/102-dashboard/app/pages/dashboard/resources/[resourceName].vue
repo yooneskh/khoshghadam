@@ -181,8 +181,17 @@ async function handleResourceDelete(resource) {
           icon: 'lucide:trash',
           onClick: handleResourceDelete,
         },
-      ]"
-    />
+      ]">
+
+      <template #createdAt-cell="{ row }">
+        {{ formatDate(row.original.createdAt) }}
+      </template>
+
+      <template #updatedAt-cell="{ row }">
+        {{ formatDate(row.original.updatedAt) }}
+      </template>
+
+    </un-table>
 
   </div>
 </template>

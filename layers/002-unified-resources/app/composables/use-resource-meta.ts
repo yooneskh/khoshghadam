@@ -21,15 +21,23 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
   });
 
   const columns = computed(() => {
-    return (
-      ((schema.value as any[] || [])
+    return [
+      ...((schema.value as any[] || [])
         .filter(it => !it.hidden)
         .map(it => ({
           accessorKey: it.key,
           header: radTitle(it.key),
         }))
-      )
-    );
+      ),
+      {
+        accessorKey: 'createdAt',
+        header: 'Created',
+      },
+      {
+        accessorKey: 'updatedAt',
+        header: 'Updated',
+      },
+    ];
   });
 
 

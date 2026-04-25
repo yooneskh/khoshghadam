@@ -2,14 +2,32 @@
 
 export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
-  const { data: schema } = useUFetch(
-    computed(() => `/${toValue(args.resource)}/schema`),
-  );
+  const schema = asyncComputed(async () => {
+
+    if (!toValue(args.resource)) {
+      return [];
+    }
+
+
+    return ufetch(`/${toValue(args.resource)}/schema`);
+
+  });
+
+
+  const meta = computed(() => {
+    return (
+      ((schema.value || [])
+        .map(it => ({
+          ...it,
+        }))
+      )
+    );
+  });
 
 
   const fields = computed(() => {
     return (
-      ((schema.value as any[] || [])
+      (meta.value
         .filter(it => !it.hidden)
         .map(convertMetaToField)
       )
@@ -18,27 +36,33 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
   const columns = computed(() => {
     return [
-      ...((schema.value as any[] || [])
+      ...(meta.value
         .filter(it => !it.hidden)
         .map(it => ({
           accessorKey: it.key,
           header: radTitle(it.key),
+          ref: it.ref,
+          type: it.type,
+          items: it.items,
+          labelFormat: it.labelFormat,
         }))
       ),
       {
         accessorKey: 'createdAt',
         header: 'Created',
+        type: 'date',
       },
       {
         accessorKey: 'updatedAt',
         header: 'Updated',
+        type: 'date',
       },
     ];
   });
 
 
   return {
-    meta: schema,
+    meta,
     fields,
     columns,
   };

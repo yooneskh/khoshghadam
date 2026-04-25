@@ -47,7 +47,7 @@ async function handleResourceCreate() {
     fields: fields.value,
     submitButton: {
       icon: 'lucide:plus',
-      label: `Create ${resourceTitle.value.singular}`,
+      label: `Create`,
       onClick: async form => {
 
         await ufetch(`/${resourceName.value}`, {
@@ -76,7 +76,7 @@ async function handleResourceUpdate(resource) {
     initialForm: radOmit(resource, ['_id', 'createdAt', 'updatedAt']),
     submitButton: {
       icon: 'lucide:pencil',
-      label: `Update ${resourceTitle.value.singular}`,
+      label: `Update`,
       onClick: async form => {
 
         await ufetch(`/${resourceName.value}/${resource._id}`, {
@@ -105,7 +105,7 @@ async function handleResourceDelete(resource) {
       {
         color: 'error',
         icon: 'lucide:trash',
-        label: `Delete ${resourceTitle.value.singular}`,
+        label: `Delete`,
         onClick: async () => {
 
           await ufetch(`/${resourceName.value}/${resource._id}`, {

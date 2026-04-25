@@ -10,6 +10,9 @@ const props = defineProps({
 
 /* resource */
 
+import ResourceExplorerCell from '~/atoms/resource-explorer-cell.vue';
+
+
 const itemsPerPage = ref(5);
 const currentPage = ref(1);
 
@@ -24,23 +27,28 @@ const { data: resourcesData, pending: isResourcesLoading, refresh: refreshResour
   },
 );
 
-const { data: resourcesCountData, refresh: refreshResourcesCount } = useUFetch(
+const { data: resourcesCountData, pending: isResourcesCountLoading, refresh: refreshResourcesCount } = useUFetch(
   computed(() => `/${props.resource}/count`),
 );
 
 
-const { columns } = useResourceMeta({
+const { meta, columns } = useResourceMeta({
   resource: () => props.resource,
 });
 
 
+async function refreshAll() {
+  await Promise.all([
+    refreshResources(),
+    refreshResourcesCount(),
+  ]);
+}
+
+
+/* outlets */
+
 defineExpose({
-  refreshResources: async () => {
-    await Promise.all([
-      refreshResources(),
-      refreshResourcesCount(),
-    ]);
-  },
+  refreshResources: refreshAll,
 });
 
 </script>
@@ -49,19 +57,20 @@ defineExpose({
 <template>
   <un-table
     :columns="columns"
-    :loading="isResourcesLoading"
+    :loading="isResourcesLoading || isResourcesCountLoading"
     :data="resourcesData"
     :total-items="resourcesCountData"
     v-model:items-per-page="itemsPerPage"
     v-model:current-page="currentPage"
     :actions="props.actions">
 
-    <template #createdAt-cell="{ row }">
-      {{ formatDate(row.original.createdAt) }}
-    </template>
-
-    <template #updatedAt-cell="{ row }">
-      {{ formatDate(row.original.updatedAt) }}
+    <template v-for="column in columns" :key="column.accessorKey" #[column.accessorKey+'-cell']="{ row }">
+      <resource-explorer-cell
+        :column="column"
+        :row="row.original"
+        :data="row.original[column.accessorKey]"
+        @resource:update="refreshAll()"
+      />
     </template>
 
   </un-table>

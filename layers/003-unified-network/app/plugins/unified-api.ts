@@ -2,6 +2,11 @@
 
 async function generalHandler(options: any, request: any, response: any) {
 
+  if (typeof request === 'string' && request.includes('/schema')) {
+    return;
+  }
+
+
   if (options.handled || [200, 201, 202, 204].includes(response?.status) || options.silent) {
     return;
   }

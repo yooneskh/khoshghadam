@@ -34,15 +34,15 @@ export function createUnifiedResourceController<T extends object>(props: { event
 
       const convertPropertyToSchema = (schema: any, properties: any, meta: any) => {
         return Object.keys(schema).map(key => ({
-          key,
-          ...(properties[key]),
-          ...(meta?.[key] ?? {}),
-          items: !properties[key]?.items ? undefined : {
-            ...properties[key].items,
-            properties: !properties[key].items.properties ? undefined : convertPropertyToSchema(
-              schema[key][0],
-              properties[key].items.properties,
-              meta?.[key]?.children,
+          key: key.replaceAll('?', ''),
+          ...(properties[key.replaceAll('?', '')]),
+          ...(meta?.[key.replaceAll('?', '')] ?? {}),
+          items: !properties[key.replaceAll('?', '')]?.items ? undefined : {
+            ...properties[key.replaceAll('?', '')].items,
+            properties: !properties[key.replaceAll('?', '')].items.properties ? undefined : convertPropertyToSchema(
+              schema[key.replaceAll('?', '')][0],
+              properties[key.replaceAll('?', '')].items.properties,
+              meta?.[key.replaceAll('?', '')]?.children,
             ),
           },
         }));

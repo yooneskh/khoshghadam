@@ -32,7 +32,7 @@ const { data: resourcesCountData, pending: isResourcesCountLoading, refresh: ref
 );
 
 
-const { meta, columns } = useResourceMeta({
+const { columns } = useResourceMeta({
   resource: () => props.resource,
 });
 

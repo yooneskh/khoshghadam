@@ -32,7 +32,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
   return {
     schema: () => {
 
-      const convertPropertyToSchema = (schema: any, properties: any, meta: any) => {
+      const convertPropertyToSchema = (schema: any, properties: any, meta: any): any => {
         return Object.keys(schema).map(key => ({
           key: key.replaceAll('?', ''),
           ...(properties[key.replaceAll('?', '')]),

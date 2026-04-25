@@ -27,7 +27,7 @@ const title = asyncComputed(async () => {
 
 
     const resources = await Promise.all(
-      (radIsArray(modelValue.value) ? modelValue.value : [modelValue.value]).map(async it =>
+      radCastArray(modelValue.value).map(async it =>
         ufetch(`/${radDash(wordToPlural(props.field.resource))}/${it}`),
       ),
     );

@@ -1,4 +1,3 @@
-import { type as arkType } from 'arktype';
 
 
 const { schema, type, inferred } = parseSchema({

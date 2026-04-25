@@ -2,7 +2,7 @@
 
 export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
-  const schema = asyncComputed(async () => {
+  const schema = asyncComputed<any>(async () => {
 
     if (!toValue(args.resource)) {
       return [];
@@ -15,20 +15,13 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
 
   const meta = computed(() => {
-    return (
-      ((schema.value || [])
-        .map(it => ({
-          ...it,
-        }))
-      )
-    );
+    return schema.value || [];
   });
-
 
   const fields = computed(() => {
     return (
       (meta.value
-        .filter(it => !it.hidden)
+        .filter((it: any) => !it.hidden)
         .map(convertMetaToField)
       )
     );
@@ -37,8 +30,8 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
   const columns = computed(() => {
     return [
       ...(meta.value
-        .filter(it => !it.hidden)
-        .map(it => ({
+        .filter((it: any) => !it.hidden)
+        .map((it: any) => ({
           accessorKey: it.key,
           header: radTitle(it.key),
           ref: it.ref,
@@ -92,6 +85,7 @@ function convertMetaToField(meta: any) {
     field.identifier = 'series';
     field.itemFields = meta.items.properties.map(convertMetaToField);
   }
+
 
   return field;
 

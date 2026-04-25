@@ -22,6 +22,7 @@ const { fields } = useResourceMeta({
   resource: () => radDash(wordToPlural(props.column.ref || '')),
 });
 
+
 const resourceData = asyncComputed(async () => {
 
   tickle.value;
@@ -46,7 +47,7 @@ const resourceTitle = asyncComputed(async () => {
 
 
   const resources = await Promise.all(
-    (radIsArray(props.data) ? props.data : [props.data]).map(async it =>
+    radCastArray(props.data).map(async it =>
       ufetch(`/${radDash(wordToPlural(props.column.ref))}/${it}`),
     ),
   );
@@ -105,7 +106,7 @@ async function handleViewItems() {
 <template>
 
   <template v-if="props.column.ref">
-    <a class="text-blue-500 underline cursor-pointer" @click="handleResourceClick()">
+    <a class="text-primary underline cursor-pointer" @click="handleResourceClick()">
       {{ resourceTitle }}
     </a>
   </template>
@@ -122,7 +123,7 @@ async function handleViewItems() {
   </template>
 
   <template v-else-if="props.column.type === 'array' && props.column.items.type === 'object'">
-    <a class="text-blue-500 underline cursor-pointer" @click="handleViewItems()">
+    <a class="text-primary underline cursor-pointer" @click="handleViewItems()">
       View Items
     </a>
   </template>

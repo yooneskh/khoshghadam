@@ -70,9 +70,11 @@ async function handleResourceSelect() {
       class="w-full"
       trailing-icon="lucide:clipboard-list"
       v-bind="radOmit(props.field, [ 'key', 'identifier', 'label', 'hint', 'help', 'description' ])"
+      readonly
       :model-value="title"
       :loading="isLoading"
       @click="handleResourceSelect()"
+      @keypress.space="handleResourceSelect()"
       @keypress.enter="handleResourceSelect()"
     />
   </u-form-field>

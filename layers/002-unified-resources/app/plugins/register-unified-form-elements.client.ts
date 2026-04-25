@@ -1,10 +1,17 @@
+import FormElementResource from '../elements/form-element-resource.vue';
+import FormElementTags from '../elements/form-element-tags.vue';
 
 
 export default defineNuxtPlugin(() => {
 
   registerFormExtraElement({
     identifier: 'resource',
-    component: defineAsyncComponent(() => import('../elements/form-element-resource.vue')),
+    component: FormElementResource,
+  });
+
+  registerFormExtraElement({
+    identifier: 'tags',
+    component: FormElementTags,
   });
 
 });

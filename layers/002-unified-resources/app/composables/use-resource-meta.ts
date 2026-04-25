@@ -23,6 +23,10 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
           if (it.ref) {
             field.identifier = 'resource';
             field.resource = it.ref;
+            field.multiple = it.multiple;
+          }
+          else if (it.type === 'array' && it.items.type === 'string') {
+            field.identifier = 'tags';
           }
 
           return field;

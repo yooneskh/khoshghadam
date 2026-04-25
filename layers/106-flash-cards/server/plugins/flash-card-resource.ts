@@ -3,11 +3,11 @@ import { type as arkType } from 'arktype';
 
 const { schema, type, inferred } = parseSchema({
   'owner': 'string > 0',
-  'tags': '(string > 0)[]',
-  'cards': arkType({
+  'tags?': '(string > 0)[]',
+  'cards': [{
     'frontText': 'string > 0',
     'backText': 'string > 0',
-  }).array().atLeastLength(1),
+  }, '[]'],
 });
 
 
@@ -31,6 +31,16 @@ export default defineNitroPlugin(nitroApp => {
         meta: {
           owner: {
             ref: 'User',
+          },
+          cards: {
+            children: {
+              frontText: {
+                width: 6,
+              },
+              backText: {
+                width: 6,
+              },
+            }
           },
         },
       }),

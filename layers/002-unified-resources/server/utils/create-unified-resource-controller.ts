@@ -23,6 +23,8 @@ export interface UnifiedResourceController<T> {
 interface ResourceMeta {
   ref?: string;
   hidden?: boolean;
+  width?: number;
+  children?: Record<string, ResourceMeta>;
 }
 
 
@@ -30,13 +32,28 @@ export function createUnifiedResourceController<T extends object>(props: { event
   return {
     schema: () => {
 
-      const properties = (props.type.toJsonSchema() as any)?.properties;
+      const convertPropertyToSchema = (schema: any, properties: any, meta: any) => {
+        return Object.keys(schema).map(key => ({
+          key,
+          ...(properties[key]),
+          ...(meta?.[key] ?? {}),
+          items: !properties[key]?.items ? undefined : {
+            ...properties[key].items,
+            properties: !properties[key].items.properties ? undefined : convertPropertyToSchema(
+              schema[key][0],
+              properties[key].items.properties,
+              meta?.[key]?.children,
+            ),
+          },
+        }));
+      };
 
-      return Object.keys(props.schema).map(it => ({
-        key: it,
-        ...(properties[it as any]),
-        ...((props.meta as any)?.[it] ?? {}),
-      }));
+
+      return convertPropertyToSchema(
+        props.schema,
+        (props.type.toJsonSchema() as any)?.properties,
+        props.meta,
+      );
 
     },
     list: async (args) => {

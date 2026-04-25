@@ -11,27 +11,7 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
     return (
       ((schema.value as any[] || [])
         .filter(it => !it.hidden)
-        .map(it => {
-
-          const field: any = {
-            key: it.key,
-            identifier: 'input',
-            label: radTitle(it.key),
-          };
-
-
-          if (it.ref) {
-            field.identifier = 'resource';
-            field.resource = it.ref;
-            field.multiple = it.multiple;
-          }
-          else if (it.type === 'array' && it.items.type === 'string') {
-            field.identifier = 'tags';
-          }
-
-          return field;
-
-        })
+        .map(convertMetaToField)
       )
     );
   });
@@ -62,5 +42,33 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
     fields,
     columns,
   };
+
+}
+
+
+function convertMetaToField(meta: any) {
+
+  const field: any = {
+    key: meta.key,
+    identifier: 'input',
+    label: radTitle(meta.key),
+    width: meta.width,
+  };
+
+
+  if (meta.ref) {
+    field.identifier = 'resource';
+    field.resource = meta.ref;
+    field.multiple = meta.multiple;
+  }
+  else if (meta.type === 'array' && meta.items.type === 'string') {
+    field.identifier = 'tags';
+  }
+  else if (meta.type === 'array' && meta.items.type === 'object') {
+    field.identifier = 'series';
+    field.itemFields = meta.items.properties.map(convertMetaToField);
+  }
+
+  return field;
 
 }

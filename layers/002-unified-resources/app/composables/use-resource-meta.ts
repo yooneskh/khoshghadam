@@ -2,14 +2,19 @@
 
 export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
+  const { resourcePath } = useResourceName({
+    resource: args.resource,
+  });
+
+
   const schema = asyncComputed<any>(async () => {
 
-    if (!toValue(args.resource)) {
+    if (!resourcePath.value) {
       return [];
     }
 
 
-    return ufetch(`/${toValue(args.resource)}/schema`);
+    return ufetch(`/${resourcePath.value}/schema`);
 
   });
 
@@ -76,7 +81,7 @@ function convertMetaToField(meta: any) {
   if (meta.ref) {
     field.identifier = 'resource';
     field.resource = meta.ref;
-    field.multiple = meta.multiple;
+    field.multiple = meta.type === 'array';
   }
   else if (meta.type === 'array' && meta.items.type === 'string') {
     field.identifier = 'tags';

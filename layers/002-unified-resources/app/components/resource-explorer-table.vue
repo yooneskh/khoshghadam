@@ -17,24 +17,28 @@ const itemsPerPage = ref(5);
 const currentPage = ref(1);
 
 
+const { resourcePath } = useResourceName({
+  resource: () => props.resource,
+});
+
+const { columns } = useResourceMeta({
+  resource: () => props.resource,
+});
+
+
 const { data: resourcesData, pending: isResourcesLoading, refresh: refreshResources } = useUFetch(
-  computed(() => `/${props.resource}`),
+  computed(() => `/${resourcePath.value}`),
   {
     query: {
       'skip': computed(() => (currentPage.value - 1) * itemsPerPage.value),
-      'limit': computed(() => itemsPerPage.value),
+      'limit': itemsPerPage,
     },
   },
 );
 
 const { data: resourcesCountData, pending: isResourcesCountLoading, refresh: refreshResourcesCount } = useUFetch(
-  computed(() => `/${props.resource}/count`),
+  computed(() => `/${resourcePath.value}/count`),
 );
-
-
-const { columns } = useResourceMeta({
-  resource: () => props.resource,
-});
 
 
 async function refreshAll() {

@@ -14,6 +14,11 @@ const modelValue = defineModel();
 const isLoading = ref(false);
 
 
+const { resourcePath } = useResourceName({
+  resource: () => props.field.resource,
+});
+
+
 const title = asyncComputed(async () => {
 
   if (!modelValue.value) {
@@ -28,7 +33,7 @@ const title = asyncComputed(async () => {
 
     const resources = await Promise.all(
       radCastArray(modelValue.value).map(async it =>
-        ufetch(`/${radDash(wordToPlural(props.field.resource))}/${it}`),
+        ufetch(`/${resourcePath.value}/${it}`),
       ),
     );
 
@@ -44,21 +49,19 @@ const title = asyncComputed(async () => {
 
 
 async function handleResourceSelect() {
-
-  const selecteds = await launchResourceSelectionDialog({
+  await launchResourceSelectionDialog({
     resource: props.field.resource,
-    items: !modelValue.value ? [] : radIsArray(modelValue.value) ? modelValue.value : [modelValue.value],
+    items: !modelValue.value ? [] : radCastArray(modelValue.value),
     multiple: props.field.multiple,
+    onSelected: async selecteds => {
+      if (props.field.multiple) {
+        modelValue.value = selecteds;
+      }
+      else {
+        modelValue.value = selecteds?.[0];
+      }
+    }
   });
-
-
-  if (props.field.multiple) {
-    modelValue.value = selecteds;
-  }
-  else {
-    modelValue.value = selecteds[0];
-  }
-
 }
 
 </script>

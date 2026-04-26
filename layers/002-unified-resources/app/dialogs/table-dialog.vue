@@ -31,6 +31,7 @@ const emit = defineEmits([
         <un-table
           :columns="props.columns"
           :data="props.data"
+          hide-pagination
           :actions="props.tableActions"
         />
       </un-card>

@@ -15,77 +15,8 @@ const emit = defineEmits([
 
 /* resource */
 
-const tickle = ref(0);
+import ResourceExplorerCellRef from '~/atoms/resource-explorer-cell-ref.vue';
 
-
-const { fields } = useResourceMeta({
-  resource: () => radDash(wordToPlural(props.column.ref || '')),
-});
-
-
-const resourceData = asyncComputed(async () => {
-
-  tickle.value;
-
-  if (!props.column.ref || !props.data) {
-    return;
-  }
-
-
-  return ufetch(`/${radDash(wordToPlural(props.column.ref))}/${props.data}`);
-
-});
-
-
-const resourceTitle = asyncComputed(async () => {
-
-  tickle.value;
-
-  if (!props.column.ref || !props.data || !props.data?.length) {
-    return '';
-  }
-
-
-  const resources = await Promise.all(
-    radCastArray(props.data).map(async it =>
-      ufetch(`/${radDash(wordToPlural(props.column.ref))}/${it}`),
-    ),
-  );
-
-
-  return resources.map(it => it.name).join(' - ');
-
-});
-
-
-async function handleResourceClick() {
-  await launchFormPickerDialog({
-    title: `Update ${radTitle(props.column.ref)}`,
-    subtitle: resourceData.value._id,
-    text: `Update the information and click submit to save.`,
-    fields: fields.value,
-    initialForm: radOmit(resourceData.value, ['_id', 'createdAt', 'updatedAt']),
-    submitButton: {
-      icon: 'lucide:pencil',
-      label: `Update`,
-      onClick: async form => {
-
-        await ufetch(`/${radDash(wordToPlural(props.column.ref))}/${resourceData.value._id}`, {
-          method: 'patch',
-          body: form,
-        });
-
-
-        tickle.value++;
-
-        toastSuccess({
-          title: `${radTitle(props.column.ref)} updated successfully.`,
-        });
-
-      },
-    },
-  });
-}
 
 async function handleViewItems() {
   launchTableDialog({
@@ -106,9 +37,16 @@ async function handleViewItems() {
 <template>
 
   <template v-if="props.column.ref">
-    <a class="text-primary underline cursor-pointer" @click="handleResourceClick()">
-      {{ resourceTitle }}
-    </a>
+    <div class="flex flex-wrap gap-2">
+      <template v-for="item of radCastArray(props.data || [])" :key="item">
+        <resource-explorer-cell-ref
+          :column="props.column"
+          :row="props.row"
+          :data="item"
+          @resource:update="emit('resource:update')"
+        />
+      </template>
+    </div>
   </template>
 
   <template v-else-if="props.column.type === 'array' && props.column.items.type === 'string'">
@@ -124,7 +62,7 @@ async function handleViewItems() {
 
   <template v-else-if="props.column.type === 'array' && props.column.items.type === 'object'">
     <a class="text-primary underline cursor-pointer" @click="handleViewItems()">
-      View Items
+      View {{ props.column?.header || 'Items' }}
     </a>
   </template>
 

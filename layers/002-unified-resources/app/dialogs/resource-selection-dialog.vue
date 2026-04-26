@@ -6,6 +6,7 @@ const props = defineProps({
   resource: String,
   items: Array,
   multiple: Boolean,
+  onSelected: Function,
 });
 
 const emit = defineEmits([
@@ -15,32 +16,45 @@ const emit = defineEmits([
 
 /* resource */
 
-const currentItems = ref(JSON.parse(JSON.stringify(props.items || [])));
+const currentItems = ref(radCloneDeep(props.items || []));
+const currentItemsTitles = ref({});
 
 
-const resourceTitle = computed(() => {
-  return {
-    plural: wordToPlural(radTitle(props.resource)),
-    singular: wordToSingular(radTitle(props.resource)),
-  };
+const { resourcePath, title, titlePlural } = useResourceName({
+  resource: () => props.resource,
 });
 
 
-function handleSelectResource(resource) {
+watchImmediate(currentItems, async () => {
+  await Promise.all(
+    currentItems.value.map(async it => {
 
+      if (currentItemsTitles.value[it]) {
+        return;
+      }
+
+
+      const resource = await ufetch(`/${resourcePath.value}/${it}`);
+
+      currentItemsTitles.value[it] = resource.name || truncateMiddle(resource._id);
+
+    }),
+  );
+});
+
+
+async function handleSelectResource(resource) {
   if (!props.multiple) {
-    emit('close', [resource._id]);
-    return;
-  }
-
-
-  if (currentItems.value.includes(resource._id)) {
-    currentItems.value = currentItems.value.filter(it => it !== resource._id);
+    await handleSubmitSelection([resource._id]);
   }
   else {
-    currentItems.value.push(resource._id);
+    currentItems.value = radToggle(currentItems.value, resource._id);
   }
+}
 
+async function handleSubmitSelection(items) {
+  await props.onSelected?.(items);
+  emit('close', items);
 }
 
 </script>
@@ -51,14 +65,14 @@ function handleSelectResource(resource) {
     <template #content>
       <un-card
         icon="lucide:bookmark"
-        :title="`Select ${props.multiple ? resourceTitle.plural : resourceTitle.singular}`"
-        :subtitle="props.multiple ? 'Select one or more ' + resourceTitle.plural : 'Select one ' + resourceTitle.singular"
+        :title="`Select ${props.multiple ? titlePlural : title}`"
+        :subtitle="props.multiple ? 'Select one or more ' + titlePlural : 'Select one ' + title"
         fluid-body
         :actions="[
           ...(!props.multiple ? [] : [{
             icon: 'lucide:check',
             label: 'Submit Selection',
-            onClick: () => emit('close', currentItems),
+            onClick: () => handleSubmitSelection(currentItems),
           }]),
           {
             actionType: 'spacer',
@@ -69,16 +83,44 @@ function handleSelectResource(resource) {
             onClick: () => emit('close'),
           },
         ]">
+
+        <template v-if="props.multiple">
+          <div class="flex items-center gap-2 border-b border-default p-3">
+            <template v-for="(item, index) of currentItems" :key="item">
+              <u-badge
+                variant="subtle"
+                :label="currentItemsTitles[item] || '-'"
+                trailing-icon="lucide:x">
+                <template #trailing>
+                  <u-icon
+                    name="lucide:x"
+                    @click="currentItems.splice(index, 1)"
+                  />
+                </template>
+              </u-badge>
+            </template>
+          </div>
+        </template>
+
         <resource-explorer-table
-          :resource="radDash(resourceTitle.plural)"
+          :resource="props.resource"
           :actions="[
             {
+              vIf: it => !currentItems.includes(it._id),
               icon: 'lucide:check',
               label: 'Select',
               onClick: handleSelectResource,
-            }
+            },
+            {
+              vIf: it => currentItems.includes(it._id),
+              color: 'error',
+              icon: 'lucide:trash',
+              label: 'Remove',
+              onClick: handleSelectResource,
+            },
           ]"
         />
+
       </un-card>
     </template>
   </u-modal>

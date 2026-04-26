@@ -8,23 +8,19 @@ definePageMeta({
 });
 
 
-const route = useRoute();
-
 const resourceName = computed(() => {
-  return route.params.resourceName;
+  return useRoute().params.resourceName;
 });
 
-const resourceTitle = computed(() => {
-  return {
-    plural: wordToPlural(radTitle(resourceName.value)),
-    singular: wordToSingular(radTitle(resourceName.value)),
-  };
+
+const { resource, resourcePath, title, titlePlural } = useResourceName({
+  resource: resourceName,
 });
 
 
 useHead({
   title: computed(() => {
-    return `${resourceTitle.value.plural} - Resources`;
+    return `${titlePlural.value} - Resources`;
   }),
 });
 
@@ -35,22 +31,22 @@ const resourceExplorerTableEl = useTemplateRef('resourceExplorerTable');
 
 
 const { fields } = useResourceMeta({
-  resource: resourceName,
+  resource,
 });
 
 
 async function handleResourceCreate() {
   await launchFormPickerDialog({
-    title: `Create ${resourceTitle.value.singular}`,
+    title: `Create ${title.value}`,
     subtitle: 'Create a new resource',
-    text: `Fill in the form below to create a new ${resourceTitle.value.singular}.`,
+    text: `Fill in the form below to create a new ${title.value}.`,
     fields: fields.value,
     submitButton: {
       icon: 'lucide:plus',
       label: `Create`,
       onClick: async form => {
 
-        await ufetch(`/${resourceName.value}`, {
+        await ufetch(`/${resourcePath.value}`, {
           method: 'post',
           body: form,
         });
@@ -59,7 +55,7 @@ async function handleResourceCreate() {
         await resourceExplorerTableEl.value.refreshResources();
 
         toastSuccess({
-          title: `${resourceTitle.value.singular} created successfully.`,
+          title: `${title.value} created successfully.`,
         });
 
       }
@@ -69,7 +65,7 @@ async function handleResourceCreate() {
 
 async function handleResourceUpdate(resource) {
   await launchFormPickerDialog({
-    title: `Update ${resourceTitle.value.singular}`,
+    title: `Update ${title.value}`,
     subtitle: resource._id,
     text: `Update the information and click submit to save.`,
     fields: fields.value,
@@ -79,7 +75,7 @@ async function handleResourceUpdate(resource) {
       label: `Update`,
       onClick: async form => {
 
-        await ufetch(`/${resourceName.value}/${resource._id}`, {
+        await ufetch(`/${resourcePath.value}/${resource._id}`, {
           method: 'patch',
           body: form,
         });
@@ -88,7 +84,7 @@ async function handleResourceUpdate(resource) {
         await resourceExplorerTableEl.value.refreshResources();
 
         toastSuccess({
-          title: `${resourceTitle.value.singular} updated successfully.`,
+          title: `${title.value} updated successfully.`,
         });
 
       },
@@ -98,9 +94,9 @@ async function handleResourceUpdate(resource) {
 
 async function handleResourceDelete(resource) {
   await launchChoicePickerDialog({
-    title: `Delete ${resourceTitle.value.singular}`,
+    title: `Delete ${title.value}`,
     subtitle: resource._id,
-    text: `Are you sure you want to delete this ${resourceTitle.value.singular}?`,
+    text: `Are you sure you want to delete this ${title.value}?`,
     startButtons: [
       {
         color: 'error',
@@ -108,7 +104,7 @@ async function handleResourceDelete(resource) {
         label: `Delete`,
         onClick: async () => {
 
-          await ufetch(`/${resourceName.value}/${resource._id}`, {
+          await ufetch(`/${resourcePath.value}/${resource._id}`, {
             method: 'delete',
           });
 
@@ -116,7 +112,7 @@ async function handleResourceDelete(resource) {
           await resourceExplorerTableEl.value.refreshResources();
 
           toastSuccess({
-            title: `${resourceTitle.value.singular} deleted successfully.`,
+            title: `${title.value} deleted successfully.`,
           });
 
         },
@@ -131,11 +127,11 @@ async function handleResourceDelete(resource) {
 <template>
   <div class="space-y-3">
 
-    <un-typography :title="`Manage ${resourceTitle.plural}`">
+    <un-typography :title="`Manage ${titlePlural}`">
       <template #append>
         <u-button
           icon="lucide:plus"
-          :label="`Create a ${resourceTitle.singular}`"
+          :label="`Create a ${title}`"
           loading-auto
           @click="handleResourceCreate()"
         />
@@ -144,7 +140,7 @@ async function handleResourceDelete(resource) {
 
     <resource-explorer-table
       ref="resourceExplorerTable"
-      :resource="resourceName"
+      :resource="resource"
       class="-mx-3 -mb-3 border-t border-default"
       :actions="[
         {

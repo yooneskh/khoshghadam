@@ -55,6 +55,16 @@ const navigationItems = computed(() => {
                 },
               },
             },
+            {
+              icon: 'lucide:history',
+              label: 'Flash Card Sessions',
+              to: {
+                name: 'dashboard.resources.single',
+                params: {
+                  resourceName: 'flash-card-sessions',
+                },
+              },
+            },
           ],
         },
       ],

@@ -8,23 +8,33 @@ interface DocumentCreated {
   updatedAt?: number;
 }
 
+type AddIdToNestedArrayObjects<T> = T extends (infer Item)[]
+  ? Item extends object
+    ? (AddIdToNestedArrayObjects<Item> & { _id: string })[]
+    : T
+  : T extends object
+    ? { [Key in keyof T]: AddIdToNestedArrayObjects<T[Key]> }
+    : T;
 
-export interface UnifiedResourceController<T> {
-  schema: () => any;
-  list: (args: { filter?: any; sort?: any; skip?: any; limit?: any; }) => Promise<(T & DocumentCreated)[]>;
-  count: (args: { filter?: any; }) => Promise<number>;
-  find: (args: { resourceId?: string; filter?: any; }) => Promise<(T & DocumentCreated) | undefined>;
-  retrieve: (args: { resourceId?: string; filter?: any; }) => Promise<(T & DocumentCreated)>;
-  create: (args: { document: T; }) => Promise<(T & DocumentCreated)>;
-  update: (args: { resourceId?: string; document: Partial<T>; }) => Promise<(T & DocumentCreated)>;
-  delete: (args: { resourceId?: string; }) => Promise<(T & DocumentCreated)>;
-}
+type UnifiedResourceDocument<T> = AddIdToNestedArrayObjects<T> & DocumentCreated;
 
 interface ResourceMeta {
   ref?: string;
   hidden?: boolean;
   width?: number;
   children?: Record<string, ResourceMeta>;
+}
+
+
+export interface UnifiedResourceController<T> {
+  schema: () => any;
+  list: (args: { filter?: any; sort?: any; skip?: any; limit?: any; }) => Promise<UnifiedResourceDocument<T>[]>;
+  count: (args: { filter?: any; }) => Promise<number>;
+  find: (args: { resourceId?: string; filter?: any; }) => Promise<UnifiedResourceDocument<T> | undefined>;
+  retrieve: (args: { resourceId?: string; filter?: any; }) => Promise<UnifiedResourceDocument<T>>;
+  create: (args: { document: T; }) => Promise<UnifiedResourceDocument<T>>;
+  update: (args: { resourceId?: string; document: Partial<T>; }) => Promise<UnifiedResourceDocument<T>>;
+  delete: (args: { resourceId?: string; }) => Promise<UnifiedResourceDocument<T>>;
 }
 
 
@@ -61,7 +71,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
       const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
 
 
-      return collection.find(args.filter).sort(args.sort).skip(args.skip).limit(args.limit).toArray() as unknown as (T & DocumentCreated)[];
+      return collection.find(args.filter).sort(args.sort).skip(args.skip).limit(args.limit).toArray() as unknown as UnifiedResourceDocument<T>[];
 
     },
     count: async (args) => {
@@ -84,7 +94,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
       }
 
 
-      return document as unknown as (T & DocumentCreated);
+      return document as unknown as UnifiedResourceDocument<T>;
 
     },
     retrieve: async (args) => {
@@ -99,7 +109,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
       }
 
 
-      return document as unknown as (T & DocumentCreated);
+      return document as unknown as UnifiedResourceDocument<T>;
 
     },
     create: async (args) => {
@@ -121,9 +131,12 @@ export function createUnifiedResourceController<T extends object>(props: { event
       }
 
 
+      normalizeDocumentIds(document);
+
+
       await collection.insertOne(document);
 
-      return validatedDocument as unknown as (T & DocumentCreated);
+      return validatedDocument as unknown as UnifiedResourceDocument<T>;
 
     },
     update: async (args) => {
@@ -158,9 +171,13 @@ export function createUnifiedResourceController<T extends object>(props: { event
         updatedAt: Date.now(),
       };
 
+
+      normalizeDocumentIds(finalDocument);
+
+
       await collection.updateOne({ _id: args.resourceId as any }, { $set: finalDocument });
 
-      return finalDocument as unknown as (T & DocumentCreated);
+      return finalDocument as unknown as UnifiedResourceDocument<T>;
 
     },
     delete: async (args) => {
@@ -177,8 +194,39 @@ export function createUnifiedResourceController<T extends object>(props: { event
 
       await collection.deleteOne({ _id: document._id });
 
-      return document as unknown as (T & DocumentCreated);
+      return document as unknown as UnifiedResourceDocument<T>;
 
     },
   };
+}
+
+
+function normalizeDocumentIds(value: any) {
+
+  if (!value || typeof value !== 'object') {
+    return;
+  }
+
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+
+      if (!item || typeof item !== 'object') {
+        continue;
+      }
+
+      if (!('_id' in item)) {
+        item._id = generateUuid();
+      }
+
+      normalizeDocumentIds(item);
+
+    }
+  }
+  else {
+    for (const key in value) {
+      normalizeDocumentIds(value[key]);
+    }
+  }
+
 }

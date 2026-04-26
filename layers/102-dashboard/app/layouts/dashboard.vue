@@ -1,5 +1,67 @@
 <script setup>
 
+/* navigation */
+
+const navigationItems = computed(() => {
+  return [
+    {
+      icon: 'lucide:layout-dashboard',
+      label: 'Dashboard',
+      to: {
+        name: 'dashboard.home',
+      },
+    },
+    {
+      icon: 'lucide:users',
+      label: 'Authority',
+      children: [
+        {
+          icon: 'lucide:user',
+          label: 'Users',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'users',
+            },
+          },
+        },
+      ],
+    },
+    {
+      icon: 'lucide:book',
+      label: 'Education',
+      children: [
+        {
+          icon: 'lucide:id-card-lanyard',
+          label: 'Flash Cards',
+          children: [
+            {
+              icon: 'lucide:package',
+              label: 'Flash Card Categories',
+              to: {
+                name: 'dashboard.resources.single',
+                params: {
+                  resourceName: 'flash-card-categories',
+                },
+              },
+            },
+            {
+              icon: 'lucide:file-badge-2',
+              label: 'Flash Cards',
+              to: {
+                name: 'dashboard.resources.single',
+                params: {
+                  resourceName: 'flash-cards',
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ];
+});
+
 </script>
 
 
@@ -45,60 +107,25 @@
 
     <main class="w-440 max-w-[calc(100vw-16px)] mx-auto bg-default border border-default shadow-lg shadow-neutral-200 rounded-xl -mt-14.5">
 
-      <u-navigation-menu
-        :items="[
-          {
-            icon: 'lucide:layout-dashboard',
-            label: 'Dashboard',
-            to: {
-              name: 'dashboard.home',
-            },
-          },
-          {
-            icon: 'lucide:users',
-            label: 'Authority',
-            children: [
-              {
-                icon: 'lucide:user',
-                label: 'Users',
-                to: {
-                  name: 'dashboard.resources.single',
-                  params: {
-                    resourceName: 'users',
-                  },
-                },
-              },
-            ],
-          },
-          {
-            icon: 'lucide:id-card-lanyard',
-            label: 'Flash Cards',
-            children: [
-              {
-                icon: 'lucide:package',
-                label: 'Flash Card Categories',
-                to: {
-                  name: 'dashboard.resources.single',
-                  params: {
-                    resourceName: 'flash-card-categories',
-                  },
-                },
-              },
-              {
-                icon: 'lucide:file-badge-2',
-                label: 'Flash Cards',
-                to: {
-                  name: 'dashboard.resources.single',
-                  params: {
-                    resourceName: 'flash-cards',
-                  },
-                },
-              },
-            ],
-          },
-        ]"
-        class="border-b border-default px-2 py-1"
-      />
+      <div class="flex items-center gap-2 p-2 border-b border-default">
+        <template v-for="item of navigationItems" :key="item.label">
+          <template v-if="!item.children">
+            <u-button
+              variant="subtle"
+              v-bind="item"
+            />
+          </template>
+          <template v-else>
+            <u-dropdown-menu :items="item.children">
+              <u-button
+                variant="subtle"
+                trailing-icon="lucide:chevron-down"
+                v-bind="radOmit(item, ['children'])"
+              />
+            </u-dropdown-menu>
+          </template>
+        </template>
+      </div>
 
       <div class="p-3">
         <slot />

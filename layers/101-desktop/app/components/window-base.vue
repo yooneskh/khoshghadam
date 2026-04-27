@@ -349,7 +349,9 @@ const effectiveY = computed(() => {
         icon="lucide:x"
         color="error"
         size="sm"
-        @click="useRouter().back();"
+        :to="{
+          name: 'desktop.home',
+        }"
       />
 
     </header>

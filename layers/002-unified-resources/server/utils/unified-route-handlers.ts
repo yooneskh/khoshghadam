@@ -14,12 +14,19 @@ export function handleResourceSchema(args: ResourceHandlerArgs) {
 
 
 export function handleResourceList(args: ResourceHandlerArgs) {
-  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).list({
-    filter: extractFilterFromEvent(args.event),
-    sort: extractSortFromEvent(args.event),
-    skip: Number(getQuery(args.event)?.skip ?? 0) || 0,
-    limit: Number(getQuery(args.event)?.limit ?? 50) || 50,
-  });
+  if (getQuery(args.event)?.single === 'xtruex') {
+    return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).find({
+      filter: extractFilterFromEvent(args.event),
+    });
+  }
+  else {
+    return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).list({
+      filter: extractFilterFromEvent(args.event),
+      sort: extractSortFromEvent(args.event),
+      skip: Number(getQuery(args.event)?.skip ?? 0) || 0,
+      limit: Number(getQuery(args.event)?.limit ?? 50) || 50,
+    });
+  }
 }
 
 export function handleResourceCount(args: ResourceHandlerArgs) {

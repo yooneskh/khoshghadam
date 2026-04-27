@@ -29,6 +29,12 @@ const { data: flashCardsData } = useUFetch(
       :items="flashCardsData?.map(it => ({
         pito: 'folder-opened',
         name: it.name,
+        to: {
+          name: 'flash-cards.single',
+          params: {
+            flashCardSlug: it.slug,
+          },
+        },
       }))"
     />
   </window-base>

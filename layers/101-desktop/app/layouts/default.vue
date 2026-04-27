@@ -21,7 +21,16 @@ import BackgroundImage from '~/assets/images/desktop-background.jpg';
         {
           pito: 'my-documents',
           name: 'Who Am I?',
-          to: { name: 'resume.who-am-i' },
+          to: {
+            name: 'resume.who-am-i',
+          },
+        },
+        {
+          pito: 'address-book',
+          name: 'Learning Center',
+          to: {
+            name: 'desktop.learning-center',
+          },
         },
       ]"
       class="text-inverted"

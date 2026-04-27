@@ -1,6 +1,8 @@
 
 
 const { schema, type, inferred } = parseSchema({
+  'name': 'string',
+  'slug': 'string',
   'owner': 'string',
   'category': 'string',
   'tags?': 'string[]',

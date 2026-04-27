@@ -325,7 +325,7 @@ const effectiveY = computed(() => {
       <template v-if="props.pito">
         <img
           :src="`/pitos/${props.pito}.png`"
-          class="size-6"
+          class="size-6 me-1"
         />
       </template>
 

@@ -39,7 +39,7 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
         .map((it: any) => ({
           accessorKey: it.key,
           header: radTitle(it.key),
-          ref: it.ref,
+          resource: it.resource,
           type: it.type,
           items: it.items,
           labelFormat: it.labelFormat,
@@ -78,9 +78,9 @@ function convertMetaToField(meta: any) {
   };
 
 
-  if (meta.ref) {
+  if (meta.resource) {
     field.identifier = 'resource';
-    field.resource = meta.ref;
+    field.resource = meta.resource;
     field.multiple = meta.type === 'array';
   }
   else if (meta.type === 'array' && meta.items.type === 'string') {

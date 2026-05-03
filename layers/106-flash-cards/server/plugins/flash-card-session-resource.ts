@@ -24,15 +24,15 @@ export default defineNitroPlugin(nitroApp => {
     event.context.flashCardSessions = {
       dbo: createUnifiedResourceController({
         event,
-        collectionName: 'flashCardSessions',
+        resource: 'flashCardSessions',
         schema,
         type,
         meta: {
           flashCard: {
-            ref: 'FlashCard',
+            resource: 'flashCards',
           },
           user: {
-            ref: 'User',
+            resource: 'users',
           },
         },
       }),

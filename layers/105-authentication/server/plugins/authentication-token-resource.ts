@@ -22,7 +22,7 @@ export default defineNitroPlugin(nitroApp => {
     event.context.authenticationTokens = {
       dbo: createUnifiedResourceController({
         event,
-        collectionName: 'authenticationTokens',
+        resource: 'authenticationTokens',
         schema,
         type,
       }),

@@ -2,24 +2,25 @@ import type { H3Event } from 'h3';
 import { type, Type } from 'arktype';
 
 
-interface DocumentCreated {
+type AddIdToNestedArrayObjects<T> = (
+  T extends (infer Item)[]
+    ? Item extends object
+      ? (AddIdToNestedArrayObjects<Item> & { _id: string })[]
+      : T
+    : T extends object
+      ? { [Key in keyof T]: AddIdToNestedArrayObjects<T[Key]> }
+      : T
+);
+
+type UnifiedResourceDocument<T> = AddIdToNestedArrayObjects<T> & {
   _id: string;
   createdAt: number;
   updatedAt?: number;
-}
+};
 
-type AddIdToNestedArrayObjects<T> = T extends (infer Item)[]
-  ? Item extends object
-    ? (AddIdToNestedArrayObjects<Item> & { _id: string })[]
-    : T
-  : T extends object
-    ? { [Key in keyof T]: AddIdToNestedArrayObjects<T[Key]> }
-    : T;
-
-type UnifiedResourceDocument<T> = AddIdToNestedArrayObjects<T> & DocumentCreated;
 
 interface ResourceMeta {
-  ref?: string;
+  resource?: string;
   hidden?: boolean;
   width?: number;
   children?: Record<string, ResourceMeta>;
@@ -28,17 +29,29 @@ interface ResourceMeta {
 
 export interface UnifiedResourceController<T> {
   schema: () => any;
-  list: (args: { filter?: any; sort?: any; skip?: any; limit?: any; }) => Promise<UnifiedResourceDocument<T>[]>;
+  list: (args: { filter?: any; select?: string[]; sort?: any; skip?: any; limit?: any; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T>[]>;
   count: (args: { filter?: any; }) => Promise<number>;
-  find: (args: { resourceId?: string; filter?: any; }) => Promise<UnifiedResourceDocument<T> | undefined>;
-  retrieve: (args: { resourceId?: string; filter?: any; }) => Promise<UnifiedResourceDocument<T>>;
+  find: (args: { resourceId?: string; filter?: any; select?: string[]; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T> | undefined>;
+  retrieve: (args: { resourceId?: string; filter?: any; select?: string[]; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T>>;
   create: (args: { document: T; }) => Promise<UnifiedResourceDocument<T>>;
   update: (args: { resourceId?: string; document: Partial<T>; }) => Promise<UnifiedResourceDocument<T>>;
   delete: (args: { resourceId?: string; }) => Promise<UnifiedResourceDocument<T>>;
 }
 
 
-export function createUnifiedResourceController<T extends object>(props: { event: H3Event; collectionName: string; schema: any, type: Type<T>; meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>> }): UnifiedResourceController<T> {
+const resourceRegistry = new Map<string, any>();
+
+
+export function createUnifiedResourceController<T extends object>(props: { event: H3Event; resource: string; schema: any, type: Type<T>; meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>> }): UnifiedResourceController<T> {
+
+  const collectionName = props.resource;
+
+
+  if (props.meta) {
+    resourceRegistry.set(collectionName, props.meta);
+  }
+
+
   return {
     schema: () => {
 
@@ -68,15 +81,32 @@ export function createUnifiedResourceController<T extends object>(props: { event
     },
     list: async (args) => {
 
-      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(collectionName));
 
 
-      return collection.find(args.filter).sort(args.sort).skip(args.skip).limit(args.limit).toArray() as unknown as UnifiedResourceDocument<T>[];
+      const documents = await collection.find(args.filter).project(!args.select ? undefined : Object.fromEntries(args.select.map(it => [it, 1])) as any).sort(args.sort).skip(args.skip).limit(args.limit).toArray() as unknown as UnifiedResourceDocument<T>[];
+
+
+      if (args.populate) {
+        await Promise.all(
+          documents.map(it =>
+            populateDocument({
+              event: props.event,
+              document: it,
+              resource: props.resource,
+              populate: args.populate!,
+            }),
+          ),
+        );
+      }
+
+
+      return documents;
 
     },
     count: async (args) => {
 
-      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(collectionName));
 
 
       return collection.countDocuments(args.filter);
@@ -84,13 +114,28 @@ export function createUnifiedResourceController<T extends object>(props: { event
     },
     find: async (args) => {
 
-      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(collectionName));
 
 
-      const document = await (args.resourceId ? collection.findOne({ _id: args.resourceId as any }) : collection.findOne(args.filter));
+      const filter = args.resourceId ? { _id: args.resourceId as any } : args.filter;
+      const projection = args.select ? Object.fromEntries(args.select.map(it => [it, 1])) as any : undefined;
+
+      const document = await collection.findOne(filter, {
+        projection,
+      });
 
       if (!document) {
         return undefined;
+      }
+
+
+      if (args.populate) {
+        await populateDocument({
+          event: props.event,
+          document,
+          resource: props.resource,
+          populate: args.populate,
+        });
       }
 
 
@@ -99,13 +144,28 @@ export function createUnifiedResourceController<T extends object>(props: { event
     },
     retrieve: async (args) => {
 
-      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(collectionName));
 
 
-      const document = await (args.resourceId ? collection.findOne({ _id: args.resourceId as any }) : collection.findOne(args.filter));
+      const filter = args.resourceId ? { _id: args.resourceId as any } : args.filter;
+      const projection = args.select ? Object.fromEntries(args.select.map(it => [it, 1])) as any : undefined;
+
+      const document = await collection.findOne(filter, {
+        projection,
+      });
 
       if (!document) {
         throw new Error('document not found');
+      }
+
+
+      if (args.populate) {
+        await populateDocument({
+          event: props.event,
+          document,
+          resource: props.resource,
+          populate: args.populate,
+        });
       }
 
 
@@ -114,7 +174,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
     },
     create: async (args) => {
 
-      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(collectionName));
 
 
       const document = {
@@ -141,7 +201,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
     },
     update: async (args) => {
 
-      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(collectionName));
 
 
       const document = await collection.findOne({ _id: args.resourceId as any });
@@ -182,7 +242,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
     },
     delete: async (args) => {
 
-      const collection = await loadDbClient(props.event).then(it => it.collection(props.collectionName));
+      const collection = await loadDbClient(props.event).then(it => it.collection(collectionName));
 
 
       const document = await collection.findOne({ _id: args.resourceId as any });
@@ -198,6 +258,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
 
     },
   };
+
 }
 
 
@@ -227,6 +288,75 @@ function normalizeDocumentIds(value: any) {
     for (const key in value) {
       normalizeDocumentIds(value[key]);
     }
+  }
+
+}
+
+async function populateDocument(args: { event: H3Event; document: any, resource: string; populate: Record<string, string[]>; }) {
+
+  if (!args.document || typeof args.document !== 'object' || Array.isArray(args.document)) {
+    return;
+  }
+
+
+  for (const key in args.document) {
+
+    const value = args.document[key];
+    const populateFields = args.populate[key];
+    const targetResource = resourceRegistry.get(args.resource)?.[key]?.resource;
+
+    if (typeof value !== 'string' && !Array.isArray(value)) {
+      continue;
+    }
+
+    if (!targetResource || !populateFields) {
+      continue;
+    }
+
+
+    if (typeof value === 'string') {
+
+      args.document[key] = await (args.event.context[targetResource]?.dbo as UnifiedResourceController<any> | undefined)?.find({
+        resourceId: value,
+        select: !populateFields?.[0] ? undefined : populateFields,
+      });
+
+      if (args.document[key]) {
+        await populateDocument({
+          event: args.event,
+          document: args.document[key],
+          resource: targetResource,
+          populate: args.populate,
+        });
+      }
+
+    }
+    else if (Array.isArray(value)) {
+      await Promise.all(
+        value.map(async (it, index) => {
+
+          if (typeof it !== 'string') {
+            return;
+          }
+
+          args.document[key][index] = await (args.event.context[targetResource]?.dbo as UnifiedResourceController<any> | undefined)?.find({
+            resourceId: it,
+            select: !populateFields?.[0] ? undefined : populateFields,
+          });
+
+          if (args.document[key][index]) {
+            await populateDocument({
+              event: args.event,
+              document: args.document[key][index],
+              resource: targetResource,
+              populate: args.populate,
+            });
+          }
+
+        }),
+      );
+    }
+
   }
 
 }

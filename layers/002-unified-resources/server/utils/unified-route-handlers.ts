@@ -17,6 +17,7 @@ export function handleResourceList(args: ResourceHandlerArgs) {
   if (getQuery(args.event)?.single === 'xtruex') {
     return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).find({
       filter: extractFilterFromEvent(args.event),
+      populate: extractPopulateFromEvent(args.event),
     });
   }
   else {
@@ -25,6 +26,7 @@ export function handleResourceList(args: ResourceHandlerArgs) {
       sort: extractSortFromEvent(args.event),
       skip: Number(getQuery(args.event)?.skip ?? 0) || 0,
       limit: Number(getQuery(args.event)?.limit ?? 50) || 50,
+      populate: extractPopulateFromEvent(args.event),
     });
   }
 }
@@ -38,6 +40,7 @@ export function handleResourceCount(args: ResourceHandlerArgs) {
 export function handleResourceRetrieve(args: ResourceHandlerArgs) {
   return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).retrieve({
     resourceId: getRouterParam(args.event, 'resourceId'),
+    populate: extractPopulateFromEvent(args.event),
   });
 }
 
@@ -141,6 +144,24 @@ function extractSortFromEvent(event: H3Event) {
         return acc;
 
       }, {} as Record<string, 1 | -1>)
+  );
+
+}
+
+function extractPopulateFromEvent(event: H3Event): Record<string, string[]> | undefined {
+
+  const populate = getQuery(event)?.populate;
+
+  if (!populate) {
+    return undefined;
+  }
+
+
+  return Object.fromEntries(
+    String(populate)
+      .split(',')
+      .map(it => it.split(':'))
+      .map(([key, value]) => [key, (value || '').split(';')]),
   );
 
 }

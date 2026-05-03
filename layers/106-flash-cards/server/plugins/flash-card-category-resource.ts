@@ -19,7 +19,7 @@ export default defineNitroPlugin(nitroApp => {
     event.context.flashCardCategories = {
       dbo: createUnifiedResourceController({
         event,
-        collectionName: 'flashCardCategories',
+        resource: 'flashCardCategories',
         schema,
         type,
       }),

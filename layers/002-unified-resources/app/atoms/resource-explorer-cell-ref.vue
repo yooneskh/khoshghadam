@@ -19,11 +19,11 @@ const tickle = ref(0);
 
 
 const { fields } = useResourceMeta({
-  resource: () => props.column.ref,
+  resource: () => props.column.resource,
 });
 
 const { title, resourcePath } = useResourceName({
-  resource: () => props.column.ref,
+  resource: () => props.column.resource,
 });
 
 
@@ -31,32 +31,12 @@ const resourceData = asyncComputed(async () => {
 
   tickle.value;
 
-  if (!props.column.ref || !props.data) {
+  if (!props.column.resource || !props.data) {
     return;
   }
 
 
   return ufetch(`/${resourcePath.value}/${props.data}`);
-
-});
-
-const resourceTitle = asyncComputed(async () => {
-
-  tickle.value;
-
-  if (!props.column.ref || !props.data || !props.data?.length) {
-    return '';
-  }
-
-
-  const resources = await Promise.all(
-    radCastArray(props.data).map(async it =>
-      ufetch(`/${resourcePath.value}/${it}`),
-    ),
-  );
-
-
-  return resources.map(it => it.name).join(' - ');
 
 });
 
@@ -94,7 +74,12 @@ async function handleResourceClick() {
 
 
 <template>
-  <a class="text-primary underline cursor-pointer" @click="handleResourceClick()">
-    {{ resourceTitle }}
-  </a>
+  <template v-if="!resourceData && props.data">
+    <un-spinner />
+  </template>
+  <template v-else>
+    <a class="text-primary underline cursor-pointer" @click="handleResourceClick()">
+      {{ resourceData.name }}
+    </a>
+  </template>
 </template>

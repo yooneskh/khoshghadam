@@ -21,7 +21,7 @@ export default defineNitroPlugin(nitroApp => {
     event.context.users = {
       dbo: createUnifiedResourceController({
         event,
-        collectionName: 'users',
+        resource: 'users',
         schema,
         type,
         meta: {

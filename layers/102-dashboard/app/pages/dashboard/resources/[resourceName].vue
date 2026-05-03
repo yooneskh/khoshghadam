@@ -19,9 +19,7 @@ const { resource, resourcePath, title, titlePlural } = useResourceName({
 
 
 useHead({
-  title: computed(() => {
-    return `${titlePlural.value} - Resources`;
-  }),
+  title: titlePlural,
 });
 
 

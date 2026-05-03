@@ -13,7 +13,7 @@ const props = defineProps({
 import ResourceExplorerCell from '~/atoms/resource-explorer-cell.vue';
 
 
-const itemsPerPage = ref(5);
+const itemsPerPage = ref(20);
 const currentPage = ref(1);
 
 

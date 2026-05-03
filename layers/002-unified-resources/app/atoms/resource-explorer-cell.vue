@@ -36,7 +36,7 @@ async function handleViewItems() {
 
 <template>
 
-  <template v-if="props.column.ref">
+  <template v-if="props.column.resource">
     <div class="flex flex-wrap gap-2">
       <template v-for="item of radCastArray(props.data || [])" :key="item">
         <resource-explorer-cell-ref

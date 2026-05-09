@@ -93,7 +93,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
             populateDocument({
               event: props.event,
               document: it,
-              resource: props.resource,
+              meta: props.meta,
               populate: args.populate!,
             }),
           ),
@@ -133,7 +133,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
         await populateDocument({
           event: props.event,
           document,
-          resource: props.resource,
+          meta: props.meta,
           populate: args.populate,
         });
       }
@@ -163,7 +163,7 @@ export function createUnifiedResourceController<T extends object>(props: { event
         await populateDocument({
           event: props.event,
           document,
-          resource: props.resource,
+          meta: props.meta,
           populate: args.populate,
         });
       }
@@ -292,9 +292,9 @@ function normalizeDocumentIds(value: any) {
 
 }
 
-async function populateDocument(args: { event: H3Event; document: any, resource: string; populate: Record<string, string[]>; }) {
+async function populateDocument(args: { event: H3Event; document: any, meta: any, populate: Record<string, string[]>; parents?: string[] }) {
 
-  if (!args.document || typeof args.document !== 'object' || Array.isArray(args.document)) {
+  if (!args.document || typeof args.document !== 'object' || Array.isArray(args.document) || !args.meta) {
     return;
   }
 
@@ -302,21 +302,24 @@ async function populateDocument(args: { event: H3Event; document: any, resource:
   for (const key in args.document) {
 
     const value = args.document[key];
-    const populateFields = args.populate[key];
-    const targetResource = resourceRegistry.get(args.resource)?.[key]?.resource;
+    const populatePath = [...(args.parents ?? []), key];
+    const keyExactMatch = Object.keys(args.populate).find(it => it === populatePath.join('.'));
+    const keyPreMatch = Object.keys(args.populate).find(it => it.startsWith(populatePath.join('.')));
+    const populateFields = keyExactMatch ? args.populate[populatePath.join('.')] : keyPreMatch ? [''] : undefined;
+    const targetMeta = args.meta[key];
 
     if (typeof value !== 'string' && !Array.isArray(value)) {
       continue;
     }
 
-    if (!targetResource || !populateFields) {
+    if (!targetMeta || !populateFields || (!targetMeta.resource && !targetMeta.children)) {
       continue;
     }
 
 
-    if (typeof value === 'string') {
+    if (typeof value === 'string' && targetMeta.resource) {
 
-      args.document[key] = await (args.event.context[targetResource]?.dbo as UnifiedResourceController<any> | undefined)?.find({
+      args.document[key] = await (args.event.context[targetMeta.resource]?.dbo as UnifiedResourceController<any> | undefined)?.find({
         resourceId: value,
         select: !populateFields?.[0] ? undefined : populateFields,
       });
@@ -325,8 +328,9 @@ async function populateDocument(args: { event: H3Event; document: any, resource:
         await populateDocument({
           event: args.event,
           document: args.document[key],
-          resource: targetResource,
+          meta: resourceRegistry.get(targetMeta.resource),
           populate: args.populate,
+          parents: populatePath,
         });
       }
 
@@ -334,25 +338,33 @@ async function populateDocument(args: { event: H3Event; document: any, resource:
     else if (Array.isArray(value)) {
       await Promise.all(
         value.map(async (it, index) => {
+          if (typeof it === 'string' && targetMeta.resource) {
 
-          if (typeof it !== 'string') {
-            return;
+            args.document[key][index] = await (args.event.context[targetMeta.resource]?.dbo as UnifiedResourceController<any> | undefined)?.find({
+              resourceId: it,
+              select: !populateFields?.[0] ? undefined : populateFields,
+            });
+
+            if (args.document[key][index]) {
+              await populateDocument({
+                event: args.event,
+                document: args.document[key][index],
+                meta: resourceRegistry.get(targetMeta.resource),
+                populate: args.populate,
+                parents: populatePath,
+              });
+            }
+
           }
-
-          args.document[key][index] = await (args.event.context[targetResource]?.dbo as UnifiedResourceController<any> | undefined)?.find({
-            resourceId: it,
-            select: !populateFields?.[0] ? undefined : populateFields,
-          });
-
-          if (args.document[key][index]) {
+          else if (it && typeof it === 'object' && targetMeta.children) {
             await populateDocument({
               event: args.event,
-              document: args.document[key][index],
-              resource: targetResource,
+              document: it,
+              meta: targetMeta.children,
               populate: args.populate,
+              parents: populatePath,
             });
           }
-
         }),
       );
     }

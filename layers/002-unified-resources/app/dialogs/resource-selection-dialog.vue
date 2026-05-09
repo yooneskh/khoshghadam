@@ -106,7 +106,7 @@ async function handleSubmitSelection(items) {
           :resource="props.resource"
           :actions="[
             {
-              vIf: it => !props.multiple && !currentItems.includes(it._id),
+              vIf: it => !props.multiple || !currentItems.includes(it._id),
               icon: 'lucide:check',
               label: 'Select',
               onClick: handleSelectResource,

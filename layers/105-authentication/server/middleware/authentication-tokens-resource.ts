@@ -17,15 +17,13 @@ declare module 'h3' {
 }
 
 
-export default defineNitroPlugin(nitroApp => {
-  nitroApp.hooks.hook('request', event => {
-    event.context.authenticationTokens = {
-      dbo: createUnifiedResourceController({
-        event,
-        resource: 'authenticationTokens',
-        schema,
-        type,
-      }),
-    };
-  });
+export default defineEventHandler(event => {
+  event.context.authenticationTokens = {
+    dbo: createUnifiedResourceController({
+      event,
+      resource: 'authenticationTokens',
+      schema,
+      type,
+    }),
+  };
 });

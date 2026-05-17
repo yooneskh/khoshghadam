@@ -22,6 +22,7 @@ type UnifiedResourceDocument<T> = AddIdToNestedArrayObjects<T> & {
 interface ResourceMeta {
   resource?: string;
   hidden?: boolean;
+  hideInTable?: boolean;
   width?: number;
   children?: Record<string, ResourceMeta>;
 }

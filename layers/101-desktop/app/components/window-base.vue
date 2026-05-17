@@ -5,6 +5,8 @@
 const props = defineProps({
   pito: String,
   title: String,
+  loading: Boolean,
+  actions: Array,
 });
 
 
@@ -19,8 +21,8 @@ const { width: windowWidth, height: windowHeight } = useWindowSize();
 
 /* movement */
 
-const width = ref(1024);
-const height = ref(768);
+const width = ref(768);
+const height = ref(512);
 const minWidth = ref(400);
 const minHeight = ref(300);
 
@@ -357,11 +359,38 @@ const effectiveY = computed(() => {
     </header>
 
     <div
-      class="h-0 grow overflow-y-auto"
+      class="h-0 grow flex flex-col"
       :class="{
         'tablet:border-x-3 tablet:border-b-3 tablet:border-[#0059F4]': !isMaximized,
       }">
-      <slot />
+
+      <!-- <div /> to be filled with actions strip -->
+
+      <div class="h-0 grow overflow-y-auto">
+        <template v-if="props.loading">
+          <div class="h-full w-full flex items-center justify-center">
+            <un-spinner />
+          </div>
+        </template>
+        <template v-else>
+          <slot />
+        </template>
+      </div>
+
+      <template v-if="props.actions?.length">
+        <div class="flex items-center justify-end gap-2 p-2 border-t border-default">
+          <slot name="actions">
+            <template v-for="action in props.actions" :key="action.label">
+              <u-button
+                variant="subtle"
+                v-bind="action"
+                loading-auto
+              />
+            </template>
+          </slot>
+        </div>
+      </template>
+
     </div>
 
   </div>

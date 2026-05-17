@@ -14,7 +14,7 @@ useSeoMeta({
 
 /* flash cards */
 
-const { data: flashCardsData } = useUFetch(
+const { data: flashCardsData, pending: isFlashCardsPending } = useUFetch(
   '/api/flash-cards',
 );
 
@@ -24,7 +24,8 @@ const { data: flashCardsData } = useUFetch(
 <template>
   <window-base
     pito="address-book"
-    title="Flash Cards">
+    title="Flash Cards"
+    :loading="isFlashCardsPending">
     <entries-grid
       :items="flashCardsData?.map(it => ({
         pito: 'folder-opened',

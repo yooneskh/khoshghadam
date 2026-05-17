@@ -35,7 +35,7 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
   const columns = computed(() => {
     return [
       ...(meta.value
-        .filter((it: any) => !it.hidden)
+        .filter((it: any) => !it.hidden && !it.hideInTable)
         .map((it: any) => ({
           accessorKey: it.key,
           header: radTitle(it.key),

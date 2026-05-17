@@ -5,6 +5,7 @@ const { schema, type, inferred } = parseSchema({
   'slug': 'string',
   'owner': 'string',
   'category': 'string',
+  'description': 'string',
   'tags?': 'string[]',
   'cards': [{
     'frontText': 'string',
@@ -35,6 +36,9 @@ export default defineEventHandler(event => {
         },
         category: {
           resource: 'flashCardCategories',
+        },
+        description: {
+          hideInTable: true,
         },
         cards: {
           children: {

@@ -6,14 +6,11 @@ definePageMeta({
   name: 'flash-cards.single',
 });
 
-useSeoMeta({
-  title: 'Flash Card',
-  description: 'Flash cards are a great way to learn new information.',
-});
 
+const route = useRoute();
 
 const flashCardSlug = computed(() => {
-  return useRoute().params.flashCardSlug;
+  return route.params.flashCardSlug;
 });
 
 
@@ -29,6 +26,12 @@ const { data: flashCardData, pending: isFlashCardPending } = useUFetch(
     },
   },
 );
+
+
+useSeoMeta({
+  title: () => flashCardData.value?.name || 'Flash Cards',
+  description: () => flashCardData.value?.description || 'Flash cards are a great way to learn new information.',
+});
 
 </script>
 

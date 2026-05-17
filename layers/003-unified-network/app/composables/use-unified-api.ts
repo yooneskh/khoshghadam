@@ -1,9 +1,22 @@
 
 
+declare module 'ofetch' {
+  interface FetchOptions {
+    enabled?: MaybeRefOrGetter<boolean>;
+  }
+}
+
+
 export const ufetch = $fetch.create({
 
-  onRequest: ({ options }) => {
-    options.baseURL = '/api';
+  onRequest: args => {
+
+    args.options.baseURL = '/api';
+
+    if ('enabled' in args.options && !toValue(args.options.enabled)) {
+      (args as any).request = undefined;
+    }
+
   },
 
   onRequestError: async ({ options, request, response }) => {

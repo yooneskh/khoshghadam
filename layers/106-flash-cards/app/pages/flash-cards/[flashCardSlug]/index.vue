@@ -29,8 +29,8 @@ const { data: flashCardData, pending: isFlashCardPending } = useUFetch(
 
 
 useSeoMeta({
-  title: () => flashCardData.value?.name || 'Flash Cards',
-  description: () => flashCardData.value?.description || 'Flash cards are a great way to learn new information.',
+  title: () => flashCardData.value?.name,
+  description: () => flashCardData.value?.description,
 });
 
 </script>
@@ -39,13 +39,19 @@ useSeoMeta({
 <template>
   <window-base
     pito="address-book"
-    title="Flash Cards"
+    :title="`${flashCardData?.name || '-'}`"
     :loading="isFlashCardPending"
     :actions="[
       {
         icon: 'lucide:play',
         label: 'Start Learning',
-      }
+        to: {
+          name: 'flash-cards.single.learn',
+          params: {
+            flashCardSlug: flashCardSlug,
+          },
+        },
+      },
     ]">
     <div class="p-2">
       <h1 class="text-2xl font-bold">

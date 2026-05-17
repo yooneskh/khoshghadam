@@ -21,8 +21,8 @@ const { width: windowWidth, height: windowHeight } = useWindowSize();
 
 /* movement */
 
-const width = ref(768);
-const height = ref(512);
+const width = ref(800);
+const height = ref(600);
 const minWidth = ref(400);
 const minHeight = ref(300);
 

@@ -3,56 +3,49 @@
 declare module 'ofetch' {
   interface FetchOptions {
     enabled?: MaybeRefOrGetter<boolean>;
+    silent?: boolean;
+    handled?: boolean;
   }
 }
 
 
+function onRequest(args: any) {
+
+  args.options.baseURL = '/api';
+
+  if ('enabled' in args.options && !toValue(args.options.enabled)) {
+    args.options.handled = true;
+    throw new Error('request is aborted');
+  }
+
+}
+
+
 export const ufetch = $fetch.create({
-
-  onRequest: args => {
-
-    args.options.baseURL = '/api';
-
-    if ('enabled' in args.options && !toValue(args.options.enabled)) {
-      (args as any).request = undefined;
-    }
-
-  },
-
-  onRequestError: async ({ options, request, response }) => {
-    await generalHandler(options, request, response)
-  },
-  onResponse: async ({ options, request, response }) => {
-    await generalHandler(options, request, response)
-  },
-  onResponseError: async ({ options, request, response }) => {
-    await generalHandler(options, request, response)
-  },
-
+  onRequest,
+  onRequestError: generalHandler,
+  onResponse: generalHandler,
+  onResponseError: generalHandler,
 });
 
 export const useUFetch = createUseFetch(callerOptions => ({
-  $fetch: ufetch as typeof $fetch,
+  onRequest,
   ...callerOptions,
 }));
 
 
-async function generalHandler(options: any, request: any, response: any) {
+function generalHandler(args: any) {
 
-  if (typeof request === 'string' && request.includes('/schema')) {
-    return;
-  }
-
-  if (options.handled || [200, 201, 202, 204].includes(response?.status) || options.silent) {
+  if (args.options.handled || args.options.silent || [200, 201, 202, 204].includes(args.response?.status)) {
     return;
   }
 
 
   toastError({
-    title: response?._data?.message ?? 'There was a problem. Please try again.',
+    title: args.response?._data?.message ?? 'There was a problem. Please try again.',
   });
 
 
-  options.handled = true;
+  args.options.handled = true;
 
 }

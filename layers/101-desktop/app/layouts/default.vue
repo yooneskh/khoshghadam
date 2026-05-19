@@ -32,6 +32,13 @@ import BackgroundImage from '~/assets/images/desktop-background.jpg';
             name: 'desktop.learning-center',
           },
         },
+        {
+          pito: 'briefcase',
+          name: 'Account Details',
+          to: {
+            name: 'authentication.account',
+          },
+        },
       ]"
       class="text-inverted"
     />
@@ -58,8 +65,8 @@ import BackgroundImage from '~/assets/images/desktop-background.jpg';
           drop-shadow-[1px_0_2px_rgba(0,0,0,0.5)]
         ">
 
-        <span class="text-xl text-inverted font-semibold drop-shadow-[2px_2px_1px_black]">
-          start
+        <span class="text-xl text-inverted font-semibold space drop-shadow-[2px_2px_1px_black]">
+          begin
         </span>
 
       </div>

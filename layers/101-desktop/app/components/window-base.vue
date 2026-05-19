@@ -327,7 +327,7 @@ const effectiveY = computed(() => {
       <template v-if="props.pito">
         <img
           :src="`/pitos/${props.pito}.png`"
-          class="size-6 me-1"
+          class="size-7 me-1"
         />
       </template>
 
@@ -337,24 +337,18 @@ const effectiveY = computed(() => {
 
       <div class="grow" />
 
-      <u-button
-        variant="solid"
-        :icon="!isMaximized ? 'lucide:maximize' : 'lucide:minimize'"
-        color="info"
-        size="sm"
-        class="max-tablet:hidden"
+      <img
+        :src="!isMaximized ? '/pitos/maximize.png' : '/pitos/restore.png'"
+        class="size-7 max-tablet:hidden"
         @click="isMaximized = !isMaximized;"
       />
 
-      <u-button
-        variant="solid"
-        icon="lucide:x"
-        color="error"
-        size="sm"
-        :to="{
-          name: 'desktop.home',
-        }"
-      />
+      <nuxt-link :to="{ name: 'desktop.home' }">
+        <img
+          src="/pitos/exit.png"
+          class="size-7"
+        />
+      </nuxt-link>
 
     </header>
 
@@ -381,11 +375,19 @@ const effectiveY = computed(() => {
         <div class="flex items-center justify-end gap-2 p-2 border-t border-default">
           <slot name="actions">
             <template v-for="action in props.actions" :key="action.label">
-              <u-button
-                variant="subtle"
-                v-bind="action"
-                loading-auto
-              />
+
+              <template v-if="action.type === 'spacer'">
+                <div class="grow" />
+              </template>
+
+              <template v-else>
+                <u-button
+                  variant="subtle"
+                  v-bind="action"
+                  loading-auto
+                />
+              </template>
+
             </template>
           </slot>
         </div>

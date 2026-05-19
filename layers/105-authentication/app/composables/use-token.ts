@@ -1,8 +1,7 @@
 
 
 export function useToken() {
-  return useLocalStorage(
+  return useCookie(
     `--${useAppConfig().brand.id}-authentication-token--`,
-    '',
   );
 }

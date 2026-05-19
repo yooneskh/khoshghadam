@@ -13,20 +13,35 @@ export default defineEventHandler(async event => {
   if (!user) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Invalid credentials',
+      statusMessage: 'invalid credentials',
     });
   }
 
 
-  if (!await verifyPassword(body.password, user.password)) {
+  const userPassword = await event.context.userPasswords.dbo.find({
+    filter: {
+      user: user._id,
+      isActive: true,
+    },
+  });
+
+  if (!userPassword) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Invalid credentials',
+      statusMessage: 'invalid credentials',
     });
   }
 
 
-  const authenticationToken = await event.context.authenticationTokens.dbo.create({
+  if (!await verifyPassword(body.password, userPassword.passwordHash)) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'invalid credentials',
+    });
+  }
+
+
+  return event.context.authenticationTokens.dbo.create({
     document: {
       user: user._id,
       token: generateUuid(),
@@ -34,8 +49,5 @@ export default defineEventHandler(async event => {
       isActive: true,
     },
   });
-
-
-  return authenticationToken;
 
 });

@@ -2,6 +2,9 @@
 
 /* navigation */
 
+const user = useUser();
+
+
 const navigationItems = computed(() => {
   return [
     {
@@ -96,8 +99,8 @@ const navigationItems = computed(() => {
             :items="[
               {
                 icon: 'lucide:user',
-                label: 'Admin Name',
-                description: 'admin@example.com',
+                label: user?.name,
+                description: user?.username,
               },
               {
                 color: 'error',

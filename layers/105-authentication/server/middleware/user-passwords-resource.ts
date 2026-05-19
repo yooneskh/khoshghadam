@@ -1,14 +1,15 @@
 
 
 const { schema, type, inferred } = parseSchema({
-  'name': 'string',
-  'username': 'string',
+  'user': 'string',
+  'passwordHash': 'string',
+  'isActive': 'boolean',
 });
 
 
 declare module 'h3' {
   interface H3EventContext {
-    users: {
+    userPasswords: {
       dbo: UnifiedResourceController<typeof inferred>;
     };
   }
@@ -16,12 +17,17 @@ declare module 'h3' {
 
 
 export default defineEventHandler(event => {
-  event.context.users = {
+  event.context.userPasswords = {
     dbo: createUnifiedResourceController({
       event,
-      resource: 'users',
+      resource: 'userPasswords',
       schema,
       type,
+      meta: {
+        user: {
+          resource: 'users',
+        },
+      },
     }),
   };
 });

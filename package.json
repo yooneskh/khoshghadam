@@ -17,10 +17,10 @@
     "arktype": "2.2.0",
     "bcryptjs": "3.0.3",
     "mongodb": "7.2.0",
-    "nuxt": "4.4.5",
+    "nuxt": "4.4.6",
     "nuxt-gtag": "4.1.0",
     "nuxt-jsonld": "2.2.1",
-    "nuxt-unified-ui": "0.4.4",
+    "nuxt-unified-ui": "0.4.5",
     "vue": "3.5.34"
   }
 }

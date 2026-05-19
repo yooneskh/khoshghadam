@@ -13,9 +13,15 @@ function onRequest(args: any) {
 
   args.options.baseURL = '/api';
 
+
   if ('enabled' in args.options && !toValue(args.options.enabled)) {
     args.options.handled = true;
     throw new Error('request is aborted');
+  }
+
+
+  if (useToken().value) {
+    args.options.headers.set('authorization', useToken().value);
   }
 
 }

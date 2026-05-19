@@ -14,7 +14,7 @@ export async function assertUser(event: H3Event) {
   if (!authenticationToken) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Unauthorized',
+      statusMessage: 'unauthorized',
     });
   }
 
@@ -26,7 +26,7 @@ export async function assertUser(event: H3Event) {
   if (!user) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Unauthorized',
+      statusMessage: 'unauthorized',
     });
   }
 

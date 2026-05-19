@@ -14,7 +14,7 @@ export default defineEventHandler(async event => {
   if (oldUser) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'User already exists',
+      statusMessage: 'user already exists',
     });
   }
 
@@ -23,11 +23,19 @@ export default defineEventHandler(async event => {
     document: {
       name: body.name,
       username: body.username,
-      password: await hashPassword(body.password),
     },
   });
 
-  const authenticationToken = await event.context.authenticationTokens.dbo.create({
+  await event.context.userPasswords.dbo.create({
+    document: {
+      user: newUser._id,
+      passwordHash: await hashPassword(body.password),
+      isActive: true,
+    },
+  });
+
+
+  return event.context.authenticationTokens.dbo.create({
     document: {
       user: newUser._id,
       token: generateUuid(),
@@ -35,8 +43,5 @@ export default defineEventHandler(async event => {
       isActive: true,
     },
   });
-
-
-  return authenticationToken;
 
 });

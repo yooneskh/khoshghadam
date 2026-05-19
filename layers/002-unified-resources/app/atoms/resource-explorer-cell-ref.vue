@@ -16,6 +16,7 @@ const emit = defineEmits([
 /* resource */
 
 const tickle = ref(0);
+const isLoading = ref(false);
 
 
 const { fields } = useResourceMeta({
@@ -36,7 +37,20 @@ const resourceData = asyncComputed(async () => {
   }
 
 
-  return ufetch(`/${resourcePath.value}/${props.data}`);
+  try {
+
+    isLoading.value = true;
+
+    const value = await ufetch(`/${resourcePath.value}/${props.data}`, {
+      silent: true,
+    });
+
+    return value;
+
+  }
+  finally {
+    isLoading.value = false;
+  }
 
 });
 
@@ -74,8 +88,16 @@ async function handleResourceClick() {
 
 
 <template>
-  <template v-if="!resourceData && props.data">
+  <template v-if="isLoading">
     <un-spinner />
+  </template>
+  <template v-else-if="!resourceData">
+    <u-tooltip text="Deleted">
+      <u-icon
+        name="lucide:triangle-alert"
+        class="text-error"
+      />
+    </u-tooltip>
   </template>
   <template v-else>
     <a class="text-primary underline cursor-pointer" @click="handleResourceClick()">

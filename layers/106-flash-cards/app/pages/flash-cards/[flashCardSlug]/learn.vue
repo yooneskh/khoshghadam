@@ -38,6 +38,64 @@ useSeoMeta({
 const activeIndex = ref(0);
 const rotatedIndex = ref(-1);
 
+
+/* session */
+
+const user = useUser();
+const flashCardSession = ref();
+
+
+watchImmediate([user, flashCardData], async () => {
+
+  if (!user.value || !flashCardData.value) {
+    return;
+  }
+
+
+  flashCardSession.value = await ufetch('/api/flash-card-sessions', {
+    method: 'post',
+    body: {
+      flashCard: flashCardData.value._id,
+      user: user.value._id,
+      answeredCards: [],
+    },
+  });
+
+});
+
+
+async function handleCardAdvance() {
+
+  if (flashCardSession.value) {
+    flashCardSession.value = await ufetch(`/api/flash-card-sessions/${flashCardSession.value._id}`, {
+      method: 'patch',
+      body: {
+        answeredCards: [
+          ...flashCardSession.value.answeredCards,
+          {
+            card: flashCardData.value.cards[activeIndex.value]._id,
+            opened: rotatedIndex.value === activeIndex.value,
+          },
+        ],
+      },
+    });
+  }
+
+
+  if (activeIndex.value < flashCardData.value.cards.length - 1) {
+    activeIndex.value += 1;
+  }
+  else {
+    await navigateTo({
+      name: 'flash-cards.single',
+      params: {
+        flashCardSlug: flashCardSlug.value,
+      },
+    });
+  }
+
+}
+
 </script>
 
 
@@ -50,13 +108,7 @@ const rotatedIndex = ref(-1);
       {
         variant: 'subtle',
         label: activeIndex < flashCardData?.cards.length - 1 ? 'Next' : 'Finish',
-        onClick: activeIndex === flashCardData?.cards.length - 1 ? undefined : () => activeIndex++,
-        to: activeIndex < flashCardData?.cards.length - 1 ? undefined : {
-          name: 'flash-cards.single',
-          params: {
-            flashCardSlug,
-          },
-        },
+        onClick: handleCardAdvance,
       },
     ]">
     <div class="h-full w-full flex items-center justify-center">

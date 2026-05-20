@@ -68,7 +68,7 @@ useSeoMeta({
           />
         </template>
       </div>
-      <p class="mt-3">
+      <p class="mt-4">
         {{ flashCardData?.description }}
       </p>
     </div>

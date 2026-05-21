@@ -1,5 +1,12 @@
 <script setup>
 
+/* seo */
+
+useSeoMeta({
+  robots: 'noindex, nofollow',
+});
+
+
 /* navigation */
 
 const user = useUser();

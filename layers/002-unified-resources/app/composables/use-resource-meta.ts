@@ -90,6 +90,9 @@ function convertMetaToField(meta: any) {
     field.identifier = 'series';
     field.itemFields = meta.items.properties.map(convertMetaToField);
   }
+  else if (meta.longText) {
+    field.identifier = 'textarea';
+  }
 
 
   return field;

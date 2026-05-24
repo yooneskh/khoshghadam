@@ -42,11 +42,8 @@ export default defineEventHandler(event => {
         },
         cards: {
           children: {
-            frontText: {
-              width: 6,
-            },
             backText: {
-              width: 6,
+              longText: true,
             },
           },
         },

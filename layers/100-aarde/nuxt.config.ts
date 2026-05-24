@@ -24,7 +24,15 @@ export default defineNuxtConfig({
   ],
 
   sitemap: {
-    zeroRuntime: true,
+
+    exclude: [
+      '/dashboard/**',
+    ],
+
+    sources: [
+      '/api/sitemap-urls',
+    ],
+
   },
 
 });

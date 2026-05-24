@@ -38,6 +38,9 @@ async function handleResourceCreate() {
     title: `Create ${title.value}`,
     subtitle: 'Create a new resource',
     text: `Fill in the form below to create a new ${title.value}.`,
+    modalOptions: {
+      scrollable: true,
+    },
     fields: fields.value,
     submitButton: {
       icon: 'lucide:plus',
@@ -66,6 +69,9 @@ async function handleResourceUpdate(resource) {
     title: `Update ${title.value}`,
     subtitle: resource._id,
     text: `Update the information and click submit to save.`,
+    modalOptions: {
+      scrollable: true,
+    },
     fields: fields.value,
     initialForm: radOmit(resource, ['_id', 'createdAt', 'updatedAt']),
     submitButton: {

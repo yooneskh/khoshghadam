@@ -5,15 +5,23 @@ import { UnifiedResourceController } from './create-unified-resource-controller'
 interface ResourceHandlerArgs {
   resource: string;
   event: H3Event;
+  permission?: string;
 }
 
 
-export function handleResourceSchema(args: ResourceHandlerArgs) {
+export async function handleResourceSchema(args: ResourceHandlerArgs) {
+
+  await ensureUserPermission(args);
+
   return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).schema();
+
 }
 
 
-export function handleResourceList(args: ResourceHandlerArgs) {
+export async function handleResourceList(args: ResourceHandlerArgs) {
+
+  await ensureUserPermission(args);
+
   if (getQuery(args.event)?.single === 'xtruex') {
     return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).find({
       filter: extractFilterFromEvent(args.event),
@@ -29,38 +37,59 @@ export function handleResourceList(args: ResourceHandlerArgs) {
       populate: extractPopulateFromEvent(args.event),
     });
   }
+
 }
 
-export function handleResourceCount(args: ResourceHandlerArgs) {
+export async function handleResourceCount(args: ResourceHandlerArgs) {
+
+  await ensureUserPermission(args);
+
   return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).count({
     filter: extractFilterFromEvent(args.event),
   });
+
 }
 
-export function handleResourceRetrieve(args: ResourceHandlerArgs) {
+export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
+
+  await ensureUserPermission(args);
+
   return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).retrieve({
     resourceId: getRouterParam(args.event, 'resourceId'),
     populate: extractPopulateFromEvent(args.event),
   });
+
 }
 
 export async function handleResourceCreate(args: ResourceHandlerArgs) {
+
+  await ensureUserPermission(args);
+
   return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).create({
     document: await readBody(args.event),
   });
+
 }
 
 export async function handleResourceUpdate(args: ResourceHandlerArgs) {
+
+  await ensureUserPermission(args);
+
   return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).update({
     resourceId: getRouterParam(args.event, 'resourceId'),
     document: await readBody(args.event),
   });
+
 }
 
-export function handleResourceDelete(args: ResourceHandlerArgs) {
+export async function handleResourceDelete(args: ResourceHandlerArgs) {
+
+  await ensureUserPermission(args);
+
   return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).delete({
     resourceId: getRouterParam(args.event, 'resourceId'),
   });
+
 }
 
 
@@ -163,5 +192,34 @@ function extractPopulateFromEvent(event: H3Event): Record<string, string[]> | un
       .map(it => it.split(':'))
       .map(([key, value]) => [key, (value || '').split(';')]),
   );
+
+}
+
+
+async function ensureUserPermission(args: ResourceHandlerArgs) {
+
+  if (!args.permission) {
+    return;
+  }
+
+
+  const user = await assertUser(args);
+
+  if (!user || !user.permissions?.length) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'unauthorized',
+    });
+  }
+
+
+  const hasPermission = user.permissions.includes(args.permission);
+
+  if (!hasPermission) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'unauthorized',
+    });
+  }
 
 }

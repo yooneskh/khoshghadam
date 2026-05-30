@@ -1,5 +1,8 @@
 
 
 export default defineEventHandler(async event => {
-  return await assertUser(event);
+  return assertUser({
+    event,
+    fillPermissions: true,
+  });
 });

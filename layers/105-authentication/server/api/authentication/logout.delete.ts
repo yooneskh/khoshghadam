@@ -2,7 +2,7 @@
 
 export default defineEventHandler(async event => {
 
-  const user = await assertUser(event);
+  const user = await assertUser({ event });
 
 
   const authenticationTokens = await event.context.authenticationTokens.dbo.list({

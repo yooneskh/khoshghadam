@@ -33,6 +33,16 @@ useSeoMeta({
   description: () => flashCardData.value?.description,
 });
 
+
+/* sessions */
+
+const { data: sessionsData } = useUFetch(
+  '/api/flash-card-sessions/mine',
+  {
+    enabled: useIsUserAuthenticated(),
+  },
+);
+
 </script>
 
 
@@ -53,14 +63,15 @@ useSeoMeta({
         },
       },
     ]">
-    <div class="p-2">
+
+    <div class="p-3">
       <h1 class="text-2xl font-bold">
         {{ flashCardData?.name }}
       </h1>
-      <h2>
+      <h2 class="mt-1">
         {{ flashCardData?.category?.name }} - by {{ flashCardData?.owner?.name }}
       </h2>
-      <div class="flex items-center gap-2 mt-1">
+      <div class="flex items-center gap-3 mt-2">
         <template v-for="tag of flashCardData?.tags" :key="tag">
           <u-badge
             variant="subtle"
@@ -72,5 +83,37 @@ useSeoMeta({
         {{ flashCardData?.description }}
       </p>
     </div>
+
+    <template v-if="sessionsData?.length">
+      <div class="p-3 border-t border-default">
+
+        <p>
+          Your past sessions
+        </p>
+
+        <div class="mt-3 space-y-3">
+          <template v-for="session of sessionsData" :key="session._id">
+            <div class="flex items-center gap-3">
+              <div class="flex flex-wrap items-center gap-1">
+                <template v-for="answer of session.answeredCards" :key="answer._id">
+                  <u-tooltip :text="flashCardData?.cards?.find(it => it._id === answer.card)?.frontText">
+                    <u-badge
+                      :color="answer.opened ? 'warning' : 'success'"
+                      class="size-3"
+                    />
+                  </u-tooltip>
+                </template>
+              </div>
+              <div class="grow" />
+              <span class="text-xs tabular-nums">
+                {{ formatDate(session.createdAt) }}
+              </span>
+            </div>
+          </template>
+        </div>
+
+      </div>
+    </template>
+
   </window-base>
 </template>

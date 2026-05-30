@@ -45,6 +45,34 @@ const user = useUser();
 const flashCardSession = ref();
 
 
+const { data: previousSessionsData } = useUFetch(
+  '/api/flash-card-sessions/mine',
+  {
+    enabled: useIsUserAuthenticated(),
+  },
+);
+
+
+const cardsSessions = computed(() => {
+
+  if (!flashCardData.value || !previousSessionsData.value) {
+    return;
+  }
+
+
+  return Object.fromEntries(
+    flashCardData.value.cards.map(it => [
+      it._id,
+      previousSessionsData.value.map(i => ({
+        opened: i.answeredCards.find(x => x.card === it._id)?.opened,
+        createdAt: i.createdAt,
+      })),
+    ]),
+  );
+
+});
+
+
 watchImmediate([user, flashCardData], async () => {
 
   if (!user.value || !flashCardData.value) {
@@ -123,22 +151,38 @@ async function handleCardAdvance() {
               'left-1/2 -translate-x-1/2': index === activeIndex,
               'left-full translate-x-0': index > activeIndex,
             }">
+
             <div
               class="relative w-full h-full transition-transform duration-1000 transform-3d"
               :class="{
                 'rotate-y-180': index === rotatedIndex
               }">
-              <div class="absolute w-full h-full flex items-center justify-center bg-elevated border border-default rounded-xl backface-hidden" @click="rotatedIndex = index;">
-                <span class="text-2xl font-medium">
+
+              <div class="absolute w-full h-full flex flex-col items-center justify-center bg-elevated border border-default rounded-xl backface-hidden" @click="rotatedIndex = index;">
+                <div class="text-2xl font-medium">
                   {{ card.frontText }}
-                </span>
+                </div>
+                <template v-if="cardsSessions?.[card._id]">
+                  <div class="flex flex-wrap items-center gap-1 mt-1">
+                    <template v-for="(answer, index) of cardsSessions[card._id]" :key="index">
+                      <u-tooltip :text="formatDate(answer.createdAt)">
+                        <u-badge
+                          :color="answer.opened === true ? 'success' : answer.opened === false ? 'warning' : 'neutral'"
+                        />
+                      </u-tooltip>
+                    </template>
+                  </div>
+                </template>
               </div>
+
               <div class="absolute w-full h-full flex items-center justify-center bg-accented border border-default rounded-xl backface-hidden rotate-y-180">
                 <span class="text-center">
                   {{ card.backText }}
                 </span>
               </div>
+
             </div>
+
           </div>
         </template>
 

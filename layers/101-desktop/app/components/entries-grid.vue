@@ -10,7 +10,7 @@ const props = defineProps({
 
 
 <template>
-  <div class="flex flex-row items-start flex-wrap gap-4 p-4">
+  <div class="flex flex-row items-start flex-wrap gap-3 p-3">
 
     <nuxt-link
       v-for="item in props.items" :key="item.name"

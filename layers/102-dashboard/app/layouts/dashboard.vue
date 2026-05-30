@@ -35,6 +35,26 @@ const navigationItems = computed(() => {
             },
           },
         },
+        {
+          icon: 'lucide:user',
+          label: 'Authorization Tokens',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'authorization-tokens',
+            },
+          },
+        },
+        {
+          icon: 'lucide:user',
+          label: 'Authorization Roles',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'authorization-roles',
+            },
+          },
+        },
       ],
     },
     {

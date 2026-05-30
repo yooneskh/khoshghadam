@@ -39,12 +39,16 @@ const { form, formTag } = useForm({
 
 
 async function handleSubmit() {
-  useUser().value = await ufetch('/api/authentication/identity', {
+
+  await ufetch('/api/authentication/identity', {
     method: 'patch',
     body: {
       name: form.value.name,
     },
   });
+
+  useUser().value = await ufetch('/api/authentication/identity');
+
 }
 
 async function handleLogout() {

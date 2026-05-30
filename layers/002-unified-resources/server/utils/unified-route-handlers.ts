@@ -213,7 +213,7 @@ async function ensureUserPermission(args: ResourceHandlerArgs) {
   }
 
 
-  const hasPermission = user.permissions.includes(args.permission);
+  const hasPermission = user.permissions.some(it => matchUserPermit(it, args.permission!));
 
   if (!hasPermission) {
     throw createError({
@@ -222,4 +222,17 @@ async function ensureUserPermission(args: ResourceHandlerArgs) {
     });
   }
 
+}
+
+function matchUserPermit(permit: string, permission: string) {
+  if (!permit.includes('**')) {
+    return permit === permission;
+  }
+  else {
+
+    const starIndex = permit.indexOf('**');
+
+    return permit.slice(0, starIndex) === permission.slice(0, starIndex);
+
+  }
 }

@@ -80,12 +80,10 @@ watchImmediate([user, flashCardData], async () => {
   }
 
 
-  flashCardSession.value = await ufetch('/api/flash-card-sessions', {
+  flashCardSession.value = await ufetch('/api/flash-card-sessions/mine', {
     method: 'post',
     body: {
       flashCard: flashCardData.value._id,
-      user: user.value._id,
-      answeredCards: [],
     },
   });
 
@@ -95,16 +93,12 @@ watchImmediate([user, flashCardData], async () => {
 async function handleCardAdvance() {
 
   if (flashCardSession.value) {
-    flashCardSession.value = await ufetch(`/api/flash-card-sessions/${flashCardSession.value._id}`, {
+    flashCardSession.value = await ufetch(`/api/flash-card-sessions/answer`, {
       method: 'patch',
       body: {
-        answeredCards: [
-          ...flashCardSession.value.answeredCards,
-          {
-            card: flashCardData.value.cards[activeIndex.value]._id,
-            opened: rotatedIndex.value === activeIndex.value,
-          },
-        ],
+        flashCardSession: flashCardSession.value._id,
+        card: flashCardData.value.cards[activeIndex.value]._id,
+        opened: rotatedIndex.value === activeIndex.value,
       },
     });
   }

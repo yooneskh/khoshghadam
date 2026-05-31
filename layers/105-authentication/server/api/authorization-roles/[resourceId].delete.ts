@@ -4,6 +4,6 @@ export default defineEventHandler(async event => {
   return handleResourceDelete({
     resource: 'authorizationRoles',
     event,
-    // permission: 'admin.authorization-roles.delete',
+    permission: 'admin.authorization-roles.delete',
   });
 });

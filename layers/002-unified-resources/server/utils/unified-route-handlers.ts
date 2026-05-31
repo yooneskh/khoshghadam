@@ -203,23 +203,20 @@ async function ensureUserPermission(args: ResourceHandlerArgs) {
   }
 
 
-  const user = await assertUser(args);
+  const user = await assertUser({
+    event: args.event,
+    fillPermissions: true,
+  });
 
   if (!user || !user.permissions?.length) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'unauthorized',
-    });
+    throw createUnauthorizedError();
   }
 
 
   const hasPermission = user.permissions.some(it => matchUserPermit(it, args.permission!));
 
   if (!hasPermission) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'unauthorized',
-    });
+    throw createUnauthorizedError();
   }
 
 }

@@ -36,6 +36,9 @@ export const ufetch = $fetch.create({
 
 export const useUFetch = createUseFetch(callerOptions => ({
   onRequest,
+  onRequestError: generalHandler,
+  onResponse: generalHandler,
+  onResponseError: generalHandler,
   ...callerOptions,
 }));
 
@@ -47,11 +50,26 @@ function generalHandler(args: any) {
   }
 
 
+  args.options.handled = true;
+
+
+  if (args.response?.status === 401) {
+
+    toastError({
+      title: 'You need to login or register.',
+    });
+
+    navigateTo({
+      name: 'authentication.login',
+    });
+
+    return;
+
+  }
+
+
   toastError({
     title: args.response?._data?.message ?? 'There was a problem. Please try again.',
   });
-
-
-  args.options.handled = true;
 
 }

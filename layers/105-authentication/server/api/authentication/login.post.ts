@@ -11,10 +11,7 @@ export default defineEventHandler(async event => {
   });
 
   if (!user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'invalid credentials',
-    });
+    throw createUnauthenticatedError();
   }
 
 
@@ -26,18 +23,12 @@ export default defineEventHandler(async event => {
   });
 
   if (!userPassword) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'invalid credentials',
-    });
+    throw createUnauthenticatedError();
   }
 
 
   if (!await verifyPassword(body.password, userPassword.passwordHash)) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'invalid credentials',
-    });
+    throw createUnauthenticatedError();
   }
 
 

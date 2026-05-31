@@ -12,10 +12,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
   });
 
   if (!authenticationToken) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'unauthorized',
-    });
+    throw createUnauthorizedError();
   }
 
 
@@ -24,10 +21,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
   });
 
   if (!user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'unauthorized',
-    });
+    throw createUnauthorizedError();
   }
 
 

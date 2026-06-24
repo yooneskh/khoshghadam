@@ -34,13 +34,12 @@ export const ufetch = $fetch.create({
   onResponseError: generalHandler,
 });
 
-export const useUFetch = createUseFetch(callerOptions => ({
+export const useUFetch = createUseFetch({
   onRequest,
   onRequestError: generalHandler,
   onResponse: generalHandler,
   onResponseError: generalHandler,
-  ...callerOptions,
-}));
+});
 
 
 function generalHandler(args: any) {
@@ -59,11 +58,9 @@ function generalHandler(args: any) {
       title: 'You need to login or register.',
     });
 
-    navigateTo({
+    return void navigateTo({
       name: 'authentication.login',
     });
-
-    return;
 
   }
 

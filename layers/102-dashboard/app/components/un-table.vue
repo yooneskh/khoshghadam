@@ -13,8 +13,8 @@ const props = defineProps({
   stickyActions: Boolean,
   ui: Object,
   meta: Object,
-  rowTo: Function,
 });
+
 
 const currentPage = defineModel('currentPage', {
   type: [Number, String],
@@ -53,6 +53,7 @@ const fullColumns = computed(() => {
   <div>
 
     <u-table
+      v-bind="$attrs"
       :columns="fullColumns"
       loading-color="neutral"
       :loading="props.loading"
@@ -61,12 +62,11 @@ const fullColumns = computed(() => {
         right: props.stickyActions ? ['actions'] : undefined,
       }"
       :ui="{
-        tr: ['data-[expanded=true]:bg-elevated!', props.rowTo ? 'cursor-pointer' : ''].join(' '),
+        tr: 'data-[expanded=true]:bg-elevated!',
         ...(props.ui || {}),
       }"
       :meta="props.meta"
-      @hover=""
-      @select="(e, row) => props.rowTo && navigateTo(props.rowTo(row.original))">
+      @hover="">
 
       <template v-for="(_, name) in $slots" #[name]="slotData">
         <slot :name="name" v-bind="slotData" />

@@ -11,8 +11,6 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     'nuxt-jsonld',
     '@nuxtjs/sitemap',
-    '@vercel/analytics',
-    '@vercel/speed-insights',
   ],
 
   gtag: {

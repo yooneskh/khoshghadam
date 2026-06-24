@@ -53,7 +53,6 @@ const fullColumns = computed(() => {
   <div>
 
     <u-table
-      v-bind="$attrs"
       :columns="fullColumns"
       loading-color="neutral"
       :loading="props.loading"

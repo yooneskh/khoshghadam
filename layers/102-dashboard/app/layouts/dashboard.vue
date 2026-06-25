@@ -99,6 +99,22 @@ const navigationItems = computed(() => {
         },
       ],
     },
+    {
+      icon: 'lucide:container',
+      label: 'Content',
+      children: [
+        {
+          icon: 'lucide:image',
+          label: 'Media',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'media',
+            },
+          },
+        },
+      ],
+    },
   ];
 });
 

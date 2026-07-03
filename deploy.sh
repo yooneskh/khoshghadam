@@ -1,13 +1,13 @@
 bun run build
 
-rsync -avz -e ssh ./mise.toml $zxc:/root/khoshghadam/
-rsync -avz --delete -e ssh ./.output/ $zxc:/root/khoshghadam/.output/
+rsync -avz -e ssh ./mise.toml $zxc:/apps/khoshghadam/
+rsync -avz --delete -e ssh ./.output/ $zxc:/apps/khoshghadam/.output/
 
 ssh $zxc <<'EOF'
 
   set -e
 
-  cd /root/khoshghadam/
+  cd /apps/khoshghadam/
   mise install
 
   systemctl restart khoshghadam

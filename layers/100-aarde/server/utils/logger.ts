@@ -37,10 +37,10 @@ export type LogFields = {
 export function writeLog(fields: LogFields): void {
 
   if (fields.taskName !== undefined) {
-    taskLog.info(formatTaskLine(fields));
+    console.log('[task]', formatTaskLine(fields));
   }
   else {
-    httpLog.info(formatHttpLine(fields));
+    console.log('[http]', formatTaskLine(fields));
   }
 
 }

@@ -9,7 +9,6 @@ import BackgroundImage from '~/assets/images/desktop-background.jpg';
   <div
     class="
       h-dvh w-screen
-      bg-cover bg-center
       relative
     "
     :style="{
@@ -47,29 +46,17 @@ import BackgroundImage from '~/assets/images/desktop-background.jpg';
 
     <div
       class="
-        absolute bottom-0 inset-x-0 h-10
+        absolute bottom-0 inset-x-0
         flex items-center gap-3
-        bg-[#2262dd]
+        bg-primary
       ">
 
-      <div
-        class="
-          h-full
-          bg-[#20911d]
-          rounded-e-xl
-          ps-6 pe-8 py-3
-          flex items-center
-          cursor-pointer select-none
-          hover:bg-[#1f7b17]
-          active:bg-[#1b6c15]
-          drop-shadow-[1px_0_2px_rgba(0,0,0,0.5)]
-        ">
-
-        <span class="text-xl text-inverted font-semibold space drop-shadow-[2px_2px_1px_black]">
-          begin
-        </span>
-
-      </div>
+      <u-button
+        variant="soft"
+        size="xl"
+        label="Begin"
+        class="font-bold rounded-s-none px-6"
+      />
 
       <div class="grow" />
 

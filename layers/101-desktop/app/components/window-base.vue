@@ -315,11 +315,11 @@ const effectiveY = computed(() => {
     <header
       ref="elHeader"
       class="
-        h-10 shrink-0
-        bg-[#0059F4]
-        flex items-center gap-1
+        shrink-0
+        bg-primary-600
+        flex items-center gap-2
         text-inverted
-        p-1 ps-2
+        p-2
         cursor-pointer
       "
       @dblclick="isMaximized = !isMaximized;">
@@ -327,26 +327,26 @@ const effectiveY = computed(() => {
       <template v-if="props.pito">
         <img
           :src="`/pitos/${props.pito}.png`"
-          class="size-7 me-1"
+          class="size-8"
         />
       </template>
 
-      <span class="text-sm text-inverted font-semibold">
+      <span class="text-inverted font-medium">
         {{ props.title }}
       </span>
 
       <div class="grow" />
 
-      <img
-        :src="!isMaximized ? '/pitos/maximize.png' : '/pitos/restore.png'"
-        class="size-7 max-tablet:hidden"
+      <u-button
+        :icon="!isMaximized ? 'lucide:maximize' : 'lucide:minimize'"
+        class="max-tablet:hidden"
         @click="isMaximized = !isMaximized;"
       />
 
       <nuxt-link :to="{ name: 'desktop.home' }">
-        <img
-          src="/pitos/exit.png"
-          class="size-7"
+        <u-button
+          color="error"
+          icon="lucide:x"
         />
       </nuxt-link>
 

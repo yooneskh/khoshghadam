@@ -3,17 +3,17 @@ import { join } from 'node:path';
 import { unlink } from 'node:fs/promises';
 
 
-export async function eraseMedia(event: H3Event, mediaDir: string, media: any) {
+export async function eraseMedia(event: H3Event, mediaDirectoryBase: string, media: any) {
 
   if (media.path) {
-    await eraseMediaFile(mediaDir, media.path);
+    await eraseMediaFile(mediaDirectoryBase, media.path);
   }
 
 
   if (media.variants) {
     await Promise.all(
       Object.values(media.variants).map(it =>
-        eraseMediaFile(mediaDir, it as string),
+        eraseMediaFile(mediaDirectoryBase, it as string),
       ),
     );
   }
@@ -31,7 +31,7 @@ export async function eraseMedia(event: H3Event, mediaDir: string, media: any) {
 }
 
 
-async function eraseMediaFile(mediaDir: string, path: string) {
+async function eraseMediaFile(mediaDirectoryBase: string, path: string) {
 
   if (!path) {
     return;
@@ -46,7 +46,7 @@ async function eraseMediaFile(mediaDir: string, path: string) {
 
 
   try {
-    await unlink(join(mediaDir, fileName));
+    await unlink(join(mediaDirectoryBase, fileName));
   }
   catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {

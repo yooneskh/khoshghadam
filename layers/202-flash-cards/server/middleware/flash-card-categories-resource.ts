@@ -1,7 +1,7 @@
 
 
 const { schema, type, inferred } = parseSchema({
-  'name': 'string > 0',
+  'name': 'string',
 });
 
 

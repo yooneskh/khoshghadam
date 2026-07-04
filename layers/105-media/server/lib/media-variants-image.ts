@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 
 
-export async function createImageMediaVariants(event: H3Event, mediaDir: string, media: any) {
+export async function createImageMediaVariants(event: H3Event, mediaDirectoryBase: string, media: any) {
 
   const variants = [
     {
@@ -19,7 +19,7 @@ export async function createImageMediaVariants(event: H3Event, mediaDir: string,
   ];
 
 
-  const sourcePath = join(mediaDir, media.path.slice(media.path.lastIndexOf('/') + 1));
+  const sourcePath = join(mediaDirectoryBase, media.path.slice(media.path.lastIndexOf('/') + 1));
 
 
   for (const variant of variants) {
@@ -29,7 +29,7 @@ export async function createImageMediaVariants(event: H3Event, mediaDir: string,
     (await sharp(sourcePath)
       .resize(variant.size, variant.size, { fit: 'inside' })
       .png()
-      .toFile(join(mediaDir, fileName))
+      .toFile(join(mediaDirectoryBase, fileName))
     );
 
     media = await event.context.media.dbo.update({

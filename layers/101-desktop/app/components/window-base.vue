@@ -317,7 +317,7 @@ const effectiveY = computed(() => {
       class="
         shrink-0
         bg-primary-600
-        flex items-center gap-2
+        flex items-center gap-1
         text-inverted
         p-2
         cursor-pointer
@@ -327,17 +327,18 @@ const effectiveY = computed(() => {
       <template v-if="props.pito">
         <img
           :src="`/pitos/${props.pito}.png`"
-          class="size-8"
+          class="size-6"
         />
       </template>
 
-      <span class="text-inverted font-medium">
+      <span class="text-sm text-inverted font-medium">
         {{ props.title }}
       </span>
 
       <div class="grow" />
 
       <u-button
+        size="sm"
         :icon="!isMaximized ? 'lucide:maximize' : 'lucide:minimize'"
         class="max-tablet:hidden"
         @click="isMaximized = !isMaximized;"
@@ -345,6 +346,7 @@ const effectiveY = computed(() => {
 
       <nuxt-link :to="{ name: 'desktop.home' }">
         <u-button
+          size="sm"
           color="error"
           icon="lucide:x"
         />

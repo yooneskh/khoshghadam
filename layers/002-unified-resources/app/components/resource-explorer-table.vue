@@ -27,7 +27,7 @@ const { columns } = useResourceMeta({
 
 
 const { data: resourcesData, pending: isResourcesLoading, refresh: refreshResources } = useUFetch(
-  computed(() => `/${resourcePath.value}`),
+  computed(() => `/api/${resourcePath.value}`),
   {
     query: {
       'skip': computed(() => (currentPage.value - 1) * itemsPerPage.value),
@@ -37,7 +37,7 @@ const { data: resourcesData, pending: isResourcesLoading, refresh: refreshResour
 );
 
 const { data: resourcesCountData, pending: isResourcesCountLoading, refresh: refreshResourcesCount } = useUFetch(
-  computed(() => `/${resourcePath.value}/count`),
+  computed(() => `/api/${resourcePath.value}/count`),
 );
 
 

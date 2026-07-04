@@ -5,7 +5,7 @@
 const props = defineProps({
   column: Object,
   row: Object,
-  data: {},
+  data: String,
 });
 
 const emit = defineEmits([
@@ -41,7 +41,7 @@ const resourceData = asyncComputed(async () => {
 
     isLoading.value = true;
 
-    const value = await ufetch(`/${resourcePath.value}/${props.data}`, {
+    const value = await ufetch(`/api/${resourcePath.value}/${props.data}`, {
       silent: true,
     });
 
@@ -60,6 +60,12 @@ async function handleResourceClick() {
     title: `Update ${title.value}`,
     subtitle: resourceData.value._id,
     text: `Update the information and click submit to save.`,
+    modalOptions: {
+      scrollable: true,
+      ui: {
+        content: 'max-w-xl',
+      },
+    },
     fields: fields.value,
     initialForm: radOmit(resourceData.value, ['_id', 'createdAt', 'updatedAt']),
     submitButton: {
@@ -67,7 +73,7 @@ async function handleResourceClick() {
       label: `Update`,
       onClick: async form => {
 
-        await ufetch(`/${resourcePath.value}/${resourceData.value._id}`, {
+        await ufetch(`/api/${resourcePath.value}/${resourceData.value._id}`, {
           method: 'patch',
           body: form,
         });

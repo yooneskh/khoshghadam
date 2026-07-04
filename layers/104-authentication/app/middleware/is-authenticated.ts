@@ -1,7 +1,7 @@
 
 
 export default defineNuxtRouteMiddleware(() => {
-  if (!useToken().value) {
+  if (!useIsUserAuthenticated().value) {
     return navigateTo({
       name: 'authentication.login',
     });

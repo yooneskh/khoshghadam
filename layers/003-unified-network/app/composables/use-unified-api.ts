@@ -11,9 +11,6 @@ declare module 'ofetch' {
 
 function onRequest(args: any) {
 
-  args.options.baseURL = '/api';
-
-
   if ('enabled' in args.options && !toValue(args.options.enabled)) {
     args.options.handled = true;
     throw new Error('request is aborted');
@@ -44,7 +41,7 @@ export const useUFetch = createUseFetch({
 
 function generalHandler(args: any) {
 
-  if (args.options.handled || args.options.silent || [200, 201, 202, 204].includes(args.response?.status)) {
+  if (args.options.handled || args.options.silent || String(args.response?.status)?.[0] === '2') {
     return;
   }
 

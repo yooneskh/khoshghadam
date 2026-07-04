@@ -47,6 +47,7 @@ async function handleSubmit() {
     },
   });
 
+
   useUser().value = await ufetch('/api/authentication/identity');
 
 }

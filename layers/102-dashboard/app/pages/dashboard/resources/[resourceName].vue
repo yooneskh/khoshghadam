@@ -8,8 +8,10 @@ definePageMeta({
 });
 
 
+const route = useRoute();
+
 const resourceName = computed(() => {
-  return useRoute().params.resourceName;
+  return route.params.resourceName;
 });
 
 
@@ -40,6 +42,9 @@ async function handleResourceCreate() {
     text: `Fill in the form below to create a new ${title.value}.`,
     modalOptions: {
       scrollable: true,
+      ui: {
+        content: 'max-w-xl',
+      },
     },
     fields: fields.value,
     submitButton: {
@@ -47,7 +52,7 @@ async function handleResourceCreate() {
       label: `Create`,
       onClick: async form => {
 
-        await ufetch(`/${resourcePath.value}`, {
+        await ufetch(`/api/${resourcePath.value}`, {
           method: 'post',
           body: form,
         });
@@ -71,6 +76,9 @@ async function handleResourceUpdate(resource) {
     text: `Update the information and click submit to save.`,
     modalOptions: {
       scrollable: true,
+      ui: {
+        content: 'max-w-xl',
+      },
     },
     fields: fields.value,
     initialForm: radOmit(resource, ['_id', 'createdAt', 'updatedAt']),
@@ -79,7 +87,7 @@ async function handleResourceUpdate(resource) {
       label: `Update`,
       onClick: async form => {
 
-        await ufetch(`/${resourcePath.value}/${resource._id}`, {
+        await ufetch(`/api/${resourcePath.value}/${resource._id}`, {
           method: 'patch',
           body: form,
         });
@@ -108,7 +116,7 @@ async function handleResourceDelete(resource) {
         label: `Delete`,
         onClick: async () => {
 
-          await ufetch(`/${resourcePath.value}/${resource._id}`, {
+          await ufetch(`/api/${resourcePath.value}/${resource._id}`, {
             method: 'delete',
           });
 

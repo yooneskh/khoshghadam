@@ -14,7 +14,7 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
     }
 
 
-    return ufetch(`/${resourcePath.value}/schema`);
+    return ufetch(`/api/${resourcePath.value}/schema`);
 
   });
 

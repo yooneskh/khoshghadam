@@ -1,29 +1,23 @@
 import type { H3Event } from 'h3';
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 
 
-let client: MongoClient | null = null;
+let database: Db | null = null;
 
 
 export async function loadDbClient(event: H3Event) {
 
-  const config = useRuntimeConfig(event);
-
-
-  if (client) {
-    return client.db(config.database.name);
+  if (database) {
+    return database;
   }
 
 
-  client = new MongoClient(config.database.url, {
-    maxPoolSize: 1,
-    minPoolSize: 0,
-    serverSelectionTimeoutMS: 10_000,
-  } as any);
+  const config = useRuntimeConfig(event);
 
+  const client = new MongoClient(config.database.url);
   await client.connect();
 
-
-  return client.db(config.database.name);
+  database = client.db(config.database.name);
+  return database;
 
 }

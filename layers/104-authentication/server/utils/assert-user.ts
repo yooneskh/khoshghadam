@@ -6,13 +6,26 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
   const authenticationToken = await args.event.context.authenticationTokens.dbo.find({
     filter: {
       token: args.event.headers.get('authorization'),
-      expiresAt: { $gt: Date.now() },
       isActive: true,
     },
   });
 
   if (!authenticationToken) {
-    throw createUnauthorizedError();
+    throw createUnauthenticatedError();
+  }
+
+
+  if (authenticationToken.expiresAt <= Date.now()) {
+
+    await args.event.context.authenticationTokens.dbo.update({
+      resourceId: authenticationToken._id,
+      document: {
+        isActive: false,
+      },
+    });
+
+    throw createUnauthenticatedError();
+
   }
 
 
@@ -21,7 +34,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
   });
 
   if (!user) {
-    throw createUnauthorizedError();
+    throw createUnauthenticatedError();
   }
 
 

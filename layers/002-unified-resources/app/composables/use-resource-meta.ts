@@ -78,7 +78,11 @@ function convertMetaToField(meta: any) {
   };
 
 
-  if (meta.resource) {
+  if (meta.resource === 'media') {
+    field.identifier = 'media';
+    field.multiple = meta.type === 'array';
+  }
+  else if (meta.resource) {
     field.identifier = 'resource';
     field.resource = meta.resource;
     field.multiple = meta.type === 'array';

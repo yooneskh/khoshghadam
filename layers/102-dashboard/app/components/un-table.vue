@@ -129,23 +129,25 @@ const fullColumns = computed(() => {
 
     </u-table>
 
-    <div v-if="!props.hidePagination" class="flex items-center gap-2 p-3 border-t border-default">
-      <u-pagination
-        active-color="neutral"
-        :total="props.totalItems"
-        :items-per-page="Number(itemsPerPage)"
-        :page="Number(currentPage)"
-        @update:page="currentPage = $event;"
-      />
-      <div class="grow" />
-      <u-select
-        :items="[5, 10, 25, 50, 100]"
-        v-model="itemsPerPage"
-      />
-      <span class="text-sm">
-        Items per page
-      </span>
-    </div>
+    <template v-if="!props.hidePagination">
+      <div class="flex items-center gap-2 p-3 border-t border-default">
+        <u-pagination
+          active-color="neutral"
+          :total="props.totalItems"
+          :items-per-page="Number(itemsPerPage)"
+          :page="Number(currentPage)"
+          @update:page="currentPage = $event;"
+        />
+        <div class="grow" />
+        <u-select
+          :items="[5, 10, 25, 50, 100]"
+          v-model="itemsPerPage"
+        />
+        <span class="text-sm">
+          Items per page
+        </span>
+      </div>
+    </template>
 
   </div>
 </template>

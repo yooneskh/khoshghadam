@@ -85,7 +85,7 @@ async function handleSubmitSelection(items) {
         ]">
 
         <template v-if="props.multiple">
-          <div class="flex items-center gap-2 border-b border-default p-3">
+          <div class="flex flex-wrap items-center gap-2 border-b border-default p-3">
             <template v-for="(item, index) of currentItems" :key="item">
               <u-badge
                 variant="subtle"

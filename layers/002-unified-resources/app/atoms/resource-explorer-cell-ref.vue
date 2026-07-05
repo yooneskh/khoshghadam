@@ -105,6 +105,33 @@ async function handleResourceClick() {
       />
     </u-tooltip>
   </template>
+  <template v-else-if="props.column.resource === 'media'">
+    <nuxt-link :href="resourceData?.path" target="_blank">
+      <template v-if="resourceData?.type?.startsWith('image')">
+        <u-popover mode="hover">
+
+          <img
+            :src="resourceData?.variants?.thumb || resourceData?.path"
+            class="size-5 rounded"
+          />
+
+          <template #content>
+            <img
+              :src="resourceData?.variants?.small || resourceData?.path"
+              class="max-w-sm rounded"
+            />
+          </template>
+
+        </u-popover>
+      </template>
+      <template v-else>
+        <u-badge
+          variant="subtle"
+          icon="lucide:file"
+        />
+      </template>
+    </nuxt-link>
+  </template>
   <template v-else>
     <a class="text-primary underline cursor-pointer" @click="handleResourceClick()">
       {{ resourceData.name }}

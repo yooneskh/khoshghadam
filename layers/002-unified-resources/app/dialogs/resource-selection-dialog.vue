@@ -34,7 +34,10 @@ watchImmediate(currentItems, async () => {
       }
 
 
-      const resource = await ufetch(`/api/${resourcePath.value}/${it}`);
+      const resource = await retrieveResource({
+        resourcePath: resourcePath.value,
+        id: it,
+      });
 
       currentItemsTitles.value[it] = resource.name || truncateMiddle(resource._id);
 

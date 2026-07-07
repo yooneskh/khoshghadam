@@ -50,7 +50,7 @@ async function handleViewItems() {
   </template>
 
   <template v-else-if="props.column.type === 'array' && props.column.items.type === 'string'">
-    <div class="w-xs flex flex-wrap gap-1">
+    <div class="max-w-xs flex flex-wrap gap-1">
       <template v-for="item of props.data || []">
         <u-badge
           variant="subtle"

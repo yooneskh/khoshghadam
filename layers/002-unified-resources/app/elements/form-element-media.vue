@@ -28,7 +28,10 @@ const resources = asyncComputed(async () => {
 
     return await Promise.all(
       radCastArray(modelValue.value).map(async it =>
-        ufetch(`/api/media/${it}`),
+        retrieveResource({
+          resourcePath: 'media',
+          id: it,
+        }),
       ),
     );
 

@@ -41,11 +41,13 @@ const resourceData = asyncComputed(async () => {
 
     isLoading.value = true;
 
-    const value = await ufetch(`/api/${resourcePath.value}/${props.data}`, {
-      silent: true,
+    return await retrieveResource({
+      resourcePath: resourcePath.value,
+      id: props.data,
+      options: {
+        silent: true,
+      },
     });
-
-    return value;
 
   }
   finally {
@@ -79,11 +81,20 @@ async function handleResourceClick() {
         });
 
 
+        evictResource({
+          resourcePath: resourcePath.value,
+          id: resourceData.value._id,
+        });
+
+
         tickle.value++;
 
         toastSuccess({
           title: `${title.value} updated successfully.`,
         });
+
+
+        emit('resource:update');
 
       },
     },

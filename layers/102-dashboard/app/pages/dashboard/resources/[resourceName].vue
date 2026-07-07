@@ -93,6 +93,12 @@ async function handleResourceUpdate(resource) {
         });
 
 
+        evictResource({
+          resourcePath: resourcePath.value,
+          id: resource._id,
+        });
+
+
         await resourceExplorerTableEl.value.refreshResources();
 
         toastSuccess({
@@ -121,6 +127,12 @@ async function handleResourceDelete(resource) {
           });
 
 
+          evictResource({
+            resourcePath: resourcePath.value,
+            id: resource._id,
+          });
+
+
           await resourceExplorerTableEl.value.refreshResources();
 
           toastSuccess({
@@ -142,10 +154,17 @@ async function handleResourceDelete(resource) {
     <un-typography :title="`Manage ${titlePlural}`">
       <template #append>
         <u-button
+          variant="subtle"
           icon="lucide:plus"
           :label="`Create a ${title}`"
           loading-auto
           @click="handleResourceCreate()"
+        />
+        <u-button
+          variant="subtle"
+          icon="lucide:refresh-ccw"
+          loading-auto
+          @click="resourceExplorerTableEl.refreshResources()"
         />
       </template>
     </un-typography>

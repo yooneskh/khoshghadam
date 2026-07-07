@@ -15,6 +15,7 @@ import ResourceExplorerCell from '~/atoms/resource-explorer-cell.vue';
 
 const itemsPerPage = ref(20);
 const currentPage = ref(1);
+const tickle = ref(0);
 
 
 const { resourcePath } = useResourceName({
@@ -42,10 +43,14 @@ const { data: resourcesCountData, pending: isResourcesCountLoading, refresh: ref
 
 
 async function refreshAll() {
+
+  tickle.value++;
+
   await Promise.all([
     refreshResources(),
     refreshResourcesCount(),
   ]);
+
 }
 
 
@@ -70,6 +75,7 @@ defineExpose({
 
     <template v-for="column in columns" :key="column.accessorKey" #[column.accessorKey+'-cell']="{ row }">
       <resource-explorer-cell
+        :key="tickle"
         :column="column"
         :row="row.original"
         :data="row.original[column.accessorKey]"

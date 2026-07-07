@@ -50,7 +50,10 @@ watchImmediate(currentItems, async () => {
       }
 
 
-      const resource = await ufetch(`/api/media/${it}`);
+      const resource = await retrieveResource({
+        resourcePath: 'media',
+        id: it,
+      });
 
       currentItemsTitles.value[it] = resource.name || truncateMiddle(resource._id);
 
@@ -120,6 +123,12 @@ async function handleDeleteMedia(media) {
 
           await ufetch(`/api/media/${media._id}`, {
             method: 'delete',
+          });
+
+
+          evictResource({
+            resourcePath: 'media',
+            id: media._id,
           });
 
 

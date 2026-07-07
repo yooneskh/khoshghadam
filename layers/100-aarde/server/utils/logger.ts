@@ -35,14 +35,12 @@ export type LogFields = {
 
 
 export function writeLog(fields: LogFields): void {
-
   if (fields.taskName !== undefined) {
     taskLog.info(formatTaskLine(fields));
   }
   else {
     httpLog.info(formatHttpLine(fields));
   }
-
 }
 
 
@@ -53,6 +51,7 @@ function formatHttpLine(fields: LogFields): string {
     fit(fields.path ?? '', columnWidths.path),
   ];
 
+
   if (fields.note !== undefined) {
     columns.push(fit(fields.note, columnWidths.note));
   }
@@ -62,8 +61,10 @@ function formatHttpLine(fields: LogFields): string {
     columns.push(`res=${pad(formatSize(fields.responseSize), columnWidths.size, 'right')}`);
   }
 
+
   columns.push(pad(formatElapsed(fields.elapsed), columnWidths.elapsed, 'right'));
   columns.push(formatDate(fields.date));
+
 
   return columns.join(' ');
 
@@ -92,8 +93,10 @@ function fit(value: string | number, width: number): string {
     return text.padEnd(width);
   }
 
+
   const head = Math.floor((width - 1) / 2);
   const tail = width - 1 - head;
+
 
   return `${text.slice(0, head)}…${text.slice(text.length - tail)}`;
 
@@ -163,12 +166,10 @@ function formatDate(date: Date | string | undefined): string {
 }
 
 function formatPayload(payload: unknown): string {
-
   try {
     return JSON.stringify(payload ?? {});
   }
   catch {
     return '[unserializable]';
   }
-
 }

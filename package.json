@@ -12,9 +12,9 @@
     "@nuxtjs/sitemap": "8.2.2",
     "@quentinadam/uuidv7": "0.1.9",
     "@theothergothamdev/pluralize-ts": "1.1.0",
-    "arktype": "2.2.2",
+    "arktype": "2.2.3",
     "bcryptjs": "3.0.3",
-    "mongodb": "7.4.0",
+    "mongodb": "7.5.0",
     "nuxt": "4.4.8",
     "nuxt-gtag": "4.1.0",
     "nuxt-jsonld": "2.2.1",
@@ -23,6 +23,6 @@
     "vue": "3.5.39"
   },
   "devDependencies": {
-    "@types/node": "26.1.0"
+    "@types/node": "26.1.1"
   }
 }

@@ -8,7 +8,6 @@
     "build": "nuxt build"
   },
   "dependencies": {
-    "@nuxthub/core": "0.10.7",
     "@nuxtjs/sitemap": "8.2.2",
     "@quentinadam/uuidv7": "0.1.9",
     "@theothergothamdev/pluralize-ts": "1.1.0",

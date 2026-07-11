@@ -3,11 +3,11 @@
 /* page */
 
 definePageMeta({
-  name: 'resume.who-am-i',
+  name: 'static-content.resume',
 });
 
 useSeoMeta({
-  title: 'Who Am I?',
+  title: 'Who Am I? Yoones Resume',
   description: 'Learn more about Yoones, a FullStack Platform Developer with 13 years of experience.',
 });
 

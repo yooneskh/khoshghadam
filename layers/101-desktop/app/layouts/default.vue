@@ -21,7 +21,7 @@ import BackgroundImage from '~/assets/images/desktop-background.jpg';
           pito: 'my-documents',
           name: 'Who Am I?',
           to: {
-            name: 'resume.who-am-i',
+            name: 'static-content.resume',
           },
         },
         {

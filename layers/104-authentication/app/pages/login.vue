@@ -32,30 +32,39 @@ const { form: loginForm, formTag: loginFormTag } = useForm({
 
 
 async function handleLogin() {
+  try {
 
-  const loginResponse = await ufetch('/api/authentication/login', {
-    method: 'post',
-    body: {
-      username: loginForm.value.username,
-      password: loginForm.value.password,
-    },
-  });
+    const loginResponse = await ufetch('/api/authentication/login', {
+      silent: true,
+      method: 'post',
+      body: {
+        username: loginForm.value.username,
+        password: loginForm.value.password,
+      },
+    });
 
-  const identityResponse = await ufetch('/api/authentication/identity', {
-    headers: {
-      'authorization': loginResponse.token,
-    },
-  });
-
-
-  useToken().value = loginResponse.token;
-  useUser().value = identityResponse;
+    const identityResponse = await ufetch('/api/authentication/identity', {
+      silent: true,
+      headers: {
+        'authorization': loginResponse.token,
+      },
+    });
 
 
-  await navigateTo({
-    name: 'authentication.account',
-  });
+    useToken().value = loginResponse.token;
+    useUser().value = identityResponse;
 
+
+    await navigateTo({
+      name: 'authentication.account',
+    });
+
+  }
+  catch {
+    toastError({
+      title: 'Invalid username or password.',
+    });
+  }
 }
 
 </script>

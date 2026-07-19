@@ -5,6 +5,9 @@
 definePageMeta({
   name: 'dashboard.home',
   layout: 'dashboard',
+  middleware: [
+    'is-authenticated',
+  ],
 });
 
 useHead({

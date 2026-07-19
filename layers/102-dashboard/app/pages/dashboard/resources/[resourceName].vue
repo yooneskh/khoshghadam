@@ -5,6 +5,9 @@
 definePageMeta({
   name: 'dashboard.resources.single',
   layout: 'dashboard',
+  middleware: [
+    'is-authenticated',
+  ],
 });
 
 

@@ -1,9 +1,8 @@
-import { H3Event } from 'h3';
 import { join } from 'node:path';
 import sharp from 'sharp';
 
 
-export async function createImageMediaVariants(event: H3Event, mediaDirectoryBase: string, media: any) {
+export async function createImageMediaVariants(mediaDirectoryBase: string, media: any) {
 
   const variants = [
     {
@@ -32,7 +31,7 @@ export async function createImageMediaVariants(event: H3Event, mediaDirectoryBas
       .toFile(join(mediaDirectoryBase, fileName))
     );
 
-    media = await event.context.media.dbo.update({
+    media = await resources.media.dbo.update({
       resourceId: media._id,
       document: {
         variants: {

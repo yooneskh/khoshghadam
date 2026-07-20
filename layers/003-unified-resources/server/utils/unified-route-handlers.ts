@@ -1,5 +1,3 @@
-import type { H3Event } from 'h3';
-import { UnifiedResourceController } from './create-unified-resource-controller';
 
 
 interface ResourceHandlerArgs {
@@ -13,7 +11,7 @@ export async function handleResourceSchema(args: ResourceHandlerArgs) {
 
   await ensureUserPermission(args);
 
-  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).schema();
+  return resources[args.resource as keyof typeof resources]?.dbo?.schema();
 
 }
 
@@ -23,13 +21,13 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
   await ensureUserPermission(args);
 
   if (getQuery(args.event)?.single === 'xtruex') {
-    return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).find({
+    return resources[args.resource as keyof typeof resources]?.dbo?.find({
       filter: extractFilterFromEvent(args.event),
       populate: extractPopulateFromEvent(args.event),
     });
   }
   else {
-    return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).list({
+    return resources[args.resource as keyof typeof resources]?.dbo?.list({
       filter: extractFilterFromEvent(args.event),
       sort: extractSortFromEvent(args.event),
       skip: Number(getQuery(args.event)?.skip ?? 0) || 0,
@@ -44,7 +42,7 @@ export async function handleResourceCount(args: ResourceHandlerArgs) {
 
   await ensureUserPermission(args);
 
-  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).count({
+  return resources[args.resource as keyof typeof resources]?.dbo?.count({
     filter: extractFilterFromEvent(args.event),
   });
 
@@ -54,7 +52,7 @@ export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
 
   await ensureUserPermission(args);
 
-  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).retrieve({
+  return resources[args.resource as keyof typeof resources]?.dbo?.retrieve({
     resourceId: getRouterParam(args.event, 'resourceId'),
     populate: extractPopulateFromEvent(args.event),
   });
@@ -65,7 +63,7 @@ export async function handleResourceCreate(args: ResourceHandlerArgs) {
 
   await ensureUserPermission(args);
 
-  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).create({
+  return resources[args.resource as keyof typeof resources]?.dbo?.create({
     document: await readBody(args.event),
   });
 
@@ -75,7 +73,7 @@ export async function handleResourceUpdate(args: ResourceHandlerArgs) {
 
   await ensureUserPermission(args);
 
-  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).update({
+  return resources[args.resource as keyof typeof resources]?.dbo?.update({
     resourceId: getRouterParam(args.event, 'resourceId'),
     document: await readBody(args.event),
   });
@@ -86,7 +84,7 @@ export async function handleResourceDelete(args: ResourceHandlerArgs) {
 
   await ensureUserPermission(args);
 
-  return (args.event.context[args.resource].dbo as UnifiedResourceController<any>).delete({
+  return resources[args.resource as keyof typeof resources]?.dbo?.delete({
     resourceId: getRouterParam(args.event, 'resourceId'),
   });
 

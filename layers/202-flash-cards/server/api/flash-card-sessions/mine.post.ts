@@ -6,7 +6,7 @@ export default defineEventHandler(async event => {
   const body = await readBody(event);
 
 
-  return event.context.flashCardSessions.dbo.create({
+  return resources.flashCardSessions.dbo.create({
     document: {
       user: user._id,
       flashCard: body.flashCard,

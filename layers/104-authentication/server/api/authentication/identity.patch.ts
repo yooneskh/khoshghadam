@@ -6,7 +6,7 @@ export default defineEventHandler(async event => {
   const body = await readBody(event);
 
 
-  return event.context.users.dbo.update({
+  return resources.users.dbo.update({
     resourceId: user._id,
     document: {
       name: body.name,

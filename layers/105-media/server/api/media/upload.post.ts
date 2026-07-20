@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
   }
 
 
-  let media = await event.context.media.dbo.create({
+  let media = await resources.media.dbo.create({
     document: {
       name: file.name,
       type: file.type,
@@ -39,7 +39,7 @@ export default defineEventHandler(async event => {
 
   try {
 
-    media = await event.context.media.dbo.update({
+    media = await resources.media.dbo.update({
       resourceId: media._id,
       document: {
         path: `/media/${mediaFileName}`,
@@ -48,7 +48,7 @@ export default defineEventHandler(async event => {
 
 
     if (file.type.startsWith('image/')) {
-      media = await createImageMediaVariants(event, mediaDirectoryBase, media);
+      media = await createImageMediaVariants(mediaDirectoryBase, media);
     }
 
     return media;
@@ -56,7 +56,7 @@ export default defineEventHandler(async event => {
   }
   catch {
 
-    await eraseMedia(event, mediaDirectoryBase, media);
+    await eraseMedia(mediaDirectoryBase, media);
 
     throw createError({
       statusCode: 500,

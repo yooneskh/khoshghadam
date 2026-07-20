@@ -7,6 +7,13 @@ export default defineNuxtPlugin(async () => {
   }
 
 
-  useUser().value = await ufetch('/api/authentication/identity');
+  try {
+    useUser().value = await ufetch('/api/authentication/identity', {
+      silent: true,
+    });
+  }
+  catch {
+    // noop
+  }
 
 });

@@ -1,9 +1,8 @@
-import type { H3Event } from 'h3';
 
 
 export async function assertUser(args: { event: H3Event, fillPermissions?: boolean }) {
 
-  const authenticationToken = await args.event.context.authenticationTokens.dbo.find({
+  const authenticationToken = await resources.authenticationTokens.dbo.find({
     filter: {
       token: args.event.headers.get('authorization'),
       isActive: true,
@@ -17,7 +16,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
 
   if (authenticationToken.expiresAt <= Date.now()) {
 
-    await args.event.context.authenticationTokens.dbo.update({
+    await resources.authenticationTokens.dbo.update({
       resourceId: authenticationToken._id,
       document: {
         isActive: false,
@@ -29,7 +28,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
   }
 
 
-  const user = await args.event.context.users.dbo.find({
+  const user = await resources.users.dbo.find({
     resourceId: authenticationToken.user,
   });
 
@@ -46,7 +45,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
     filledUser.permissions = [];
 
 
-    const authorizationToken = await args.event.context.authorizationTokens.dbo.find({
+    const authorizationToken = await resources.authorizationTokens.dbo.find({
       filter: {
         'user': filledUser._id,
       },
@@ -58,7 +57,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
       }
       else {
 
-        const authorizationRoles = await args.event.context.authorizationRoles.dbo.list({
+        const authorizationRoles = await resources.authorizationRoles.dbo.list({
           filter: {
             '_id': {
               $in: authorizationToken.roles,

@@ -2,8 +2,8 @@
 
 export default defineSitemapEventHandler(async () => {
 
-  const data: any[][] = await Promise.all([
-    $fetch('/api/flash-cards'),
+  const data = await Promise.all([
+    $fetch('/api/flash-cards') as Promise<any[]>,
   ]);
 
 

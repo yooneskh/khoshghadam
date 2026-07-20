@@ -1,9 +1,8 @@
-import { H3Event } from 'h3';
 import { join } from 'node:path';
 import { unlink } from 'node:fs/promises';
 
 
-export async function eraseMedia(event: H3Event, mediaDirectoryBase: string, media: any) {
+export async function eraseMedia(mediaDirectoryBase: string, media: any) {
 
   if (media.path) {
     await eraseMediaFile(mediaDirectoryBase, media.path);
@@ -20,7 +19,7 @@ export async function eraseMedia(event: H3Event, mediaDirectoryBase: string, med
 
 
   try {
-    return await event.context.media.dbo.delete({
+    return await resources.media.dbo.delete({
       resourceId: media._id,
     });
   }

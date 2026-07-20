@@ -1,4 +1,3 @@
-import type { H3Event } from 'h3';
 
 
 export default defineNitroPlugin(nitroApp => {

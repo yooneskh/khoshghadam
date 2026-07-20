@@ -7,19 +7,18 @@ const { schema, type, inferred } = parseSchema({
 });
 
 
-declare module 'h3' {
-  interface H3EventContext {
+declare global {
+  interface UnifiedResourcesRegistry {
     userPasswords: {
-      dbo: UnifiedResourceController<typeof inferred>;
+      dbo: UnifiedResourceController<typeof inferred>
     };
   }
-}
+};
 
 
-export default defineEventHandler(event => {
-  event.context.userPasswords = {
+export default defineNitroPlugin(() => {
+  resources.userPasswords = {
     dbo: createUnifiedResourceController({
-      event,
       resource: 'userPasswords',
       schema,
       type,

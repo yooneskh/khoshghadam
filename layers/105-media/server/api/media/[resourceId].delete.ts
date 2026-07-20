@@ -12,7 +12,6 @@ export default defineEventHandler(async event => {
 
 
   return eraseMedia(
-    event,
     join(process.cwd(), '.data/media'),
     media,
   );

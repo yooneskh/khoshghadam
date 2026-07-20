@@ -4,7 +4,8 @@ export default defineEventHandler(async event => {
 
   const body = await readBody(event);
 
-  const user = await event.context.users.dbo.find({
+
+  const user = await resources.users.dbo.find({
     filter: {
       username: body.username,
     },
@@ -15,7 +16,7 @@ export default defineEventHandler(async event => {
   }
 
 
-  const userPassword = await event.context.userPasswords.dbo.find({
+  const userPassword = await resources.userPasswords.dbo.find({
     filter: {
       user: user._id,
       isActive: true,
@@ -32,7 +33,7 @@ export default defineEventHandler(async event => {
   }
 
 
-  return event.context.authenticationTokens.dbo.create({
+  return resources.authenticationTokens.dbo.create({
     document: {
       user: user._id,
       token: generateUuid(),

@@ -6,7 +6,7 @@ export default defineEventHandler(async event => {
   const body = await readBody(event);
 
 
-  const flashCardSession = await event.context.flashCardSessions.dbo.retrieve({
+  const flashCardSession = await resources.flashCardSessions.dbo.retrieve({
     resourceId: body.flashCardSession,
   });
 
@@ -15,7 +15,7 @@ export default defineEventHandler(async event => {
   }
 
 
-  return event.context.flashCardSessions.dbo.update({
+  return resources.flashCardSessions.dbo.update({
     resourceId: flashCardSession._id,
     document: {
       answeredCards: [

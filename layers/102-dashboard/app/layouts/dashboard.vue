@@ -55,16 +55,6 @@ const navigationItems = computed(() => {
             },
           },
         },
-        {
-          icon: 'lucide:user',
-          label: 'Authentication Tokens',
-          to: {
-            name: 'dashboard.resources.single',
-            params: {
-              resourceName: 'authentication-tokens',
-            },
-          },
-        },
       ],
     },
     {

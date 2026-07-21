@@ -99,6 +99,10 @@ function convertMetaToField(meta: any) {
   else if (meta.longText) {
     field.identifier = 'textarea';
   }
+  else if (meta.options) {
+    field.identifier = 'select';
+    field.options = meta.options;
+  }
 
 
   return field;

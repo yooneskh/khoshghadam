@@ -30,6 +30,11 @@ export interface ResourceMeta {
 
   longText?: boolean;
 
+  options?: {
+    label: string;
+    value: string | number;
+  }[];
+
 }
 
 

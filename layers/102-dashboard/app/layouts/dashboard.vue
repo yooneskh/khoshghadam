@@ -139,6 +139,7 @@ const navigationItems = computed(() => {
           <div class="grow" />
 
           <u-dropdown-menu
+            :ui="{ content: 'min-w-xs' }"
             :items="[
               {
                 icon: 'lucide:user',

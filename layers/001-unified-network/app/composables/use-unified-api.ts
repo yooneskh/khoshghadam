@@ -10,7 +10,7 @@ declare module 'ofetch' {
 
 function onRequest(args: any) {
 
-  if (useToken().value) {
+  if (useToken().value && !args.options.headers.has('authorization')) {
     args.options.headers.set('authorization', useToken().value);
   }
 

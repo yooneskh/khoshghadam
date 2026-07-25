@@ -3,7 +3,15 @@
 export default defineEventHandler(async event => {
 
   const user = await assertUser({ event });
-  const body = await readBody(event);
+
+  const body = await ensureBody({
+    event,
+    schema: {
+      'flashCardSession': 'string',
+      'card': 'string',
+      'opened': 'boolean',
+    },
+  });
 
 
   const flashCardSession = await resources.flashCardSessions.dbo.retrieve({

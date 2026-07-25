@@ -2,7 +2,13 @@
 
 export default defineEventHandler(async event => {
 
-  const body = await readBody(event);
+  const body = await ensureBody({
+    event,
+    schema: {
+      'username': 'string',
+      'password': 'string',
+    },
+  });
 
 
   const user = await resources.users.dbo.find({

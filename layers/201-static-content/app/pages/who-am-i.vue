@@ -6,9 +6,8 @@ definePageMeta({
   name: 'static-content.resume',
 });
 
-useSeoMeta({
+useHead({
   title: 'Who Am I? Yoones Resume',
-  description: 'Learn more about Yoones, a FullStack Platform Developer with 13 years of experience.',
 });
 
 </script>

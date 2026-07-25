@@ -6,9 +6,8 @@ definePageMeta({
   name: 'authentication.login',
 });
 
-useSeoMeta({
+useHead({
   title: 'Login',
-  description: 'Login to your account.',
 });
 
 

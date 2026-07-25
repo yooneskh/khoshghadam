@@ -6,9 +6,8 @@ definePageMeta({
   name: 'desktop.learning-center',
 });
 
-useSeoMeta({
+useHead({
   title: 'Learning Center',
-  description: 'Tools to help you in learning multiple aspects of education.',
 });
 
 </script>

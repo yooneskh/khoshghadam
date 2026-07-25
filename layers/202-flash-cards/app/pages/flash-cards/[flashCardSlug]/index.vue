@@ -28,9 +28,8 @@ const { data: flashCardData, pending: isFlashCardPending } = useUFetch(
 );
 
 
-useSeoMeta({
+useHead({
   title: () => flashCardData.value?.name,
-  description: () => flashCardData.value?.description,
 });
 
 

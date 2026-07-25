@@ -6,9 +6,8 @@ definePageMeta({
   name: 'static-content.slack-quick-reply.privacy-policy',
 });
 
-useSeoMeta({
+useHead({
   title: 'Privacy Policy - Slack Quick Reply',
-  description: 'Privacy Policy for the Slack Quick Reply Chrome extension. Learn how this extension handles your data.',
 });
 
 </script>

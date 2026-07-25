@@ -6,9 +6,8 @@ definePageMeta({
   name: 'flash-cards.list',
 });
 
-useSeoMeta({
+useHead({
   title: 'Flash Cards',
-  description: 'Flash cards are a great way to learn new information.',
 });
 
 

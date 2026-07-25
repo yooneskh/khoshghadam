@@ -9,9 +9,8 @@ definePageMeta({
   ],
 });
 
-useSeoMeta({
+useHead({
   title: 'Account',
-  description: 'View and manage your account details.',
 });
 
 

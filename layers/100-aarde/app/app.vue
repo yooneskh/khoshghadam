@@ -9,17 +9,11 @@ useHead({
   titleTemplate: t => `${t ? `${t} - ` : ''}${config.brand.title}`,
 });
 
-useSeoMeta({
-  'description': 'Portfolio reimagined as the Nostalgia OS! My creative showcase of web development skills using Vue, Nuxt and Bun!',
-});
-
-
 useJsonld({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   'name': config.brand.title,
   'url': 'https://khoshghadam.com',
-  'description': 'Portfolio reimagined as the Nostalgia OS! My creative showcase of web development skills using Vue, Nuxt and Bun!',
   'publisher': {
     '@type': 'Person',
     'name': 'Yoones Khoshghadam',

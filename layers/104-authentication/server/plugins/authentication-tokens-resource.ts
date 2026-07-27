@@ -23,6 +23,11 @@ export default defineNitroPlugin(() => {
       resource: 'authenticationTokens',
       schema,
       type,
+      meta: {
+        user: {
+          resource: 'users',
+        },
+      },
     }),
   };
 });

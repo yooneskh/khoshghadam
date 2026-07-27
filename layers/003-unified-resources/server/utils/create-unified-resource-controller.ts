@@ -95,7 +95,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
 
-      const documents = await collection.find(args.filter).project(!args.select ? undefined : Object.fromEntries(args.select.map(it => [it, 1])) as any).sort(args.sort).skip(args.skip ?? 0).limit(args.limit ?? 100).toArray() as unknown as UnifiedResourceDocument<T>[];
+      const documents = await collection.find(args.filter).project(!args.select ? undefined : Object.fromEntries(args.select.map(it => [it, 1])) as any).sort(args.sort).skip(args.skip ?? 0).limit(args.limit ?? 0).toArray() as unknown as UnifiedResourceDocument<T>[];
 
 
       if (args.populate) {

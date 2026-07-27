@@ -5,4 +5,4 @@ declare global {
 }
 
 
-export const resources: UnifiedResourcesRegistry = Object.create(null) as UnifiedResourcesRegistry;
+export const resources = Object.create(null) as UnifiedResourcesRegistry;

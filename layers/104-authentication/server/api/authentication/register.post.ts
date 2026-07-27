@@ -2,7 +2,7 @@
 
 export default defineEventHandler(async event => {
 
-  const body = await ensureBody({
+  const body = await assertBody({
     event,
     schema: {
       'name': 'string',

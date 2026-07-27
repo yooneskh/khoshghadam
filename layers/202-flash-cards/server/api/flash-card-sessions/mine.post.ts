@@ -4,7 +4,7 @@ export default defineEventHandler(async event => {
 
   const user = await assertUser({ event });
 
-  const body = await ensureBody({
+  const body = await assertBody({
     event,
     schema: {
       'flashCard': 'string',

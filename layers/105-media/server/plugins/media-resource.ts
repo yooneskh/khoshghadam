@@ -1,6 +1,7 @@
 
 
 const { schema, type, inferred } = parseSchema({
+  'owner': 'string',
   'name': 'string',
   'type': 'string',
   'size': 'number',
@@ -24,6 +25,11 @@ export default defineNitroPlugin(() => {
       resource: 'media',
       schema,
       type,
+      meta: {
+        owner: {
+          resource: 'users',
+        },
+      },
     }),
   };
 });

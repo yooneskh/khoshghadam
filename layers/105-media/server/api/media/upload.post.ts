@@ -9,6 +9,7 @@ const mediaDirectoryBase = join(process.cwd(), '.data/media');
 
 export default defineEventHandler(async event => {
 
+  const user = await assertUser({ event });
   const form = await readFormData(event);
   const file = form.get('file') as File;
 
@@ -22,6 +23,7 @@ export default defineEventHandler(async event => {
 
   let media = await resources.media.dbo.create({
     document: {
+      owner: user._id,
       name: file.name,
       type: file.type,
       size: file.size,

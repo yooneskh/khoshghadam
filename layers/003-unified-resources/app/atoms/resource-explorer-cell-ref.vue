@@ -145,7 +145,7 @@ async function handleResourceClick() {
   </template>
   <template v-else>
     <a class="text-primary underline cursor-pointer" @click="handleResourceClick()">
-      {{ resourceData.name }}
+      {{ resourceData.name || truncateMiddle(resourceData._id) }}
     </a>
   </template>
 </template>

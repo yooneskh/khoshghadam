@@ -15,7 +15,7 @@ const emit = defineEmits([
 
 /* media */
 
-const itemsPerPage = ref(12);
+const itemsPerPage = ref(18);
 const currentPage = ref(1);
 
 const currentItems = ref(radCloneDeep(props.items || []));
@@ -246,7 +246,7 @@ async function handleSubmitSelection(items) {
                   </div>
                 </template>
 
-                <div class="text-xs">
+                <div class="text-xs break-all">
                   {{ media.name }}
                 </div>
 
@@ -301,7 +301,7 @@ async function handleSubmitSelection(items) {
             />
             <div class="grow" />
             <u-select
-              :items="[6, 12, 24]"
+              :items="[6, 12, 18, 24, 30]"
               v-model="itemsPerPage"
             />
             <span class="text-sm">

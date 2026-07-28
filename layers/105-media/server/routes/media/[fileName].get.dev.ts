@@ -17,10 +17,9 @@ export default defineEventHandler(async event => {
   }
 
 
-  const mediaDir = resolve(process.cwd(), '.data/media');
-  const filePath = resolve(mediaDir, fileName);
+  const filePath = resolve(resources.media.directory, fileName);
 
-  if (relative(mediaDir, filePath).startsWith('..')) {
+  if (relative(resources.media.directory, filePath).startsWith('..')) {
     throw createError({
       statusCode: 401,
       statusMessage: 'invalid file name',

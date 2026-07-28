@@ -1,3 +1,4 @@
+import { join } from 'node:path';
 
 
 const { schema, type, inferred } = parseSchema({
@@ -13,6 +14,7 @@ const { schema, type, inferred } = parseSchema({
 declare global {
   interface UnifiedResourcesRegistry {
     media: {
+      directory: string;
       dbo: UnifiedResourceController<typeof inferred>
     };
   }
@@ -21,6 +23,7 @@ declare global {
 
 export default defineNitroPlugin(() => {
   resources.media = {
+    directory: join(process.cwd(), '.data/media'),
     dbo: createUnifiedResourceController({
       resource: 'media',
       schema,

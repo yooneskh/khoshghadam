@@ -2,7 +2,7 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 
 
-export async function createImageMediaVariants(mediaDirectoryBase: string, media: any) {
+export async function createImageMediaVariants(media: any) {
 
   const variants = [
     {
@@ -18,7 +18,7 @@ export async function createImageMediaVariants(mediaDirectoryBase: string, media
   ];
 
 
-  const sourcePath = join(mediaDirectoryBase, media.path.slice(media.path.lastIndexOf('/') + 1));
+  const sourcePath = join(resources.media.directory, media.path.slice(media.path.lastIndexOf('/') + 1));
 
 
   for (const variant of variants) {
@@ -28,7 +28,7 @@ export async function createImageMediaVariants(mediaDirectoryBase: string, media
     (await sharp(sourcePath)
       .resize(variant.size, variant.size, { fit: 'inside' })
       .png()
-      .toFile(join(mediaDirectoryBase, fileName))
+      .toFile(join(resources.media.directory, fileName))
     );
 
     media = await resources.media.dbo.update({

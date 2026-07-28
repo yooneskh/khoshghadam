@@ -2,17 +2,16 @@ import { join } from 'node:path';
 import { unlink } from 'node:fs/promises';
 
 
-export async function eraseMedia(mediaDirectoryBase: string, media: any) {
+export async function eraseMedia(media: any) {
 
   if (media.path) {
-    await eraseMediaFile(mediaDirectoryBase, media.path);
+    await eraseMediaFile(media.path);
   }
-
 
   if (media.variants) {
     await Promise.all(
       Object.values(media.variants).map(it =>
-        eraseMediaFile(mediaDirectoryBase, it as string),
+        eraseMediaFile(it as string),
       ),
     );
   }
@@ -30,7 +29,7 @@ export async function eraseMedia(mediaDirectoryBase: string, media: any) {
 }
 
 
-async function eraseMediaFile(mediaDirectoryBase: string, path: string) {
+async function eraseMediaFile(path: string) {
 
   if (!path) {
     return;
@@ -45,7 +44,7 @@ async function eraseMediaFile(mediaDirectoryBase: string, path: string) {
 
 
   try {
-    await unlink(join(mediaDirectoryBase, fileName));
+    await unlink(join(resources.media.directory, fileName));
   }
   catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {

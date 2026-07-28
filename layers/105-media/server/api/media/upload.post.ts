@@ -1,10 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createImageMediaVariants } from '../../lib/media-variants-image';
-import { eraseMedia } from '../../lib/media-erase';
-
-
-const mediaDirectoryBase = join(process.cwd(), '.data/media');
 
 
 export default defineEventHandler(async event => {
@@ -33,9 +29,9 @@ export default defineEventHandler(async event => {
 
 
   const mediaFileName = `${media._id}.${file.name.slice(file.name.lastIndexOf('.') + 1)}`;
-  const mediaFilePath = join(mediaDirectoryBase, mediaFileName);
+  const mediaFilePath = join(resources.media.directory, mediaFileName);
 
-  await mkdir(mediaDirectoryBase, { recursive: true });
+  await mkdir(resources.media.directory, { recursive: true });
   await writeFile(mediaFilePath, Buffer.from(await file.arrayBuffer()));
 
 
@@ -50,7 +46,7 @@ export default defineEventHandler(async event => {
 
 
     if (file.type.startsWith('image/')) {
-      media = await createImageMediaVariants(mediaDirectoryBase, media);
+      media = await createImageMediaVariants(media);
     }
 
     return media;
@@ -58,7 +54,7 @@ export default defineEventHandler(async event => {
   }
   catch {
 
-    await eraseMedia(mediaDirectoryBase, media);
+    await eraseMedia(media);
 
     throw createError({
       statusCode: 500,

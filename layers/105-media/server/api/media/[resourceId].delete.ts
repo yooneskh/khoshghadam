@@ -1,5 +1,3 @@
-import { join } from 'node:path';
-import { eraseMedia } from '../../lib/media-erase';
 
 
 export default defineEventHandler(async event => {
@@ -11,9 +9,6 @@ export default defineEventHandler(async event => {
   });
 
 
-  return eraseMedia(
-    join(process.cwd(), '.data/media'),
-    media,
-  );
+  return eraseMedia(media);
 
 });

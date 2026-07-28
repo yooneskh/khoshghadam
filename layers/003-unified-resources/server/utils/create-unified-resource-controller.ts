@@ -30,10 +30,12 @@ export interface ResourceMeta {
 
   longText?: boolean;
 
-  options?: {
+  enum?: {
     label: string;
     value: string | number;
   }[];
+
+  labelFormat?: string | true;
 
 }
 
@@ -186,8 +188,8 @@ export function createUnifiedResourceController<T extends object>(props: { resou
 
 
       const document = {
-        ...args.document,
         _id: generateUuid() as any,
+        ...args.document,
         createdAt: Date.now(),
       };
 

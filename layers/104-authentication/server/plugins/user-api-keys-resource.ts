@@ -1,15 +1,19 @@
 
 
 const { schema, type, inferred } = parseSchema({
-  'user': 'string',
+  'name': 'string',
+  'owner': 'string',
+  'apiKey': 'string',
   'permissions?': 'string[]',
   'roles?': 'string[]',
+  'isActive': 'boolean',
+  'expiresAt': 'number',
 });
 
 
 declare global {
   interface UnifiedResourcesRegistry {
-    authorizationTokens: {
+    userApiKeys: {
       dbo: UnifiedResourceController<typeof inferred>
     };
   }
@@ -17,17 +21,20 @@ declare global {
 
 
 export default defineNitroPlugin(() => {
-  resources.authorizationTokens = {
+  resources.userApiKeys = {
     dbo: createUnifiedResourceController({
-      resource: 'authorizationTokens',
+      resource: 'userApiKeys',
       schema,
       type,
       meta: {
-        user: {
+        owner: {
           resource: 'users',
         },
         roles: {
           resource: 'authorizationRoles',
+        },
+        expiresAt: {
+          labelFormat: true,
         },
       },
     }),

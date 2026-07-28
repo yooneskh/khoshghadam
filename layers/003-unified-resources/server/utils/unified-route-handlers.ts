@@ -31,7 +31,7 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
       filter: extractFilterFromEvent(args.event),
       sort: extractSortFromEvent(args.event),
       skip: Math.max(0, Math.trunc(Number(getQuery(args.event)?.skip ?? 0)) || 0),
-      limit: Math.min(100, Math.max(0, Math.trunc(Number(getQuery(args.event)?.limit ?? 50)) || 50)),
+      limit: Math.min(300, Math.max(0, Math.trunc(Number(getQuery(args.event)?.limit ?? 300)) || 300)),
       populate: extractPopulateFromEvent(args.event),
     });
   }

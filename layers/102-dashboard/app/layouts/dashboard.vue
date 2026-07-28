@@ -55,6 +55,16 @@ const navigationItems = computed(() => {
             },
           },
         },
+        {
+          icon: 'lucide:rail-symbol',
+          label: 'User API Keys',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'user-api-keys',
+            },
+          },
+        },
       ],
     },
     {

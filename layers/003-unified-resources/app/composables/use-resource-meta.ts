@@ -43,7 +43,7 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
           header: radTitle(it.key),
           resource: it.resource,
           type: it.type,
-          items: it.items,
+          enum: it.enum,
           labelFormat: it.labelFormat,
         }))
       ),
@@ -99,9 +99,18 @@ function convertMetaToField(meta: any) {
   else if (meta.longText) {
     field.identifier = 'textarea';
   }
-  else if (meta.options) {
+  else if (meta.enum) {
     field.identifier = 'select';
-    field.options = meta.options;
+    field.items = meta.enum;
+  }
+  else if (meta.type === 'boolean') {
+    field.identifier = 'checkbox';
+  }
+  else if (meta.labelFormat) {
+    field.identifier = 'date';
+  }
+  else if (meta.type === 'number') {
+    field.type = 'number';
   }
 
 

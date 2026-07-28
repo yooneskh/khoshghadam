@@ -67,7 +67,31 @@ async function handleViewItems() {
   </template>
 
   <template v-else-if="props.column.type === 'date' || props.column.labelFormat">
-    {{ formatDate(props.data, props.column.labelFormat) }}
+    {{ formatDate(props.data, props.column.labelFormat === true ? undefined : props.column.labelFormat) }}
+  </template>
+
+  <template v-else-if="props.data === true || props.data === false">
+    <template v-if="props.data">
+      <u-badge
+        variant="subtle"
+        color="success"
+        icon="lucide:check"
+      />
+    </template>
+    <template v-else>
+      <u-badge
+        variant="subtle"
+        color="error"
+        icon="lucide:x"
+      />
+    </template>
+  </template>
+
+  <template v-else-if="props.column.enum">
+      <u-badge
+        variant="subtle"
+        :label="props.column.enum?.find(it => it.value === props.data)?.label ?? props.data"
+      />
   </template>
 
   <template v-else>

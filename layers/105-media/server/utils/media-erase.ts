@@ -2,7 +2,22 @@ import { join } from 'node:path';
 import { unlink } from 'node:fs/promises';
 
 
-export async function eraseMedia(media: any) {
+export async function eraseMedia(mediaId: string | undefined) {
+
+  if (!mediaId) {
+    return;
+  }
+
+
+  const media = await resources.media.dbo.find({
+    resourceId: mediaId,
+  });
+
+  if (!media) {
+    return;
+  }
+
+
 
   if (media.path) {
     await eraseMediaFile(media.path);

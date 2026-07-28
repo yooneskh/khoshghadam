@@ -9,6 +9,6 @@ export default defineEventHandler(async event => {
   });
 
 
-  return eraseMedia(media);
+  return eraseMedia(media._id);
 
 });

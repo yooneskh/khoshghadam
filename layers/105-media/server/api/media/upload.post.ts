@@ -54,7 +54,7 @@ export default defineEventHandler(async event => {
   }
   catch {
 
-    await eraseMedia(media);
+    await eraseMedia(media._id);
 
     throw createError({
       statusCode: 500,

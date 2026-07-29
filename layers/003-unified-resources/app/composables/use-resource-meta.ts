@@ -43,6 +43,7 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
           header: radTitle(it.key),
           resource: it.resource,
           type: it.type,
+          items: it.items,
           enum: it.enum,
           labelFormat: it.labelFormat,
         }))

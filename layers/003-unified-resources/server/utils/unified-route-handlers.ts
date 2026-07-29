@@ -9,7 +9,12 @@ interface ResourceHandlerArgs {
 
 export async function handleResourceSchema(args: ResourceHandlerArgs) {
 
-  await assertUserPermission(args);
+  if (args.permission) {
+    await assertUserPermission({
+      event: args.event,
+      permission: args.permission!,
+    });
+  }
 
   return resources[args.resource as keyof typeof resources]?.dbo?.schema();
 
@@ -18,7 +23,12 @@ export async function handleResourceSchema(args: ResourceHandlerArgs) {
 
 export async function handleResourceList(args: ResourceHandlerArgs) {
 
-  await assertUserPermission(args);
+  if (args.permission) {
+    await assertUserPermission({
+      event: args.event,
+      permission: args.permission!,
+    });
+  }
 
   if (getQuery(args.event)?.single === 'xtruex') {
     return resources[args.resource as keyof typeof resources]?.dbo?.find({
@@ -40,7 +50,12 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
 
 export async function handleResourceCount(args: ResourceHandlerArgs) {
 
-  await assertUserPermission(args);
+  if (args.permission) {
+    await assertUserPermission({
+      event: args.event,
+      permission: args.permission!,
+    });
+  }
 
   return resources[args.resource as keyof typeof resources]?.dbo?.count({
     filter: extractFilterFromEvent(args.event),
@@ -50,7 +65,12 @@ export async function handleResourceCount(args: ResourceHandlerArgs) {
 
 export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
 
-  await assertUserPermission(args);
+  if (args.permission) {
+    await assertUserPermission({
+      event: args.event,
+      permission: args.permission!,
+    });
+  }
 
   return resources[args.resource as keyof typeof resources]?.dbo?.retrieve({
     resourceId: getRouterParam(args.event, 'resourceId'),
@@ -61,7 +81,12 @@ export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
 
 export async function handleResourceCreate(args: ResourceHandlerArgs) {
 
-  await assertUserPermission(args);
+  if (args.permission) {
+    await assertUserPermission({
+      event: args.event,
+      permission: args.permission!,
+    });
+  }
 
   return resources[args.resource as keyof typeof resources]?.dbo?.create({
     document: await readBody(args.event),
@@ -71,7 +96,12 @@ export async function handleResourceCreate(args: ResourceHandlerArgs) {
 
 export async function handleResourceUpdate(args: ResourceHandlerArgs) {
 
-  await assertUserPermission(args);
+  if (args.permission) {
+    await assertUserPermission({
+      event: args.event,
+      permission: args.permission!,
+    });
+  }
 
   return resources[args.resource as keyof typeof resources]?.dbo?.update({
     resourceId: getRouterParam(args.event, 'resourceId'),
@@ -82,7 +112,12 @@ export async function handleResourceUpdate(args: ResourceHandlerArgs) {
 
 export async function handleResourceDelete(args: ResourceHandlerArgs) {
 
-  await assertUserPermission(args);
+  if (args.permission) {
+    await assertUserPermission({
+      event: args.event,
+      permission: args.permission!,
+    });
+  }
 
   return resources[args.resource as keyof typeof resources]?.dbo?.delete({
     resourceId: getRouterParam(args.event, 'resourceId'),
@@ -194,12 +229,7 @@ function extractPopulateFromEvent(event: H3Event): Record<string, string[]> | un
 }
 
 
-export async function assertUserPermission(args: { event: H3Event; permission?: string; }) {
-
-  if (!args.permission) {
-    return;
-  }
-
+export async function assertUserPermission(args: { event: H3Event; permission: string; }) {
 
   const user = await assertUser({
     event: args.event,
@@ -216,6 +246,9 @@ export async function assertUserPermission(args: { event: H3Event; permission?: 
   if (!hasPermission) {
     throw createUnauthorizedError();
   }
+
+
+  return user;
 
 }
 

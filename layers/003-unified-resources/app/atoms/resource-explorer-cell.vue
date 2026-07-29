@@ -67,7 +67,7 @@ async function handleViewItems() {
   </template>
 
   <template v-else-if="props.column.type === 'date' || props.column.labelFormat">
-    {{ formatDate(props.data, props.column.labelFormat === true ? undefined : props.column.labelFormat) }}
+    {{ formatDate(props.data, props.column.labelFormat === 'default' ? undefined : props.column.labelFormat) }}
   </template>
 
   <template v-else-if="props.data === true || props.data === false">

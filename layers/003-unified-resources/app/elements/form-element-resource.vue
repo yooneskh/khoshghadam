@@ -41,7 +41,7 @@ const title = asyncComputed(async () => {
     );
 
 
-    return resources.map(it => it.name).join(' - ');
+    return resources.map(it => it.name || truncateMiddle(it._id)).join(' - ');
 
   }
   finally {

@@ -35,7 +35,7 @@ export interface ResourceMeta {
     value: string | number;
   }[];
 
-  labelFormat?: string | true;
+  labelFormat?: string;
 
 }
 
@@ -76,7 +76,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
           items: !properties[key.replaceAll('?', '')]?.items ? undefined : {
             ...properties[key.replaceAll('?', '')].items,
             properties: !properties[key.replaceAll('?', '')].items.properties ? undefined : convertPropertyToSchema(
-              schema[key.replaceAll('?', '')][0],
+              schema[key][0],
               properties[key.replaceAll('?', '')].items.properties,
               meta?.[key.replaceAll('?', '')]?.children,
             ),

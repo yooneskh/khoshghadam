@@ -172,7 +172,7 @@ const navigationItems = computed(() => {
       </div>
     </header>
 
-    <main class="w-440 max-w-[calc(100vw-16px)] mx-auto bg-default border border-default shadow-lg shadow-neutral-200 rounded-xl -mt-14.5">
+    <main class="w-440 max-w-[calc(100vw-16px)] mx-auto bg-default border border-default shadow-lg shadow-neutral-200 rounded-xl -mt-14.5 overflow-clip mb-3">
 
       <div class="flex items-center gap-2 p-2 border-b border-default">
         <template v-for="item of navigationItems" :key="item.label">

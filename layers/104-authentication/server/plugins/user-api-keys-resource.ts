@@ -34,7 +34,7 @@ export default defineNitroPlugin(() => {
           resource: 'authorizationRoles',
         },
         expiresAt: {
-          labelFormat: true,
+          labelFormat: 'default',
         },
       },
     }),

@@ -33,12 +33,14 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
   if (getQuery(args.event)?.single === 'xtruex') {
     return resources[args.resource as keyof typeof resources]?.dbo?.find({
       filter: extractFilterFromEvent(args.event),
+      select: extractSelectFromEvent(args.event),
       populate: extractPopulateFromEvent(args.event),
     });
   }
   else {
     return resources[args.resource as keyof typeof resources]?.dbo?.list({
       filter: extractFilterFromEvent(args.event),
+      select: extractSelectFromEvent(args.event),
       sort: extractSortFromEvent(args.event),
       skip: Math.max(0, Math.trunc(Number(getQuery(args.event)?.skip ?? 0)) || 0),
       limit: Math.min(300, Math.max(0, Math.trunc(Number(getQuery(args.event)?.limit ?? 300)) || 300)),
@@ -180,6 +182,19 @@ function extractFilterFromEvent(event: H3Event) {
 
       }, {} as Record<string, any>)
   );
+
+}
+
+function extractSelectFromEvent(event: H3Event): string[] | undefined {
+
+  const select = getQuery(event)?.select;
+
+  if (!select) {
+    return undefined;
+  }
+
+
+  return String(select).split(',').map(it => it.trim()).filter(Boolean);
 
 }
 

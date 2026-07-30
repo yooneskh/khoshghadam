@@ -29,10 +29,7 @@ const navigationItems = computed(() => {
           icon: 'lucide:user',
           label: 'Users',
           to: {
-            name: 'dashboard.resources.single',
-            params: {
-              resourceName: 'users',
-            },
+            name: 'dashboard.resources.users',
           },
         },
         {
@@ -194,7 +191,7 @@ const navigationItems = computed(() => {
         </template>
       </div>
 
-      <div class="p-3">
+      <div class="p-3 bg-muted">
         <slot />
       </div>
 

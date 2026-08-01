@@ -1,6 +1,6 @@
 <script setup>
 
-import BackgroundImage from '~/assets/images/desktop-background.jpg';
+import BackgroundImage from '~/assets/images/background.jpg';
 
 </script>
 
@@ -10,6 +10,7 @@ import BackgroundImage from '~/assets/images/desktop-background.jpg';
     class="
       h-dvh w-screen
       relative
+      bg-center bg-cover
     "
     :style="{
       backgroundImage: `url(${BackgroundImage})`
@@ -53,9 +54,8 @@ import BackgroundImage from '~/assets/images/desktop-background.jpg';
 
       <u-button
         variant="soft"
-        size="xl"
         label="Begin"
-        class="font-bold rounded-s-none px-6"
+        class="font-bold rounded-s-none bg-green-600 text-white px-6"
       />
 
       <div class="grow" />

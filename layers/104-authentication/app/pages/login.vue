@@ -30,12 +30,23 @@ const { form: loginForm, formTag: loginFormTag } = useForm({
 });
 
 
+/* captcha */
+
+const captchaChallengeEl = ref();
+const captchaId = ref('');
+const captchaCode = ref('');
+
+
 async function handleLogin() {
   try {
 
     const loginResponse = await ufetch('/api/authentication/login', {
       silent: true,
       method: 'post',
+      headers: {
+        'x-captcha-id': captchaId.value,
+        'x-captcha-code': captchaCode.value,
+      },
       body: {
         username: loginForm.value.username,
         password: loginForm.value.password,
@@ -60,9 +71,13 @@ async function handleLogin() {
 
   }
   catch {
+
+    await captchaChallengeEl.value?.refresh();
+
     toastError({
-      title: 'Invalid username or password.',
+      title: 'Invalid username, password, or captcha.',
     });
+
   }
 }
 
@@ -76,7 +91,7 @@ async function handleLogin() {
     :actions="[
       {
         label: 'Login',
-        disabled: !loginForm.username || !loginForm.password,
+        disabled: !loginForm.username || !loginForm.password || !captchaId || !captchaCode,
         onClick: handleLogin,
       },
     ]">
@@ -94,6 +109,12 @@ async function handleLogin() {
       </p>
 
       <login-form-tag />
+
+      <captcha-challenge
+        ref="captchaChallengeEl"
+        v-model:id="captchaId"
+        v-model:code="captchaCode"
+      />
 
     </div>
   </window-base>

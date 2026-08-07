@@ -2,6 +2,11 @@
 
 export default defineEventHandler(async event => {
 
+  await assertCaptchaCode({
+    event,
+  });
+
+
   const body = await assertBody({
     event,
     schema: {

@@ -2,6 +2,11 @@
 
 export default defineEventHandler(async event => {
 
+  await assertRateLimit({
+    event,
+    limit: 5,
+  });
+
   await assertCaptchaCode({
     event,
   });

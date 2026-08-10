@@ -61,7 +61,9 @@ async function handleViewItems() {
   </template>
 
   <template v-else-if="props.column.type === 'array' && props.column.items.type === 'object'">
-    <a class="text-primary underline cursor-pointer" @click="handleViewItems()">
+    <a
+      class="text-primary underline cursor-pointer"
+      @click="handleViewItems()">
       View {{ props.column?.header || 'Items' }}
     </a>
   </template>

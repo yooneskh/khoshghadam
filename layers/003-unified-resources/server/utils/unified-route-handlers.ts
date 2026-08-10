@@ -16,7 +16,7 @@ export async function handleResourceSchema(args: ResourceHandlerArgs) {
     });
   }
 
-  return resources[args.resource as keyof typeof resources]?.dbo?.schema();
+  return app[args.resource as keyof typeof app]?.dbo?.schema();
 
 }
 
@@ -31,14 +31,14 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
   }
 
   if (getQuery(args.event)?.single === 'xtruex') {
-    return resources[args.resource as keyof typeof resources]?.dbo?.find({
+    return app[args.resource as keyof typeof app]?.dbo?.find({
       filter: extractFilterFromEvent(args.event),
       select: extractSelectFromEvent(args.event),
       populate: extractPopulateFromEvent(args.event),
     });
   }
   else {
-    return resources[args.resource as keyof typeof resources]?.dbo?.list({
+    return app[args.resource as keyof typeof app]?.dbo?.list({
       filter: extractFilterFromEvent(args.event),
       select: extractSelectFromEvent(args.event),
       sort: extractSortFromEvent(args.event),
@@ -59,7 +59,7 @@ export async function handleResourceCount(args: ResourceHandlerArgs) {
     });
   }
 
-  return resources[args.resource as keyof typeof resources]?.dbo?.count({
+  return app[args.resource as keyof typeof app]?.dbo?.count({
     filter: extractFilterFromEvent(args.event),
   });
 
@@ -74,7 +74,7 @@ export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
     });
   }
 
-  return resources[args.resource as keyof typeof resources]?.dbo?.retrieve({
+  return app[args.resource as keyof typeof app]?.dbo?.retrieve({
     resourceId: getRouterParam(args.event, 'resourceId'),
     populate: extractPopulateFromEvent(args.event),
   });
@@ -90,7 +90,7 @@ export async function handleResourceCreate(args: ResourceHandlerArgs) {
     });
   }
 
-  return resources[args.resource as keyof typeof resources]?.dbo?.create({
+  return app[args.resource as keyof typeof app]?.dbo?.create({
     document: await readBody(args.event),
   });
 
@@ -105,7 +105,7 @@ export async function handleResourceUpdate(args: ResourceHandlerArgs) {
     });
   }
 
-  return resources[args.resource as keyof typeof resources]?.dbo?.update({
+  return app[args.resource as keyof typeof app]?.dbo?.update({
     resourceId: getRouterParam(args.event, 'resourceId'),
     document: await readBody(args.event),
   });
@@ -121,7 +121,7 @@ export async function handleResourceDelete(args: ResourceHandlerArgs) {
     });
   }
 
-  return resources[args.resource as keyof typeof resources]?.dbo?.delete({
+  return app[args.resource as keyof typeof app]?.dbo?.delete({
     resourceId: getRouterParam(args.event, 'resourceId'),
   });
 

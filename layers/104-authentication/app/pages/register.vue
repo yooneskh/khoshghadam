@@ -110,7 +110,11 @@ async function handleRegister() {
 
       <p>
         Enter your account information below and click on register. If you already have an account, you can
-        <nuxt-link :to="{ name: 'authentication.login' }" class="text-primary underline">
+        <nuxt-link
+          class="text-primary underline"
+          :to="{
+            name: 'authentication.login',
+          }">
           login here.
         </nuxt-link>
       </p>

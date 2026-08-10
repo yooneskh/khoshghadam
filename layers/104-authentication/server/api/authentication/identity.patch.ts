@@ -12,7 +12,7 @@ export default defineEventHandler(async event => {
   });
 
 
-  return resources.users.dbo.update({
+  return app.users.dbo.update({
     resourceId: user._id,
     document: {
       name: body.name,

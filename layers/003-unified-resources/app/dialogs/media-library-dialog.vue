@@ -165,7 +165,7 @@ async function handleSubmitSelection(items) {
 
 
 <template>
-  <u-modal scrollable :ui="{ content: 'max-w-5xl' }" @update:open="!$event && emit('close')">
+  <u-modal :ui="{ content: 'max-w-5xl' }" scrollable @update:open="!$event && emit('close')">
     <template #content>
       <un-card
         icon="lucide:file-badge"
@@ -257,6 +257,7 @@ async function handleSubmitSelection(items) {
                 <template v-if="currentItems.includes(media._id)">
                   <div class="absolute top-1 inset-s-1">
                     <u-badge
+                      variant="subtle"
                       color="success"
                       icon="lucide:check"
                     />

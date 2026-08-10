@@ -20,7 +20,7 @@ export default defineNitroPlugin(() => {
       }
 
 
-      const existingUser = await resources.users.dbo.find({
+      const existingUser = await app.users.dbo.find({
         filter: {
           username: initialUser.username,
         },
@@ -31,14 +31,14 @@ export default defineNitroPlugin(() => {
       }
 
 
-      const user = await resources.users.dbo.create({
+      const user = await app.users.dbo.create({
         document: {
           name: initialUser.name,
           username: initialUser.username,
         },
       });
 
-      await resources.userPasswords.dbo.create({
+      await app.userPasswords.dbo.create({
         document: {
           user: user._id,
           passwordHash: await hashPassword(initialUser.password),
@@ -56,7 +56,7 @@ export default defineNitroPlugin(() => {
           });
         }
 
-        await resources.authorizationTokens.dbo.create({
+        await app.authorizationTokens.dbo.create({
           document: {
             user: user._id,
             permissions: initialUser.permissions,

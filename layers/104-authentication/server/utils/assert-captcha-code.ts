@@ -13,7 +13,7 @@ export async function assertCaptchaCode(args: { event: H3Event }) {
   }
 
 
-  const captcha = await resources.captchaCodes.dbo.find({
+  const captcha = await app.captchaCodes.dbo.find({
     resourceId: captchaId,
   });
 
@@ -33,7 +33,7 @@ export async function assertCaptchaCode(args: { event: H3Event }) {
   }
 
 
-  await resources.captchaCodes.dbo.update({
+  await app.captchaCodes.dbo.update({
     resourceId: captcha._id,
     document: {
       isActive: false,

@@ -27,7 +27,7 @@ const { columns } = useResourceMeta({
 });
 
 
-const { data: resourcesData, pending: isResourcesLoading, refresh: refreshResources } = useUFetch(
+const { data: resourcesData, pending: isResourcesPending, refresh: refreshResources } = useUFetch(
   computed(() => `/api/${resourcePath.value}`),
   {
     query: {
@@ -37,7 +37,7 @@ const { data: resourcesData, pending: isResourcesLoading, refresh: refreshResour
   },
 );
 
-const { data: resourcesCountData, pending: isResourcesCountLoading, refresh: refreshResourcesCount } = useUFetch(
+const { data: resourcesCountData, pending: isResourcesCountPending, refresh: refreshResourcesCount } = useUFetch(
   computed(() => `/api/${resourcePath.value}/count`),
 );
 
@@ -66,7 +66,7 @@ defineExpose({
 <template>
   <un-table
     :columns="columns"
-    :loading="isResourcesLoading || isResourcesCountLoading"
+    :loading="isResourcesPending || isResourcesCountPending"
     :data="resourcesData"
     :total-items="resourcesCountData"
     v-model:items-per-page="itemsPerPage"

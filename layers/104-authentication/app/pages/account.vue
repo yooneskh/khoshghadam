@@ -91,7 +91,7 @@ async function handleLogout() {
     ]">
     <div class="max-w-sm mx-auto space-y-4 py-8">
 
-      <h1 class="text-2xl font-bold">
+      <h1 class="text-2xl font-semibold">
         Welcome, {{ user.name }}!
       </h1>
 

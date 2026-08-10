@@ -329,7 +329,7 @@ async function populateDocument(args: { document: any, meta: any, populate: Reco
 
     if (typeof value === 'string' && targetMeta.resource) {
 
-      args.document[key] = await resources[targetMeta.resource as keyof typeof resources]?.dbo.find({
+      args.document[key] = await app[targetMeta.resource as keyof typeof app]?.dbo.find({
         resourceId: value,
         select: !populateFields?.[0] ? undefined : populateFields,
       });
@@ -349,7 +349,7 @@ async function populateDocument(args: { document: any, meta: any, populate: Reco
         value.map(async (it, index) => {
           if (typeof it === 'string' && targetMeta.resource) {
 
-            args.document[key][index] = await resources[targetMeta.resource as keyof typeof resources]?.dbo.find({
+            args.document[key][index] = await app[targetMeta.resource as keyof typeof app]?.dbo.find({
               resourceId: it,
               select: !populateFields?.[0] ? undefined : populateFields,
             });

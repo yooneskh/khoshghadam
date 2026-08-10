@@ -21,7 +21,7 @@ export default defineEventHandler(async event => {
   });
 
 
-  const user = await resources.users.dbo.find({
+  const user = await app.users.dbo.find({
     filter: {
       username: body.username,
     },
@@ -32,7 +32,7 @@ export default defineEventHandler(async event => {
   }
 
 
-  const userPassword = await resources.userPasswords.dbo.find({
+  const userPassword = await app.userPasswords.dbo.find({
     filter: {
       user: user._id,
       isActive: true,
@@ -49,7 +49,7 @@ export default defineEventHandler(async event => {
   }
 
 
-  return resources.authenticationTokens.dbo.create({
+  return app.authenticationTokens.dbo.create({
     document: {
       user: user._id,
       token: generateUuid(),

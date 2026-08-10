@@ -1,8 +1,8 @@
 
 
 declare global {
-  interface UnifiedResourcesRegistry {}
+  interface UnifiedAppRegistry {}
 }
 
 
-export const resources = Object.create(null) as UnifiedResourcesRegistry;
+export const app = Object.create(null) as UnifiedAppRegistry;

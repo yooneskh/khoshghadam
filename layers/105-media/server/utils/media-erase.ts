@@ -9,7 +9,7 @@ export async function eraseMedia(mediaId: string | undefined) {
   }
 
 
-  const media = await resources.media.dbo.find({
+  const media = await app.media.dbo.find({
     resourceId: mediaId,
   });
 
@@ -33,7 +33,7 @@ export async function eraseMedia(mediaId: string | undefined) {
 
 
   try {
-    return await resources.media.dbo.delete({
+    return await app.media.dbo.delete({
       resourceId: media._id,
     });
   }
@@ -59,7 +59,7 @@ async function eraseMediaFile(path: string) {
 
 
   try {
-    await unlink(join(resources.media.directory, fileName));
+    await unlink(join(app.media.directory, fileName));
   }
   catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {

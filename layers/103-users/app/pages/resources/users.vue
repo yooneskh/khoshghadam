@@ -56,9 +56,9 @@ async function handleOnboardUser() {
         key: 'role',
         identifier: 'select',
         label: 'Role',
-        items: roles.map(role => ({
-          label: role.name,
-          value: role._id,
+        items: roles.map(it => ({
+          value: it._id,
+          label: it.name,
         })),
       },
       {
@@ -154,8 +154,8 @@ async function handleResetPassword(user) {
     ]"
     :resource-actions="[
       {
-        tooltip: 'Reset Password',
         icon: 'lucide:key-round',
+        tooltip: 'Reset Password',
         onClick: handleResetPassword,
       },
     ]"

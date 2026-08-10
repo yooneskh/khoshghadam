@@ -12,7 +12,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
 
   if (authorizationHeader) {
 
-    const authenticationToken = await resources.authenticationTokens.dbo.find({
+    const authenticationToken = await app.authenticationTokens.dbo.find({
       filter: {
         token: authorizationHeader,
         isActive: true,
@@ -26,7 +26,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
 
     if (authenticationToken.expiresAt <= Date.now()) {
 
-      await resources.authenticationTokens.dbo.update({
+      await app.authenticationTokens.dbo.update({
         resourceId: authenticationToken._id,
         document: {
           isActive: false,
@@ -43,7 +43,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
   }
   else if (apiKeyHeader) {
 
-    const userApiKey = await resources.userApiKeys.dbo.find({
+    const userApiKey = await app.userApiKeys.dbo.find({
       filter: {
         apiKey: apiKeyHeader,
         isActive: true,
@@ -57,7 +57,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
 
     if (userApiKey.expiresAt <= Date.now()) {
 
-      await resources.userApiKeys.dbo.update({
+      await app.userApiKeys.dbo.update({
         resourceId: userApiKey._id,
         document: {
           isActive: false,
@@ -79,7 +79,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
   }
 
 
-  const user = await resources.users.dbo.find({
+  const user = await app.users.dbo.find({
     resourceId: userId,
   });
 
@@ -106,7 +106,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
     }
     else {
 
-      const authorizationToken = await resources.authorizationTokens.dbo.find({
+      const authorizationToken = await app.authorizationTokens.dbo.find({
         filter: {
           'user': filledUser._id,
         },
@@ -125,7 +125,7 @@ export async function assertUser(args: { event: H3Event, fillPermissions?: boole
     }
     else {
 
-      const authorizationRoles = await resources.authorizationRoles.dbo.list({
+      const authorizationRoles = await app.authorizationRoles.dbo.list({
         filter: {
           '_id': {
             $in: roles,

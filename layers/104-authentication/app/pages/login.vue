@@ -103,7 +103,11 @@ async function handleLogin() {
 
       <p>
         Enter your account information below and click on login. If you don't have an account, you can
-        <nuxt-link :to="{ name: 'authentication.register' }" class="text-primary underline">
+        <nuxt-link
+          class="text-primary underline"
+          :to="{
+            name: 'authentication.register',
+          }">
           register a new account here.
         </nuxt-link>
       </p>

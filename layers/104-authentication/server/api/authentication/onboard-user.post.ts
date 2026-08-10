@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
   });
 
 
-  const existingUser = await resources.users.dbo.find({
+  const existingUser = await app.users.dbo.find({
     filter: {
       username: body.username,
     },
@@ -36,7 +36,7 @@ export default defineEventHandler(async event => {
 
   if (body.role) {
 
-    const role = await resources.authorizationRoles.dbo.find({
+    const role = await app.authorizationRoles.dbo.find({
       resourceId: body.role,
     });
 
@@ -58,14 +58,14 @@ export default defineEventHandler(async event => {
 
   try {
 
-    user = await resources.users.dbo.create({
+    user = await app.users.dbo.create({
       document: {
         name: body.name,
         username: body.username,
       },
     });
 
-    userPassword = await resources.userPasswords.dbo.create({
+    userPassword = await app.userPasswords.dbo.create({
       document: {
         user: user._id,
         passwordHash,
@@ -73,7 +73,7 @@ export default defineEventHandler(async event => {
       },
     });
 
-    await resources.authorizationTokens.dbo.create({
+    await app.authorizationTokens.dbo.create({
       document: {
         user: user._id,
         ...(!body.permissions ? {} : {
@@ -92,13 +92,13 @@ export default defineEventHandler(async event => {
   catch (error) {
 
     if (user) {
-      await resources.users.dbo.delete({
+      await app.users.dbo.delete({
         resourceId: user._id,
       });
     }
 
     if (userPassword) {
-      resources.userPasswords.dbo.delete({
+      app.userPasswords.dbo.delete({
         resourceId: userPassword._id,
       });
     }

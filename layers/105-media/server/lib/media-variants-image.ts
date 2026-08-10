@@ -18,7 +18,7 @@ export async function createImageMediaVariants(media: any) {
   ];
 
 
-  const sourcePath = join(resources.media.directory, media.path.slice(media.path.lastIndexOf('/') + 1));
+  const sourcePath = join(app.media.directory, media.path.slice(media.path.lastIndexOf('/') + 1));
 
 
   for (const variant of variants) {
@@ -28,10 +28,10 @@ export async function createImageMediaVariants(media: any) {
     (await sharp(sourcePath)
       .resize(variant.size, variant.size, { fit: 'inside' })
       .png()
-      .toFile(join(resources.media.directory, fileName))
+      .toFile(join(app.media.directory, fileName))
     );
 
-    media = await resources.media.dbo.update({
+    media = await app.media.dbo.update({
       resourceId: media._id,
       document: {
         variants: {

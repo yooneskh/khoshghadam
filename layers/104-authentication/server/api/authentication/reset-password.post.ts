@@ -17,7 +17,7 @@ export default defineEventHandler(async event => {
   });
 
 
-  const user = await resources.users.dbo.find({
+  const user = await app.users.dbo.find({
     resourceId: body.user,
   });
 
@@ -32,13 +32,13 @@ export default defineEventHandler(async event => {
   const passwordHash = await hashPassword(body.password);
 
   const [userPasswords, authenticationTokens] = await Promise.all([
-    resources.userPasswords.dbo.list({
+    app.userPasswords.dbo.list({
       filter: {
         user: user._id,
         isActive: true,
       },
     }),
-    resources.authenticationTokens.dbo.list({
+    app.authenticationTokens.dbo.list({
       filter: {
         user: user._id,
         isActive: true,
@@ -49,7 +49,7 @@ export default defineEventHandler(async event => {
 
   await Promise.all([
     ...userPasswords.map(userPassword => {
-      return resources.userPasswords.dbo.update({
+      return app.userPasswords.dbo.update({
         resourceId: userPassword._id,
         document: {
           isActive: false,
@@ -57,7 +57,7 @@ export default defineEventHandler(async event => {
       });
     }),
     ...authenticationTokens.map(authenticationToken => {
-      return resources.authenticationTokens.dbo.update({
+      return app.authenticationTokens.dbo.update({
         resourceId: authenticationToken._id,
         document: {
           isActive: false,
@@ -67,7 +67,7 @@ export default defineEventHandler(async event => {
   ]);
 
 
-  await resources.userPasswords.dbo.create({
+  await app.userPasswords.dbo.create({
     document: {
       user: user._id,
       passwordHash,

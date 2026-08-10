@@ -64,7 +64,7 @@ const { data: sessionsData } = useUFetch(
     ]">
 
     <div class="p-3">
-      <h1 class="text-2xl font-bold">
+      <h1 class="text-2xl font-semibold">
         {{ flashCardData?.name }}
       </h1>
       <h2 class="mt-1">
@@ -97,6 +97,7 @@ const { data: sessionsData } = useUFetch(
                 <template v-for="answer of session.answeredCards" :key="answer._id">
                   <u-tooltip :text="flashCardData?.cards?.find(it => it._id === answer.card)?.frontText">
                     <u-badge
+                      variant="subtle"
                       :color="answer.opened ? 'warning' : 'success'"
                       class="size-3"
                     />

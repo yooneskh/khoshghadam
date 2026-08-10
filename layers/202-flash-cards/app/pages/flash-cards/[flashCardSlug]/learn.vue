@@ -160,7 +160,8 @@ async function handleCardAdvance() {
                     <template v-for="(answer, index) of cardsSessions[card._id]" :key="index">
                       <u-tooltip :text="formatDate(answer.createdAt)">
                         <u-badge
-                          :color="answer.opened === true ? 'success' : answer.opened === false ? 'warning' : 'neutral'"
+                          variant="subtle"
+                          :color="answer.opened === true ? 'success' : answer.opened === false ? 'warning' : undefined"
                         />
                       </u-tooltip>
                     </template>

@@ -22,7 +22,7 @@ export default defineEventHandler(async event => {
   });
 
 
-  const oldUser = await resources.users.dbo.find({
+  const oldUser = await app.users.dbo.find({
     filter: {
       username: body.username,
     },
@@ -36,14 +36,14 @@ export default defineEventHandler(async event => {
   }
 
 
-  const newUser = await resources.users.dbo.create({
+  const newUser = await app.users.dbo.create({
     document: {
       name: body.name,
       username: body.username,
     },
   });
 
-  await resources.userPasswords.dbo.create({
+  await app.userPasswords.dbo.create({
     document: {
       user: newUser._id,
       passwordHash: await hashPassword(body.password),
@@ -52,7 +52,7 @@ export default defineEventHandler(async event => {
   });
 
 
-  return resources.authenticationTokens.dbo.create({
+  return app.authenticationTokens.dbo.create({
     document: {
       user: newUser._id,
       token: generateUuid(),

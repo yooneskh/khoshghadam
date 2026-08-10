@@ -7,7 +7,7 @@ const { schema, type, inferred } = parseSchema({
 
 
 declare global {
-  interface UnifiedResourcesRegistry {
+  interface UnifiedAppRegistry {
     users: {
       dbo: UnifiedResourceController<typeof inferred>
     };
@@ -16,7 +16,7 @@ declare global {
 
 
 export default defineNitroPlugin(() => {
-  resources.users = {
+  app.users = {
     dbo: createUnifiedResourceController({
       resource: 'users',
       schema,

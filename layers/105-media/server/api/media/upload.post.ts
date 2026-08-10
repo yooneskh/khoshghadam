@@ -17,7 +17,7 @@ export default defineEventHandler(async event => {
   }
 
 
-  let media = await resources.media.dbo.create({
+  let media = await app.media.dbo.create({
     document: {
       owner: user._id,
       name: file.name,
@@ -29,15 +29,15 @@ export default defineEventHandler(async event => {
 
 
   const mediaFileName = `${media._id}.${file.name.slice(file.name.lastIndexOf('.') + 1)}`;
-  const mediaFilePath = join(resources.media.directory, mediaFileName);
+  const mediaFilePath = join(app.media.directory, mediaFileName);
 
-  await mkdir(resources.media.directory, { recursive: true });
+  await mkdir(app.media.directory, { recursive: true });
   await writeFile(mediaFilePath, Buffer.from(await file.arrayBuffer()));
 
 
   try {
 
-    media = await resources.media.dbo.update({
+    media = await app.media.dbo.update({
       resourceId: media._id,
       document: {
         path: `/media/${mediaFileName}`,

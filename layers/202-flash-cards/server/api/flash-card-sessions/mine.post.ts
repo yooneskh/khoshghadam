@@ -12,7 +12,7 @@ export default defineEventHandler(async event => {
   });
 
 
-  return resources.flashCardSessions.dbo.create({
+  return app.flashCardSessions.dbo.create({
     document: {
       user: user._id,
       flashCard: body.flashCard,

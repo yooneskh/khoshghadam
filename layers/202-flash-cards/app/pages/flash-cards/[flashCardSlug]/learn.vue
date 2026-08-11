@@ -13,6 +13,10 @@ const flashCardSlug = computed(() => {
   return route.params.flashCardSlug;
 });
 
+const journeySlug = computed(() => {
+  return route.query.journey;
+});
+
 
 /* flash cards */
 
@@ -62,10 +66,13 @@ const cardsSessions = computed(() => {
   return Object.fromEntries(
     flashCardData.value.cards.map(it => [
       it._id,
-      previousSessionsData.value.map(i => ({
-        opened: i.answeredCards.find(x => x.card === it._id)?.opened,
-        createdAt: i.createdAt,
-      })),
+      previousSessionsData.value
+        .filter(i => i.flashCard === flashCardData.value._id)
+        .map(i => ({
+          opened: i.answeredCards.find(x => x.card === it._id)?.opened,
+          createdAt: i.createdAt,
+        }))
+        .filter(i => i.opened !== undefined),
     ]),
   );
 
@@ -107,12 +114,22 @@ async function handleCardAdvance() {
     activeIndex.value += 1;
   }
   else {
-    await navigateTo({
-      name: 'flash-cards.single',
-      params: {
-        flashCardSlug: flashCardSlug.value,
-      },
-    });
+    if (journeySlug.value) {
+      await navigateTo({
+        name: 'flash-cards.flash-card-journeys.single',
+        params: {
+          journeySlug: journeySlug.value,
+        },
+      });
+    }
+    else {
+      await navigateTo({
+        name: 'flash-cards.single',
+        params: {
+          flashCardSlug: flashCardSlug.value,
+        },
+      });
+    }
   }
 
 }
@@ -161,7 +178,7 @@ async function handleCardAdvance() {
                       <u-tooltip :text="formatDate(answer.createdAt)">
                         <u-badge
                           variant="subtle"
-                          :color="answer.opened === true ? 'success' : answer.opened === false ? 'warning' : undefined"
+                          :color="answer.opened === true ? 'warning' : answer.opened === false ? 'success' : undefined"
                         />
                       </u-tooltip>
                     </template>

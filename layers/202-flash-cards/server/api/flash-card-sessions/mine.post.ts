@@ -12,6 +12,18 @@ export default defineEventHandler(async event => {
   });
 
 
+  const flashCard = await app.flashCards.dbo.find({
+    resourceId: body.flashCard,
+  });
+
+  if (!flashCard) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'flash card does not exist',
+    });
+  }
+
+
   return app.flashCardSessions.dbo.create({
     document: {
       user: user._id,

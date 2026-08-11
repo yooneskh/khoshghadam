@@ -7,6 +7,8 @@ const { schema, type, inferred } = parseSchema({
     'card': 'string',
     'opened': 'boolean',
   }, '[]'],
+  'finishedAt?': 'number',
+  'successful?': 'boolean',
 });
 
 

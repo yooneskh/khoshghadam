@@ -26,6 +26,13 @@ useHead({
             name: 'flash-cards.list',
           },
         },
+        {
+          pito: 'address-book',
+          name: 'Flash Card Journeys',
+          to: {
+            name: 'flash-cards.flash-card-journeys.list',
+          },
+        },
       ]"
     />
   </window-base>

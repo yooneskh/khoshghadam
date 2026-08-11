@@ -42,6 +42,18 @@ const { data: sessionsData } = useUFetch(
   },
 );
 
+
+const flashCardSessions = computed(() => {
+
+  if (!flashCardData.value || !sessionsData.value) {
+    return [];
+  }
+
+
+  return sessionsData.value.filter(it => it.flashCard === flashCardData.value._id);
+
+});
+
 </script>
 
 
@@ -83,7 +95,7 @@ const { data: sessionsData } = useUFetch(
       </p>
     </div>
 
-    <template v-if="sessionsData?.length">
+    <template v-if="flashCardSessions.length">
       <div class="p-3 border-t border-default">
 
         <p>
@@ -91,7 +103,7 @@ const { data: sessionsData } = useUFetch(
         </p>
 
         <div class="mt-3 space-y-3">
-          <template v-for="session of sessionsData" :key="session._id">
+          <template v-for="session of flashCardSessions" :key="session._id">
             <div class="flex items-center gap-3">
               <div class="flex flex-wrap items-center gap-1">
                 <template v-for="answer of session.answeredCards" :key="answer._id">

@@ -11,6 +11,13 @@ useHead({
 });
 
 
+const route = useRoute();
+
+const returnUrl = computed(() => {
+  return route.query.returnUrl;
+});
+
+
 /* login */
 
 const { form: loginForm, formTag: loginFormTag } = useForm({
@@ -65,9 +72,21 @@ async function handleLogin() {
     useUser().value = identityResponse;
 
 
-    await navigateTo({
-      name: 'authentication.account',
-    });
+    if (returnUrl.value) {
+      if (returnUrl.value.startsWith('::')) {
+        await navigateTo({
+          name: returnUrl.value.slice(2),
+        });
+      }
+      else {
+        await navigateTo(returnUrl.value);
+      }
+    }
+    else {
+      await navigateTo({
+        name: 'authentication.account',
+      });
+    }
 
   }
   catch {

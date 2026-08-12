@@ -154,69 +154,73 @@ function getFlashCardSessionsFor(flashCardId) {
 
           </div>
 
-          <template v-if="step.completed">
-            <u-badge
-              variant="subtle"
-              color="success"
-              icon="lucide:circle-check"
-              label="Completed"
-            />
-          </template>
-          <template v-else-if="!step.unlocked">
-            <u-badge
-              variant="subtle"
-              icon="lucide:lock"
-              label="Locked"
-            />
-          </template>
+          <div class="flex flex-col items-center gap-2">
 
-          <template v-if="step.unlocked">
-            <template v-if="!isUserAuthenticated">
-              <u-button
+            <template v-if="step.unlocked">
+              <template v-if="!isUserAuthenticated">
+                <u-button
+                  variant="subtle"
+                  icon="lucide:log-in"
+                  label="Login to Start"
+                  :to="{
+                    name: 'authentication.login',
+                    query: {
+                      returnUrl: route.fullPath,
+                    },
+                  }"
+                />
+              </template>
+              <template v-else-if="step.completed">
+                <u-button
+                  variant="subtle"
+                  icon="lucide:rotate-ccw"
+                  label="Practice Again"
+                  :to="{
+                    name: 'flash-cards.single.learn',
+                    params: {
+                      flashCardSlug: step.flashCard.slug,
+                    },
+                    query: {
+                      journey: journeyData.slug,
+                    },
+                  }"
+                />
+              </template>
+              <template v-else>
+                <u-button
+                  variant="subtle"
+                  icon="lucide:play"
+                  label="Start"
+                  :to="{
+                    name: 'flash-cards.single.learn',
+                    params: {
+                      flashCardSlug: step.flashCard.slug,
+                    },
+                    query: {
+                      journey: journeyData.slug,
+                    },
+                  }"
+                />
+              </template>
+            </template>
+
+            <template v-if="step.completed">
+              <u-badge
                 variant="subtle"
-                icon="lucide:log-in"
-                label="Login to Start"
-                :to="{
-                  name: 'authentication.login',
-                  query: {
-                    returnUrl: route.fullPath,
-                  },
-                }"
+                color="success"
+                icon="lucide:circle-check"
+                label="Completed"
               />
             </template>
-            <template v-else-if="step.completed">
-              <u-button
+            <template v-else-if="!step.unlocked">
+              <u-badge
                 variant="subtle"
-                icon="lucide:rotate-ccw"
-                label="Practice Again"
-                :to="{
-                  name: 'flash-cards.single.learn',
-                  params: {
-                    flashCardSlug: step.flashCard.slug,
-                  },
-                  query: {
-                    journey: journeyData.slug,
-                  },
-                }"
+                icon="lucide:lock"
+                label="Locked"
               />
             </template>
-            <template v-else>
-              <u-button
-                variant="subtle"
-                icon="lucide:play"
-                label="Start"
-                :to="{
-                  name: 'flash-cards.single.learn',
-                  params: {
-                    flashCardSlug: step.flashCard.slug,
-                  },
-                  query: {
-                    journey: journeyData.slug,
-                  },
-                }"
-              />
-            </template>
-          </template>
+
+          </div>
 
         </div>
       </template>

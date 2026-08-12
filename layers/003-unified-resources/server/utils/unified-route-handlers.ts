@@ -144,8 +144,10 @@ function extractFilterFromEvent(event: H3Event) {
       .reduce((acc, it) => {
 
         const key = it[0] as string;
-        const operator = it[2] ? it[1] : 'is';
-        const value = it[2] ?? it[1] as string;
+        const hasOperator = it.length >= 3;
+        const operator = hasOperator ? it[1] : 'is';
+        const rawValue = hasOperator ? it[2] : it[1] as string;
+        const value = guessFilterValue(rawValue);
 
         if (operator === 'is') {
           acc[key] = value;
@@ -169,13 +171,55 @@ function extractFilterFromEvent(event: H3Event) {
           acc[key] = { $lte: value };
         }
         else if (operator === 'in') {
-          acc[key] = { $in: value };
+          acc[key] = {
+            $in: String(rawValue).split(';').map(guessFilterValue),
+          };
         }
         else if (operator === 'nin') {
-          acc[key] = { $nin: value };
+          acc[key] = {
+            $nin: String(rawValue).split(';').map(guessFilterValue),
+          };
         }
         else if (operator === 'like') {
-          acc[key] = { $regex: value, $options: 'i' };
+          acc[key] = {
+            $regex: rawValue,
+            $options: 'i',
+          };
+        }
+        else if (operator === 'contains') {
+          acc[key] = {
+            $regex: escapeRegularExpression(String(value)),
+            $options: 'i',
+          };
+        }
+        else if (operator === 'on') {
+          acc[key] = {
+            $gte: Number(value),
+            $lt: Number(value) + 24 * 60 * 60 * 1000,
+          };
+        }
+        else if (operator === 'before') {
+          acc[key] = { $lt: Number(value) };
+        }
+        else if (operator === 'after') {
+          acc[key] = { $gte: Number(value) + 24 * 60 * 60 * 1000 };
+        }
+        else if (operator === 'empty') {
+          acc[key] = { $size: 0 };
+        }
+        else if (operator === 'not-empty') {
+          acc[key] = {
+            $exists: true,
+            $not: {
+              $size: 0,
+            },
+          };
+        }
+        else if (operator === 'empty-object') {
+          acc[key] = { $eq: {} };
+        }
+        else if (operator === 'not-empty-object') {
+          acc[key] = { $ne: {} };
         }
 
         return acc;
@@ -183,6 +227,25 @@ function extractFilterFromEvent(event: H3Event) {
       }, {} as Record<string, any>)
   );
 
+}
+
+function guessFilterValue(value: any) {
+  if (value === 'true') {
+    return true;
+  }
+  else if (value === 'false') {
+    return false;
+  }
+  else if (/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:e[+-]?\d+)?$/i.test(value) && Number.isFinite(Number(value))) {
+    return Number(value);
+  }
+  else {
+    return value;
+  }
+}
+
+function escapeRegularExpression(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function extractSelectFromEvent(event: H3Event): string[] | undefined {

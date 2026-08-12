@@ -11,13 +11,13 @@
       "source": "nuxt/ui",
       "sourceType": "github",
       "skillPath": "skills/nuxt-ui/SKILL.md",
-      "computedHash": "ef3a731fdfa8439d3c7f0c6d497a67073216b8cb7d7fa6a3c605a6fda4ede19a"
+      "computedHash": "44f2989d98ea9592b777f28a6a387643378162c9fdf1a61ef91226ffa5a6e323"
     },
     "nuxt-unified-ui": {
       "source": "yooneskh/nuxt-unified-ui",
       "sourceType": "github",
       "skillPath": "skills/nuxt-unified-ui/SKILL.md",
-      "computedHash": "17c7a853e4d215458ab7d922fe9dec3d61d4f55736fc555dbcb6ce0746fb318b"
+      "computedHash": "67a5566985fa5ca1e7bdf09f6555f066becce105ed4198b93b14b6b2644944e8"
     },
     "vueuse-functions": {
       "source": "antfu/skills",

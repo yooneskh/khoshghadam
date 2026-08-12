@@ -28,6 +28,39 @@ useHead({
 });
 
 
+const actions = computed(() => {
+  return [
+    {
+      icon: 'lucide:plus',
+      label: `Create a ${title.value}`,
+      onClick: handleResourceCreate,
+    },
+    ...(props.actions || []),
+    {
+      icon: 'lucide:refresh-ccw',
+      onClick: refreshResources,
+    },
+  ];
+});
+
+const resourceActions = computed(() => {
+  return [
+    ...(props.resourceActions || []),
+    {
+      icon: 'lucide:pencil',
+      tooltip: 'Edit',
+      onClick: handleResourceUpdate,
+    },
+    {
+      color: 'error',
+      icon: 'lucide:trash',
+      tooltip: 'Delete',
+      onClick: handleResourceDelete,
+    },
+  ];
+});
+
+
 async function refreshResources() {
   await resourceExplorerTableEl.value?.refreshResources();
 }
@@ -141,41 +174,6 @@ async function handleResourceDelete(resource) {
     ],
   });
 }
-
-
-const actions = computed(() => {
-  return [
-    {
-      variant: 'subtle',
-      icon: 'lucide:plus',
-      label: `Create a ${title.value}`,
-      onClick: handleResourceCreate,
-    },
-    ...(props.actions || []),
-    {
-      variant: 'subtle',
-      icon: 'lucide:refresh-ccw',
-      onClick: refreshResources,
-    },
-  ];
-});
-
-const resourceActions = computed(() => {
-  return [
-    ...(props.resourceActions || []),
-    {
-      tooltip: 'Edit',
-      icon: 'lucide:pencil',
-      onClick: handleResourceUpdate,
-    },
-    {
-      color: 'error',
-      tooltip: 'Delete',
-      icon: 'lucide:trash',
-      onClick: handleResourceDelete,
-    },
-  ];
-});
 
 
 /* outlets */

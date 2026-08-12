@@ -20,7 +20,7 @@ const emit = defineEmits([
 
 
 <template>
-  <u-modal scrollable :ui="{ content: 'max-w-5xl' }" @update:open="!$event && emit('close')">
+  <u-modal :ui="{ content: 'max-w-5xl' }" scrollable @update:open="!$event && emit('close')">
     <template #content>
       <un-card
         :icon="props.icon"

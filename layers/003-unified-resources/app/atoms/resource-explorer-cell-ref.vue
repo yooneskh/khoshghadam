@@ -61,7 +61,7 @@ async function handleResourceClick() {
   await launchFormPickerDialog({
     title: `Update ${title.value}`,
     subtitle: resourceData.value._id,
-    text: `Update the information and click submit to save.`,
+    text: 'Update the information and click submit to save.',
     modalOptions: {
       scrollable: true,
       ui: {
@@ -72,7 +72,7 @@ async function handleResourceClick() {
     initialForm: radOmit(resourceData.value, ['_id', 'createdAt', 'updatedAt']),
     submitButton: {
       icon: 'lucide:pencil',
-      label: `Update`,
+      label: 'Update',
       onClick: async form => {
 
         await ufetch(`/api/${resourcePath.value}/${resourceData.value._id}`, {

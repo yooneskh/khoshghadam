@@ -63,7 +63,7 @@ async function handleResourceSelect() {
       else {
         modelValue.value = selecteds?.[0];
       }
-    }
+    },
   });
 }
 
@@ -73,12 +73,12 @@ async function handleResourceSelect() {
 <template>
   <u-form-field v-bind="radPick(props.field, [ 'label', 'hint', 'help', 'description' ])">
     <u-input
-      class="w-full"
       trailing-icon="lucide:clipboard-list"
+      class="w-full"
       v-bind="radOmit(props.field, [ 'key', 'identifier', 'label', 'hint', 'help', 'description' ])"
+      :loading="isLoading"
       readonly
       :model-value="title"
-      :loading="isLoading"
       @click="handleResourceSelect()"
       @keypress.space="handleResourceSelect()"
       @keypress.enter="handleResourceSelect()"

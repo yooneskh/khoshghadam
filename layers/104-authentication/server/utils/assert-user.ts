@@ -1,6 +1,6 @@
 
 
-export async function assertUser(args: { event: H3Event, fillPermissions?: boolean }) {
+export async function assertUser(args: { event: H3Event; fillPermissions?: boolean }) {
 
   const authorizationHeader = args.event.headers.get('authorization');
   const apiKeyHeader = args.event.headers.get('x-api-key');

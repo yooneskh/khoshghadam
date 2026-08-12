@@ -18,7 +18,7 @@ const emit = defineEmits([
 import ResourceExplorerCellRef from '~/atoms/resource-explorer-cell-ref.vue';
 
 
-async function handleViewItems() {
+function handleViewItems() {
   launchTableDialog({
     icon: 'lucide:list',
     title: 'View Items',
@@ -51,7 +51,7 @@ async function handleViewItems() {
 
   <template v-else-if="props.column.type === 'array' && props.column.items.type === 'string'">
     <div class="max-w-xs flex flex-wrap gap-1">
-      <template v-for="item of props.data || []">
+      <template v-for="(item, index) of props.data || []" :key="`${item}-${index}`">
         <u-badge
           variant="subtle"
           :label="item"
@@ -90,10 +90,10 @@ async function handleViewItems() {
   </template>
 
   <template v-else-if="props.column.enum">
-      <u-badge
-        variant="subtle"
-        :label="props.column.enum?.find(it => it.value === props.data)?.label ?? props.data"
-      />
+    <u-badge
+      variant="subtle"
+      :label="props.column.enum?.find(it => it.value === props.data)?.label ?? props.data"
+    />
   </template>
 
   <template v-else>

@@ -65,7 +65,7 @@ async function handleSelectMedia() {
       else {
         modelValue.value = selecteds?.[0];
       }
-    }
+    },
   });
 }
 
@@ -75,12 +75,12 @@ async function handleSelectMedia() {
 <template>
   <u-form-field v-bind="radPick(props.field, [ 'label', 'hint', 'help', 'description' ])">
     <u-input
-      class="w-full"
       trailing-icon="lucide:file-badge"
+      class="w-full"
       v-bind="radOmit(props.field, [ 'key', 'identifier', 'label', 'hint', 'help', 'description' ])"
+      :loading="isLoading"
       readonly
       :model-value="title"
-      :loading="isLoading"
       @click="handleSelectMedia()"
       @keypress.space="handleSelectMedia()"
       @keypress.enter="handleSelectMedia()">

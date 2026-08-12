@@ -243,9 +243,9 @@ defineExpose({
       :loading="isResourcesPending || isResourcesCountPending"
       :data="resourcesData"
       :total-items="resourcesCountData"
+      :actions="props.actions"
       v-model:items-per-page="itemsPerPage"
-      v-model:current-page="currentPage"
-      :actions="props.actions">
+      v-model:current-page="currentPage">
 
       <template v-for="column in columns" :key="column.accessorKey" #[column.accessorKey+'-header']>
         <div class="flex items-center gap-1">

@@ -55,7 +55,7 @@ export interface UnifiedResourceController<T> {
 const resourceRegistry = new Map<string, any>();
 
 
-export function createUnifiedResourceController<T extends object>(props: { resource: string; schema: any, type: Type<T>; meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>> }): UnifiedResourceController<T> {
+export function createUnifiedResourceController<T extends object>(props: { resource: string; schema: any; type: Type<T>; meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>> }): UnifiedResourceController<T> {
 
   const collectionName = props.resource;
 
@@ -302,7 +302,7 @@ function normalizeDocumentIds(value: any) {
 
 }
 
-async function populateDocument(args: { document: any, meta: any, populate: Record<string, string[]>; parents?: string[] }) {
+async function populateDocument(args: { document: any; meta: any; populate: Record<string, string[]>; parents?: string[] }) {
 
   if (!args.document || typeof args.document !== 'object' || Array.isArray(args.document) || !args.meta) {
     return;

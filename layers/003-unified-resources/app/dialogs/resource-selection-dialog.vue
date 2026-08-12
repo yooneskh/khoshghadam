@@ -25,30 +25,37 @@ const { resourcePath, title, titlePlural } = useResourceName({
 });
 
 
-watchImmediate(currentItems, async () => {
-  await Promise.all(
-    currentItems.value.map(async it => {
+watchImmediate(
+  currentItems,
+  loadCurrentItemTitles,
+);
 
-      if (currentItemsTitles.value[it]) {
+
+async function loadCurrentItemTitles() {
+  await Promise.all(
+    currentItems.value.map(async itemId => {
+
+      if (currentItemsTitles.value[itemId]) {
         return;
       }
 
 
       const resource = await retrieveResource({
         resourcePath: resourcePath.value,
-        id: it,
+        id: itemId,
       });
 
-      currentItemsTitles.value[it] = resource.name || truncateMiddle(resource._id);
+      currentItemsTitles.value[itemId] = resource.name || truncateMiddle(resource._id);
 
     }),
   );
-});
-
+}
 
 async function handleSelectResource(resource) {
   if (!props.multiple) {
-    await handleSubmitSelection([resource._id]);
+    await handleSubmitSelection([
+      resource._id,
+    ]);
   }
   else {
     currentItems.value = radToggle(currentItems.value, resource._id);
@@ -92,8 +99,8 @@ async function handleSubmitSelection(items) {
             <template v-for="(item, index) of currentItems" :key="item">
               <u-badge
                 variant="subtle"
-                :label="currentItemsTitles[item] || '-'"
-                trailing-icon="lucide:x">
+                trailing-icon="lucide:x"
+                :label="currentItemsTitles[item] || '-'">
                 <template #trailing>
                   <u-icon
                     name="lucide:x"

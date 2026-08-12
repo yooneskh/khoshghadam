@@ -41,26 +41,31 @@ const { data: mediaCountData, refresh: refreshMediaCount } = useUFetch(
 );
 
 
-watchImmediate(currentItems, async () => {
-  await Promise.all(
-    currentItems.value.map(async it => {
+watchImmediate(
+  currentItems,
+  loadCurrentItemTitles,
+);
 
-      if (currentItemsTitles.value[it]) {
+
+async function loadCurrentItemTitles() {
+  await Promise.all(
+    currentItems.value.map(async itemId => {
+
+      if (currentItemsTitles.value[itemId]) {
         return;
       }
 
 
       const resource = await retrieveResource({
         resourcePath: 'media',
-        id: it,
+        id: itemId,
       });
 
-      currentItemsTitles.value[it] = resource.name || truncateMiddle(resource._id);
+      currentItemsTitles.value[itemId] = resource.name || truncateMiddle(resource._id);
 
     }),
   );
-});
-
+}
 
 async function handleUploadMedia() {
   await launchFormPickerDialog({
@@ -149,7 +154,9 @@ async function handleDeleteMedia(media) {
 
 async function handleSelectMedia(media) {
   if (!props.multiple) {
-    await handleSubmitSelection([media._id]);
+    await handleSubmitSelection([
+      media._id,
+    ]);
   }
   else {
     currentItems.value = radToggle(currentItems.value, media._id);
@@ -159,6 +166,11 @@ async function handleSelectMedia(media) {
 async function handleSubmitSelection(items) {
   await props.onSelected?.(items);
   emit('close', items);
+}
+
+function handleOpenMedia(media) {
+  openedMedia.value = media;
+  isViewerOpen.value = true;
 }
 
 </script>
@@ -200,8 +212,8 @@ async function handleSubmitSelection(items) {
             <template v-for="(item, index) of currentItems" :key="item">
               <u-badge
                 variant="subtle"
-                :label="currentItemsTitles[item] || '-'"
-                trailing-icon="lucide:x">
+                trailing-icon="lucide:x"
+                :label="currentItemsTitles[item] || '-'">
                 <template #trailing>
                   <u-icon
                     name="lucide:x"
@@ -270,7 +282,7 @@ async function handleSubmitSelection(items) {
                       {
                         icon: 'lucide:eye',
                         label: 'View Full Size',
-                        onSelect: () => { openedMedia = media; isViewerOpen = true; },
+                        onSelect: () => handleOpenMedia(media),
                       },
                       {
                         color: 'error',
@@ -312,7 +324,7 @@ async function handleSubmitSelection(items) {
 
         </template>
 
-        <u-modal scrollable :ui="{ content: openedMedia?.type?.startsWith('image') ? '' : 'max-w-5xl' }" v-model:open="isViewerOpen">
+        <u-modal :ui="{ content: openedMedia?.type?.startsWith('image') ? '' : 'max-w-5xl' }" scrollable v-model:open="isViewerOpen">
           <template #content>
 
             <template v-if="openedMedia.type?.startsWith('image')">

@@ -1,3 +1,4 @@
+
 bun run build
 
 rsync -avz -e ssh ./mise.toml $zxc:/apps/khoshghadam/

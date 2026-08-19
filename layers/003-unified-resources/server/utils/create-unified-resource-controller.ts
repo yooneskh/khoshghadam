@@ -48,6 +48,7 @@ export interface UnifiedResourceController<T> {
   retrieve: (args: { resourceId?: string; filter?: any; select?: string[]; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T>>;
   create: (args: { document: T; }) => Promise<UnifiedResourceDocument<T>>;
   update: (args: { resourceId?: string; document: Partial<T>; }) => Promise<UnifiedResourceDocument<T>>;
+  updateQuery: (args: { resourceId?: string; query: any; }) => Promise<UnifiedResourceDocument<T>>;
   delete: (args: { resourceId?: string; }) => Promise<UnifiedResourceDocument<T>>;
 }
 
@@ -248,6 +249,32 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       await collection.updateOne({ _id: args.resourceId as any }, { $set: finalDocument });
 
       return finalDocument as unknown as UnifiedResourceDocument<T>;
+
+    },
+    updateQuery: async (args) => {
+
+      const collection = await loadDbClient().then(it => it.collection(collectionName));
+
+
+      const query = {
+        ...args.query,
+        $set: {
+          ...args.query?.$set,
+          updatedAt: Date.now(),
+        },
+      };
+
+
+      const document = await collection.findOneAndUpdate({ _id: args.resourceId as any }, query, {
+        returnDocument: 'after',
+      });
+
+      if (!document) {
+        throw new Error('document not found');
+      }
+
+
+      return document as unknown as UnifiedResourceDocument<T>;
 
     },
     delete: async (args) => {

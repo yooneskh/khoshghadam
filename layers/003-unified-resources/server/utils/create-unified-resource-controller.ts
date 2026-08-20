@@ -44,6 +44,7 @@ export interface UnifiedResourceController<T> {
   schema: () => any;
   list: (args: { filter?: any; select?: string[]; sort?: any; skip?: any; limit?: any; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T>[]>;
   count: (args: { filter?: any; }) => Promise<number>;
+  aggregate: (args: { pipeline: any[]; }) => Promise<any[]>;
   find: (args: { resourceId?: string; filter?: any; select?: string[]; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T> | undefined>;
   retrieve: (args: { resourceId?: string; filter?: any; select?: string[]; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T>>;
   create: (args: { document: T; }) => Promise<UnifiedResourceDocument<T>>;
@@ -123,6 +124,14 @@ export function createUnifiedResourceController<T extends object>(props: { resou
 
 
       return collection.countDocuments(args.filter);
+
+    },
+    aggregate: async (args) => {
+
+      const collection = await loadDbClient().then(it => it.collection(collectionName));
+
+
+      return collection.aggregate(args.pipeline).toArray();
 
     },
     find: async (args) => {

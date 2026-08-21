@@ -44,14 +44,14 @@ const rotatedIndex = ref(-1);
 
 /* session */
 
-const user = useUser();
-const flashCardSession = ref();
+const isUserAuthenticated = useIsUserAuthenticated();
+const answeredCards = ref([]);
 
 
 const { data: previousSessionsData } = useUFetch(
   '/api/flash-card-sessions/mine',
   {
-    enabled: useIsUserAuthenticated(),
+    enabled: isUserAuthenticated,
   },
 );
 
@@ -79,57 +79,51 @@ const cardsSessions = computed(() => {
 });
 
 
-watchImmediate([user, flashCardData], async () => {
+async function handleCardAdvance() {
 
-  if (!user.value || !flashCardData.value) {
+  const currentCard = flashCardData.value.cards[activeIndex.value];
+
+  answeredCards.value = [
+    ...answeredCards.value.filter(it => it.card !== currentCard._id),
+    {
+      card: currentCard._id,
+      opened: rotatedIndex.value === activeIndex.value,
+    },
+  ];
+
+
+  if (activeIndex.value < flashCardData.value.cards.length - 1) {
+    activeIndex.value += 1;
     return;
   }
 
 
-  flashCardSession.value = await ufetch('/api/flash-card-sessions/mine', {
-    method: 'post',
-    body: {
-      flashCard: flashCardData.value._id,
-    },
-  });
-
-});
-
-
-async function handleCardAdvance() {
-
-  if (flashCardSession.value) {
-    flashCardSession.value = await ufetch(`/api/flash-card-sessions/answer`, {
-      method: 'patch',
+  if (isUserAuthenticated.value) {
+    await ufetch('/api/flash-card-sessions/mine', {
+      method: 'post',
       body: {
-        flashCardSession: flashCardSession.value._id,
-        card: flashCardData.value.cards[activeIndex.value]._id,
-        opened: rotatedIndex.value === activeIndex.value,
+        flashCard: flashCardData.value._id,
+        answeredCards: answeredCards.value,
       },
     });
   }
 
 
-  if (activeIndex.value < flashCardData.value.cards.length - 1) {
-    activeIndex.value += 1;
+  if (journeySlug.value) {
+    await navigateTo({
+      name: 'flash-cards.flash-card-journeys.single',
+      params: {
+        journeySlug: journeySlug.value,
+      },
+    });
   }
   else {
-    if (journeySlug.value) {
-      await navigateTo({
-        name: 'flash-cards.flash-card-journeys.single',
-        params: {
-          journeySlug: journeySlug.value,
-        },
-      });
-    }
-    else {
-      await navigateTo({
-        name: 'flash-cards.single',
-        params: {
-          flashCardSlug: flashCardSlug.value,
-        },
-      });
-    }
+    await navigateTo({
+      name: 'flash-cards.single',
+      params: {
+        flashCardSlug: flashCardSlug.value,
+      },
+    });
   }
 
 }

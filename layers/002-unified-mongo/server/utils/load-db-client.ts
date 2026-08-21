@@ -1,22 +1,32 @@
 import { Db, MongoClient } from 'mongodb';
 
 
-let database: Db | null = null;
+let databasePromise: Promise<Db> | null = null;
 
 
-export async function loadDbClient() {
+export function loadDbClient() {
 
-  if (database) {
-    return database;
+  if (!databasePromise) {
+
+    databasePromise = (async () => {
+
+      const config = useRuntimeConfig();
+
+      const client = new MongoClient(config.database.url);
+      await client.connect();
+
+      return client.db(config.database.name);
+
+    })();
+
+
+    databasePromise.catch(() => {
+      databasePromise = null;
+    });
+
   }
 
 
-  const config = useRuntimeConfig();
-
-  const client = new MongoClient(config.database.url);
-  await client.connect();
-
-  database = client.db(config.database.name);
-  return database;
+  return databasePromise;
 
 }

@@ -40,6 +40,20 @@ export interface ResourceMeta {
 }
 
 
+export interface UnifiedResourceIndex {
+
+  key: Record<string, 1 | -1>;
+  name?: string;
+
+  unique?: boolean;
+  sparse?: boolean;
+  hidden?: boolean;
+
+  expireAfterSeconds?: number;
+
+}
+
+
 export interface UnifiedResourceController<T> {
   schema: () => any;
   list: (args: { filter?: any; select?: string[]; sort?: any; skip?: any; limit?: any; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T>[]>;
@@ -57,13 +71,21 @@ export interface UnifiedResourceController<T> {
 const resourceRegistry = new Map<string, any>();
 
 
-export function createUnifiedResourceController<T extends object>(props: { resource: string; schema: any; type: Type<T>; meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>> }): UnifiedResourceController<T> {
+export function createUnifiedResourceController<T extends object>(props: { resource: string; schema: any; type: Type<T>; meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>>; indexes?: UnifiedResourceIndex[]; }): UnifiedResourceController<T> {
 
   const collectionName = props.resource;
 
 
   if (props.meta) {
     resourceRegistry.set(collectionName, props.meta);
+  }
+
+
+  if (props.indexes !== undefined) {
+    ensureCollectionIndexes({ collectionName, indexes: props.indexes }).catch(error => {
+      console.error(`failed to ensure indexes for resource "${collectionName}"`, error);
+      process.exit(1);
+    });
   }
 
 

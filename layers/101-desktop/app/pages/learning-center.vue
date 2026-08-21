@@ -21,14 +21,14 @@ useHead({
       :items="[
         {
           pito: 'address-book',
-          name: 'Flash Cards',
+          name: 'Flash Lessons',
           to: {
             name: 'flash-cards.list',
           },
         },
         {
           pito: 'address-book',
-          name: 'Flash Card Journeys',
+          name: 'Flash Journeys',
           to: {
             name: 'flash-cards.flash-card-journeys.list',
           },

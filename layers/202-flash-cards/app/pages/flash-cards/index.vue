@@ -25,7 +25,7 @@ const { data: flashCardsData, pending: isFlashCardsPending } = useUFetch(
     pito="address-book"
     title="Flash Cards"
     :loading="isFlashCardsPending">
-    <entries-grid
+    <entries-table
       :items="flashCardsData?.map(it => ({
         pito: 'folder-opened',
         name: it.name,

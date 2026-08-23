@@ -13,6 +13,7 @@ export async function assertBody(args: { event: H3Event; schema: unknown }): Pro
     throw createError({
       statusCode: 400,
       statusMessage: 'request body is invalid',
+      message: validatedBody.summary,
       data: {
         errors: validatedBody.summary,
       },

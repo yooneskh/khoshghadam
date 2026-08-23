@@ -147,6 +147,24 @@ function getSortIcon(column) {
   }
 }
 
+function getSortVariant(column) {
+  if (sortedColumn.value !== column) {
+    return 'ghost';
+  }
+  else {
+    return undefined;
+  }
+}
+
+function getSortColor(column) {
+  if (sortedColumn.value !== column) {
+    return undefined;
+  }
+  else {
+    return 'primary';
+  }
+}
+
 function getSortLabel(column) {
   if (sortedColumn.value !== column) {
     return `Sort ${column} descending`;
@@ -253,7 +271,8 @@ defineExpose({
             {{ column.header }}
           </span>
           <u-button
-            variant="subtle"
+            :variant="getSortVariant(column.accessorKey)"
+            :color="getSortColor(column.accessorKey)"
             size="xs"
             :icon="getSortIcon(column.accessorKey)"
             :aria-label="getSortLabel(column.accessorKey)"

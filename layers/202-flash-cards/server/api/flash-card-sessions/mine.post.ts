@@ -11,7 +11,7 @@ export default defineEventHandler(async event => {
       'answeredCards': [{
         'card': 'string',
         'opened': 'boolean',
-      }],
+      }, '[]'],
     },
   });
 

@@ -30,6 +30,9 @@ export default defineNitroPlugin(() => {
         owner: {
           resource: 'users',
         },
+        apiKey: {
+          hideInTable: true,
+        },
         roles: {
           resource: 'authorizationRoles',
         },

@@ -146,7 +146,6 @@ async function handleResetPassword(user) {
     resource="users"
     :actions="[
       {
-        variant: 'subtle',
         icon: 'lucide:user-plus',
         label: 'Onboard User',
         onClick: handleOnboardUser,

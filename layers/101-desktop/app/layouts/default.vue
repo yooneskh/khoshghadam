@@ -47,6 +47,7 @@ import BackgroundImage from '~/assets/images/background.jpg';
 
     <div
       class="
+        h-10
         absolute bottom-0 inset-x-0
         flex items-center gap-3
         bg-primary
@@ -55,7 +56,7 @@ import BackgroundImage from '~/assets/images/background.jpg';
       <u-button
         variant="soft"
         label="Begin"
-        class="font-bold rounded-s-none bg-green-600 text-white px-6"
+        class="h-full font-bold rounded-s-none bg-green-600 text-white px-8"
       />
 
       <div class="grow" />

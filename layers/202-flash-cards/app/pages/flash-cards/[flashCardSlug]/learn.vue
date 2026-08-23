@@ -109,6 +109,9 @@ async function handleCardAdvance() {
   }
 
 
+  makeConfettiOnEdges();
+
+
   if (journeySlug.value) {
     await navigateTo({
       name: 'flash-cards.flash-card-journeys.single',

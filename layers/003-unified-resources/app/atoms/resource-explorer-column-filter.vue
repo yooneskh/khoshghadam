@@ -187,6 +187,24 @@ const fields = computed(() => {
 
 });
 
+const buttonVariant = computed(() => {
+  if (props.filter) {
+    return undefined;
+  }
+  else {
+    return 'ghost';
+  }
+});
+
+const buttonColor = computed(() => {
+  if (props.filter) {
+    return 'primary';
+  }
+  else {
+    return undefined;
+  }
+});
+
 
 const { form, formTag } = useForm({
   fields,
@@ -352,10 +370,10 @@ function getValueField() {
     v-model:open="isOpen">
 
     <u-button
-      variant="subtle"
+      :variant="buttonVariant"
+      :color="buttonColor"
       size="xs"
       icon="lucide:filter"
-      :color="props.filter ? 'primary' : undefined"
     />
 
     <template #content>

@@ -13,11 +13,11 @@
     "@theothergothamdev/pluralize-ts": "1.1.0",
     "arktype": "2.2.3",
     "bcryptjs": "3.0.3",
-    "mongodb": "7.5.0",
+    "mongodb": "7.6.0",
     "nuxt": "4.5.2",
     "nuxt-gtag": "5.0.0",
     "nuxt-jsonld": "2.2.1",
-    "nuxt-unified-ui": "0.5.6",
+    "nuxt-unified-ui": "0.5.7",
     "sharp": "0.35.3",
     "vue": "3.5.41"
   },

@@ -109,7 +109,9 @@ async function handleCardAdvance() {
   }
 
 
-  makeConfettiOnEdges();
+  makeConfetti({
+    template: 'split-on-top',
+  });
 
 
   if (journeySlug.value) {

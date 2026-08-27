@@ -2,15 +2,23 @@
 
 export default defineSitemapEventHandler(async () => {
 
-  const data = await Promise.all([
-    $fetch('/api/flash-cards') as Promise<any[]>,
-    $fetch('/api/flash-card-journeys') as Promise<any[]>,
+  const [flashCards, flashCardJourneys] = await Promise.all([
+    app.flashCards.dbo.list({
+      select: [
+        'slug',
+      ],
+    }),
+    app.flashCardJourneys.dbo.list({
+      select: [
+        'slug',
+      ],
+    }),
   ]);
 
 
   return [
-    ...data[0]!.map(it => `/flash-cards/${it.slug}`),
-    ...data[1]!.map(it => `/flash-card-journeys/${it.slug}`),
-  ].flat(Infinity);
+    ...flashCards.map(it => `/flash-cards/${it.slug}`),
+    ...flashCardJourneys.map(it => `/flash-card-journeys/${it.slug}`),
+  ];
 
 });

@@ -18,6 +18,7 @@ export default defineSitemapEventHandler(async () => {
 
   return [
     ...flashCards.map(it => `/flash-cards/${it.slug}`),
+    ...flashCards.map(it => `/flash-cards/${it.slug}/learn`),
     ...flashCardJourneys.map(it => `/flash-card-journeys/${it.slug}`),
   ];
 

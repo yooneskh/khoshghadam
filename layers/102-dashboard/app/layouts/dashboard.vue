@@ -132,6 +132,42 @@ const navigationItems = computed(() => {
         },
       ],
     },
+    {
+      icon: 'lucide:message-circle-heart',
+      label: 'Omani',
+      children: [
+        {
+          icon: 'lucide:lightbulb',
+          label: 'Ideas',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'omani-ideas',
+            },
+          },
+        },
+        {
+          icon: 'lucide:arrow-big-up',
+          label: 'Idea Votes',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'omani-idea-votes',
+            },
+          },
+        },
+        {
+          icon: 'lucide:message-square',
+          label: 'Idea Comments',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'omani-idea-comments',
+            },
+          },
+        },
+      ],
+    },
   ];
 });
 

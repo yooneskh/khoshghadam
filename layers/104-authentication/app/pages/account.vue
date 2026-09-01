@@ -9,8 +9,15 @@ definePageMeta({
   ],
 });
 
+
+/* seo */
+
 useHead({
   title: 'Account',
+});
+
+useSeoMeta({
+  description: 'View and update your account details.',
 });
 
 

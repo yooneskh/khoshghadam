@@ -7,7 +7,10 @@ definePageMeta({
 });
 
 
+/* params */
+
 const route = useRoute();
+
 
 const journeySlug = computed(() => {
   return route.params.journeySlug;
@@ -40,8 +43,71 @@ const isJourneyPending = computed(() => {
 });
 
 
+/* seo */
+
 useHead({
   title: () => journeyData.value?.name,
+});
+
+useSeoMeta({
+  description: () => journeyData.value?.description,
+});
+
+useJsonld(() => !journeyData.value ? null : {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Learning Center',
+          'item': 'https://khoshghadam.com/learning-center',
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': 'Flash Card Journeys',
+          'item': 'https://khoshghadam.com/flash-card-journeys',
+        },
+        {
+          '@type': 'ListItem',
+          'position': 3,
+          'name': journeyData.value.name,
+          'item': `https://khoshghadam.com/flash-card-journeys/${journeyData.value.slug}`,
+        },
+      ],
+    },
+    {
+      '@type': 'Course',
+      'name': journeyData.value.name,
+      'description': journeyData.value.description,
+      'url': `https://khoshghadam.com/flash-card-journeys/${journeyData.value.slug}`,
+      'isAccessibleForFree': true,
+      'provider': {
+        '@type': 'Person',
+        'name': 'Yoones Khoshghadam',
+      },
+      'hasCourseInstance': {
+        '@type': 'CourseInstance',
+        'courseMode': 'online',
+      },
+      'offers': {
+        '@type': 'Offer',
+        'price': 0,
+        'priceCurrency': 'USD',
+      },
+      'hasPart': journeyData.value.steps.map((it, index) => {
+        return {
+          '@type': 'LearningResource',
+          'position': index + 1,
+          'name': it.flashCard.name,
+          'url': `https://khoshghadam.com/flash-cards/${it.flashCard.slug}`,
+        };
+      }),
+    },
+  ],
 });
 
 

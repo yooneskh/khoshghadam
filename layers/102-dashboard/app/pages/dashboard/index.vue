@@ -10,8 +10,15 @@ definePageMeta({
   ],
 });
 
+
+/* seo */
+
 useHead({
   title: 'Dashboard',
+});
+
+useSeoMeta({
+  description: 'Welcome to the dashboard.',
 });
 
 </script>

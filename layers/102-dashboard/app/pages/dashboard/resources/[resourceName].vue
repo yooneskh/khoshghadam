@@ -11,10 +11,24 @@ definePageMeta({
 });
 
 
+/* params */
+
 const route = useRoute();
+
 
 const resourceName = computed(() => {
   return route.params.resourceName;
+});
+
+
+/* seo */
+
+useHead({
+  title: () => resourceName.value,
+});
+
+useSeoMeta({
+  description: 'Manage dashboard resources.',
 });
 
 </script>

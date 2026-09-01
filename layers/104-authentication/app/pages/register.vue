@@ -6,8 +6,15 @@ definePageMeta({
   name: 'authentication.register',
 });
 
+
+/* seo */
+
 useHead({
   title: 'Register',
+});
+
+useSeoMeta({
+  description: 'Create a new account.',
 });
 
 

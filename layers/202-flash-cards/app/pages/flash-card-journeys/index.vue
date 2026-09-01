@@ -6,10 +6,6 @@ definePageMeta({
   name: 'flash-cards.flash-card-journeys.list',
 });
 
-useHead({
-  title: 'Flash Card Journeys',
-});
-
 
 /* journeys */
 
@@ -34,6 +30,57 @@ const journeysData = computed(() => {
 
 const isJourneysPending = computed(() => {
   return isAvailableJourneysPending.value || (isUserAuthenticated.value && isJourneyStatesPending.value);
+});
+
+
+/* seo */
+
+useHead({
+  title: 'Flash Card Journeys',
+});
+
+useSeoMeta({
+  description: 'Follow structured flash card journeys to learn step by step.',
+});
+
+useJsonld(() => !journeysData.value ? null : {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Learning Center',
+          'item': 'https://khoshghadam.com/learning-center',
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': 'Flash Card Journeys',
+          'item': 'https://khoshghadam.com/flash-card-journeys',
+        },
+      ],
+    },
+    {
+      '@type': 'CollectionPage',
+      'name': 'Flash Card Journeys',
+      'description': 'Follow structured flash card journeys to learn step by step.',
+      'url': 'https://khoshghadam.com/flash-card-journeys',
+      'mainEntity': {
+        '@type': 'ItemList',
+        'itemListElement': journeysData.value.map((it, index) => {
+          return {
+            '@type': 'ListItem',
+            'position': index + 1,
+            'name': it.name,
+            'url': `https://khoshghadam.com/flash-card-journeys/${it.slug}`,
+          };
+        }),
+      },
+    },
+  ],
 });
 
 </script>

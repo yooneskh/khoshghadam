@@ -7,7 +7,10 @@ definePageMeta({
 });
 
 
+/* params */
+
 const route = useRoute();
+
 
 const flashCardSlug = computed(() => {
   return route.params.flashCardSlug;
@@ -28,8 +31,65 @@ const { data: flashCardData, pending: isFlashCardPending } = useUFetch(
 );
 
 
+/* seo */
+
 useHead({
   title: () => flashCardData.value?.name,
+});
+
+useSeoMeta({
+  description: () => flashCardData.value?.description,
+});
+
+useJsonld(() => !flashCardData.value ? null : {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Learning Center',
+          'item': 'https://khoshghadam.com/learning-center',
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': 'Flash Cards',
+          'item': 'https://khoshghadam.com/flash-cards',
+        },
+        {
+          '@type': 'ListItem',
+          'position': 3,
+          'name': flashCardData.value.name,
+          'item': `https://khoshghadam.com/flash-cards/${flashCardData.value.slug}`,
+        },
+      ],
+    },
+    {
+      '@type': 'LearningResource',
+      'name': flashCardData.value.name,
+      'description': flashCardData.value.description,
+      'url': `https://khoshghadam.com/flash-cards/${flashCardData.value.slug}`,
+      'learningResourceType': 'Flash cards',
+      'isAccessibleForFree': true,
+      'author': {
+        '@type': 'Person',
+        'name': flashCardData.value.owner?.name || 'Yoones Khoshghadam',
+      },
+      'hasPart': flashCardData.value.cards.map(it => {
+        return {
+          '@type': 'Question',
+          'name': it.frontText,
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': it.backText,
+          },
+        };
+      }),
+    },
+  ],
 });
 
 

@@ -6,8 +6,23 @@ definePageMeta({
   name: 'static-content.slack-quick-reply.privacy-policy',
 });
 
+
+/* seo */
+
 useHead({
   title: 'Privacy Policy - Slack Quick Reply',
+});
+
+useSeoMeta({
+  description: 'Privacy policy for Slack Quick Reply, a Chrome extension that quotes Slack messages into the composer without collecting personal information.',
+});
+
+useJsonld({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  'name': 'Privacy Policy - Slack Quick Reply',
+  'description': 'Privacy policy for Slack Quick Reply, a Chrome extension that quotes Slack messages into the composer without collecting personal information.',
+  'url': 'https://khoshghadam.com/slack-quick-reply/privacy-policy',
 });
 
 </script>

@@ -13,12 +13,11 @@ definePageMeta({
   name: 'dashboard.patients.single',
 });
 
-useHead({
-  title: $t('patients.single.pageTitle'),
-});
 
+/* params */
 
 const route = useRoute();
+
 
 const patientUid = computed(() => {
   return route.params.patientUid;
@@ -27,9 +26,20 @@ const patientUid = computed(() => {
 
 /* data */
 
-const { data: patientData, pending: isPatientLoading, refresh: refreshPatient } = useUFetch(
+const { data: patientData, pending: isPatientPending, refresh: refreshPatient } = useUFetch(
   computed(() => `/api/patients/${patientUid.value}`),
 );
+
+
+/* seo */
+
+useHead({
+  title: () => patientData.value?.name,
+});
+
+useSeoMeta({
+  description: () => patientData.value?.description,
+});
 
 
 /* handlers */
@@ -56,13 +66,134 @@ async function handleAction() {
 </template>
 ```
 
+A page with no dynamic params and no fetched SEO fields puts `/* seo */` directly under `/* page */`.
+
 ## Script ordering (pages)
 
-1. `/* page */` — `definePageMeta`, then `useHead` (head may move below data when title depends on fetched data)
-2. Route / params (`useRoute`, reactive param computeds)
-3. Domain sections (`/* data */`, forms, etc.) including `useUFetch`
-4. Watchers / lifecycle
-5. Handlers (`handleXxx`)
+1. `/* page */` — only `definePageMeta`
+2. `/* params */` — only when the page reads `route.params` or `route.query` (see Page params)
+3. Domain sections the SEO block needs (`useUFetch`, derived data, …)
+4. `/* seo */` — required on every page (see Page SEO)
+5. Remaining domain sections (forms, sessions, UI state, …)
+6. Watchers / lifecycle
+7. Handlers (`handleXxx`)
+
+Do **not** put `useHead` / `useSeoMeta` / `useJsonld` inside `/* page */`. Those belong in `/* seo */`.
+
+## Page params
+
+If a page reads `route.params` or `route.query`, add a `/* params */` block **immediately under** `/* page */`.
+
+1. Declare `const route = useRoute();`
+2. Two blank lines
+3. One `computed` per value — `route.params` first, then `route.query` — keep each reactive; do not snapshot into a bare `const`
+
+Consecutive computeds: **one** blank line between them.
+
+```ts
+/* params */
+
+const route = useRoute();
+
+
+const flashCardSlug = computed(() => {
+  return route.params.flashCardSlug;
+});
+```
+
+```ts
+/* params */
+
+const route = useRoute();
+
+
+const returnUrl = computed(() => {
+  return route.query.returnUrl;
+});
+```
+
+```ts
+/* params */
+
+const route = useRoute();
+
+
+const flashCardSlug = computed(() => {
+  return route.params.flashCardSlug;
+});
+
+const journeySlug = computed(() => {
+  return route.query.journey;
+});
+```
+
+- Files: `[patientUid].vue`, `[flashCardSlug]/index.vue`
+- Params: **camelCase** in brackets and when reading `route.params`
+- Query keys stay as they appear on the URL; the computed name is camelCase (`returnUrl` for `returnUrl`)
+- Omit `/* params */` entirely on pages that read neither `route.params` nor `route.query` — do not create an empty block. If something else needs `route` (for example `route.fullPath`), call `useRoute()` in that domain section instead.
+
+## Page SEO
+
+Every page **must** have a `/* seo */` block.
+
+**Placement**
+
+1. Default: directly under `/* page */`
+2. If the page has `/* params */`: under `/* params */`
+3. If `/* seo */` needs data from any other block: under **that** block (after the fetch / derived computeds), not above it
+
+Blocks that SEO does not read (sessions, local UI state, handlers) stay **below** `/* seo */`.
+
+**Contents (in this order, one blank line between calls)**
+
+1. `useHead({ title })` — required
+2. `useSeoMeta({ description })` — required
+3. `useJsonld(() => …)` — only when the project has `nuxt-jsonld` set up (`package.json` / `nuxt.config` modules), and only on public indexable pages. Skip it on `noindex` / dashboard / auth pages.
+
+Static strings when the copy is fixed; getters when the value comes from fetched data (`() => flashCardData.value?.name`). Optional chaining is fine on title/description getters.
+
+```ts
+/* seo */
+
+useHead({
+  title: 'Flash Cards',
+});
+
+useSeoMeta({
+  description: 'Browse free flash card decks for practice and study.',
+});
+```
+
+```ts
+/* seo */
+
+useHead({
+  title: () => flashCardData.value?.name,
+});
+
+useSeoMeta({
+  description: () => flashCardData.value?.description,
+});
+```
+
+**`useJsonld` data guard**
+
+When JSON-LD is included, inline the schema in the page (no shared `makeXxxJsonld` helpers). Guard absent data with a ternary — return `null` so no tag is emitted; do **not** replace this guard with optional chaining inside the object:
+
+```ts
+useJsonld(() => !flashCardData.value ? null : {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'LearningResource',
+      'name': flashCardData.value.name,
+      'url': `https://khoshghadam.com/flash-cards/${flashCardData.value.slug}`,
+    },
+  ],
+});
+```
+
+Keep `useJsonld(() => !data ? null : {` on **one line**. Object properties follow the usual multi-line literal rules. `data` is the fetched document or list the schema reads.
 
 ## `definePageMeta`
 
@@ -75,20 +206,6 @@ async function handleAction() {
 definePageMeta({
   name: 'authentication.login',
   layout: 'empty',
-});
-```
-
-## Dynamic routes
-
-- Files: `[patientUid].vue`, `[flashCardSlug]/index.vue`
-- Params: **camelCase** in brackets and when reading `route.params`
-- Keep params **reactive** for async workflows — do not snapshot once into a bare `const`:
-
-```ts
-const route = useRoute();
-
-const flashCardSlug = computed(() => {
-  return route.params.flashCardSlug;
 });
 ```
 

@@ -6,15 +6,25 @@ definePageMeta({
   name: 'authentication.login',
 });
 
+
+/* params */
+
+const route = useRoute();
+
+
+const returnUrl = computed(() => {
+  return route.query.returnUrl;
+});
+
+
+/* seo */
+
 useHead({
   title: 'Login',
 });
 
-
-const route = useRoute();
-
-const returnUrl = computed(() => {
-  return route.query.returnUrl;
+useSeoMeta({
+  description: 'Sign in to your account.',
 });
 
 

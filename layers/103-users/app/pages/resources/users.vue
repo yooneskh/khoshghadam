@@ -11,6 +11,17 @@ definePageMeta({
 });
 
 
+/* seo */
+
+useHead({
+  title: 'Users',
+});
+
+useSeoMeta({
+  description: 'Manage dashboard users.',
+});
+
+
 /* actions */
 
 const resourceManagerEl = useTemplateRef('resourceManager');

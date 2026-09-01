@@ -6,8 +6,32 @@ definePageMeta({
   name: 'static-content.resume',
 });
 
+
+/* seo */
+
 useHead({
   title: 'Who Am I? Yoones Resume',
+});
+
+useSeoMeta({
+  description: 'I am a FullStack Platform Developer of 13 years who likes to create. Let\'s create the future together.',
+});
+
+useJsonld({
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  'name': 'Who Am I? Yoones Resume',
+  'url': 'https://khoshghadam.com/who-am-i',
+  'mainEntity': {
+    '@type': 'Person',
+    'name': 'Yoones Khoshghadam',
+    'jobTitle': 'FullStack Platform Developer',
+    'url': 'https://khoshghadam.com',
+    'sameAs': [
+      'https://github.com/yooneskh',
+      'https://twitter.com/yooneskh',
+    ],
+  },
 });
 
 </script>

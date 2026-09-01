@@ -139,7 +139,8 @@ const cardsSessions = computed(() => {
           opened: i.answeredCards.find(x => x.card === it._id)?.opened,
           createdAt: i.createdAt,
         }))
-        .filter(i => i.opened !== undefined),
+        .filter(i => i.opened !== undefined)
+        .toReversed(),
     ]),
   );
 

@@ -92,6 +92,7 @@ const sim = {
   playerVz: 0,
   touchX: 0,
   touchZ: 0,
+  movePointerId: null,
   lookPointerId: null,
   lookLastX: 0,
   lookLastY: 0,
@@ -112,8 +113,31 @@ const gameSurfaceEl = useTemplateRef('gameSurfaceEl');
 
 const documentVisibility = useDocumentVisibility();
 const isCoarsePointer = useMediaQuery('(pointer: coarse)');
+const isHoverless = useMediaQuery('(hover: none)');
 const { w, a, s, d, arrowup, arrowdown, arrowleft, arrowright } = useMagicKeys();
 const { lock: lockPointer, unlock: unlockPointer, element: pointerLockElement } = usePointerLock(gameSurfaceEl);
+
+
+const moveStick = ref({
+  active: false,
+  baseX: 0,
+  baseY: 0,
+  knobX: 0,
+  knobY: 0,
+});
+const lookStick = ref({
+  active: false,
+  baseX: 0,
+  baseY: 0,
+  knobX: 0,
+  knobY: 0,
+});
+
+
+const touchStick = {
+  radius: 54,
+  dead: 12,
+};
 
 
 const isPageVisible = computed(() => {
@@ -122,6 +146,28 @@ const isPageVisible = computed(() => {
 
 const isPointerLocked = computed(() => {
   return !!pointerLockElement.value;
+});
+
+const isTouchPlay = computed(() => {
+  return isCoarsePointer.value || isHoverless.value;
+});
+
+const fogNear = computed(() => {
+  if (phase.value === 'playing') {
+    return 14;
+  }
+  else {
+    return 26;
+  }
+});
+
+const fogFar = computed(() => {
+  if (phase.value === 'playing') {
+    return 62;
+  }
+  else {
+    return 88;
+  }
 });
 
 
@@ -183,7 +229,7 @@ function readMoveInput() {
 
 function handleMouseLook(event) {
 
-  if (phase.value !== 'playing' || isCoarsePointer.value) {
+  if (phase.value !== 'playing' || isTouchPlay.value) {
     return;
   }
 
@@ -210,16 +256,142 @@ function handlePlayKeydown(event) {
 
 }
 
-function handleLookPointerDown(event) {
+function getSurfacePoint(event) {
 
-  if (phase.value !== 'playing') {
+  const rect = gameSurfaceEl.value.getBoundingClientRect();
+
+  return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+  };
+
+}
+
+function clampStickKnob(dx, dy) {
+
+  const length = Math.hypot(dx, dy);
+  const scale = length > touchStick.radius ? touchStick.radius / length : 1;
+
+  return {
+    x: dx * scale,
+    y: dy * scale,
+  };
+
+}
+
+function applyMoveStick(clientX, clientY) {
+
+  const rect = gameSurfaceEl.value.getBoundingClientRect();
+  const dx = clientX - (rect.left + moveStick.value.baseX);
+  const dy = clientY - (rect.top + moveStick.value.baseY);
+  const knob = clampStickKnob(dx, dy);
+  const length = Math.hypot(knob.x, knob.y);
+
+  moveStick.value.knobX = knob.x;
+  moveStick.value.knobY = knob.y;
+
+
+  if (length < touchStick.dead) {
+    sim.touchX = 0;
+    sim.touchZ = 0;
     return;
   }
 
 
+  const strength = (length - touchStick.dead) / (touchStick.radius - touchStick.dead);
+
+  sim.touchX = (knob.x / length) * strength;
+  sim.touchZ = (-knob.y / length) * strength;
+
+}
+
+function clearTouchControls() {
+  sim.touchX = 0;
+  sim.touchZ = 0;
+  sim.movePointerId = null;
+  sim.lookPointerId = null;
+  moveStick.value.active = false;
+  moveStick.value.knobX = 0;
+  moveStick.value.knobY = 0;
+  lookStick.value.active = false;
+  lookStick.value.knobX = 0;
+  lookStick.value.knobY = 0;
+}
+
+function handleMovePointerDown(event) {
+
+  if (phase.value !== 'playing' || sim.movePointerId !== null) {
+    return;
+  }
+
+
+  event.preventDefault();
+  event.stopPropagation();
+
+
+  const point = getSurfacePoint(event);
+
+  sim.movePointerId = event.pointerId;
+  moveStick.value.active = true;
+  moveStick.value.baseX = point.x;
+  moveStick.value.baseY = point.y;
+  moveStick.value.knobX = 0;
+  moveStick.value.knobY = 0;
+  sim.touchX = 0;
+  sim.touchZ = 0;
+  event.currentTarget.setPointerCapture(event.pointerId);
+
+}
+
+function handleMovePointerMove(event) {
+
+  if (sim.movePointerId !== event.pointerId) {
+    return;
+  }
+
+
+  event.preventDefault();
+  applyMoveStick(event.clientX, event.clientY);
+
+}
+
+function handleMovePointerUp(event) {
+
+  if (sim.movePointerId !== event.pointerId) {
+    return;
+  }
+
+
+  sim.movePointerId = null;
+  sim.touchX = 0;
+  sim.touchZ = 0;
+  moveStick.value.active = false;
+  moveStick.value.knobX = 0;
+  moveStick.value.knobY = 0;
+
+}
+
+function handleLookPointerDown(event) {
+
+  if (phase.value !== 'playing' || sim.lookPointerId !== null) {
+    return;
+  }
+
+
+  event.preventDefault();
+  event.stopPropagation();
+
+
+  const point = getSurfacePoint(event);
+
   sim.lookPointerId = event.pointerId;
   sim.lookLastX = event.clientX;
   sim.lookLastY = event.clientY;
+  lookStick.value.active = true;
+  lookStick.value.baseX = point.x;
+  lookStick.value.baseY = point.y;
+  lookStick.value.knobX = 0;
+  lookStick.value.knobY = 0;
   event.currentTarget.setPointerCapture(event.pointerId);
 
 }
@@ -231,10 +403,22 @@ function handleLookPointerMove(event) {
   }
 
 
-  sim.lookYaw -= (event.clientX - sim.lookLastX) * 0.008;
-  sim.lookPitch = Math.min(0.42, Math.max(-0.55, sim.lookPitch - (event.clientY - sim.lookLastY) * 0.006));
+  event.preventDefault();
+
+
+  const dx = event.clientX - sim.lookLastX;
+  const dy = event.clientY - sim.lookLastY;
+
+  sim.lookYaw -= dx * 0.0072;
+  sim.lookPitch = Math.min(0.42, Math.max(-0.55, sim.lookPitch - dy * 0.0054));
   sim.lookLastX = event.clientX;
   sim.lookLastY = event.clientY;
+
+
+  const knob = clampStickKnob(lookStick.value.knobX + dx, lookStick.value.knobY + dy);
+
+  lookStick.value.knobX = knob.x;
+  lookStick.value.knobY = knob.y;
 
 }
 
@@ -246,16 +430,10 @@ function handleLookPointerUp(event) {
 
 
   sim.lookPointerId = null;
+  lookStick.value.active = false;
+  lookStick.value.knobX = 0;
+  lookStick.value.knobY = 0;
 
-}
-
-function handleTouchPress(axis, value, event) {
-  sim[axis] = value;
-  event.currentTarget.setPointerCapture(event.pointerId);
-}
-
-function handleTouchRelease(axis) {
-  sim[axis] = 0;
 }
 
 
@@ -1112,20 +1290,39 @@ function updateBoothCamera(step, elapsed) {
   }
 
 
-  const breathe = Math.sin(elapsed * 0.62) * 0.05;
-  const sway = Math.sin(elapsed * 0.18) * 0.16;
+  const camera = playerCamera.value;
+  const aspect = camera.aspect > 0.05 ? camera.aspect : 16 / 9;
+  const portrait = aspect < 0.9;
+  const breathe = Math.sin(elapsed * 0.62) * (portrait ? 0.02 : 0.05);
+  const sway = Math.sin(elapsed * 0.18) * (portrait ? 0.03 : 0.16);
   const follow = Math.min(1, step * 2.3);
-  const targetX = 0.38 + sway;
-  const targetY = 1.86 + breathe;
-  const targetZ = 3.28;
+  const fov = portrait ? 58 : aspect < 1.15 ? 52 : 46;
+  const lookY = portrait ? 1.72 : 1.62;
+  const lookZ = 8.08;
+  const frameWidth = portrait ? 4.7 : 8.1;
+  const frameHeight = portrait ? 3.7 : 3.25;
+  const verticalFov = (fov * Math.PI) / 180;
+  const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * aspect);
+  const distance = Math.max(
+    (frameWidth * 0.5) / Math.tan(horizontalFov * 0.5),
+    (frameHeight * 0.5) / Math.tan(verticalFov * 0.5),
+  ) * 1.08;
+  const targetX = sway;
+  const targetY = lookY + (portrait ? 0.42 : 0.16) + breathe;
+  const targetZ = lookZ - distance;
 
-  playerCamera.value.position.x += (targetX - playerCamera.value.position.x) * follow;
-  playerCamera.value.position.y += (targetY - playerCamera.value.position.y) * follow;
-  playerCamera.value.position.z += (targetZ - playerCamera.value.position.z) * follow;
-  playerCamera.value.fov += (50 - playerCamera.value.fov) * follow;
-  playerCamera.value.updateProjectionMatrix();
-  playerCamera.value.lookAt(0, 1.7 + breathe * 0.25, 8.12);
-  playerCamera.value.updateMatrixWorld();
+  camera.position.x += (targetX - camera.position.x) * follow;
+  camera.position.y += (targetY - camera.position.y) * follow;
+  camera.position.z += (targetZ - camera.position.z) * follow;
+  camera.fov += (fov - camera.fov) * follow;
+  camera.updateProjectionMatrix();
+  camera.lookAt(0, lookY + breathe * 0.2, lookZ);
+  camera.updateMatrixWorld();
+
+  if (camera.parent?.fog) {
+    camera.parent.fog.near = 26;
+    camera.parent.fog.far = 88;
+  }
 
 }
 
@@ -1281,7 +1478,13 @@ function paintBoard() {
       fillParagraph(ctx, 'You\'re on a floating slab. Big dumb boxes are doing 90. Don\'t become a stain.', canvas.width / 2, 300, 860, 44);
       ctx.fillStyle = '#c4b8a5';
       ctx.font = '600 28px ui-sans-serif, system-ui';
-      ctx.fillText('WASD to scoot  ·  mouse to look  ·  stay on the island', canvas.width / 2, 520);
+
+      if (isTouchPlay.value) {
+        ctx.fillText('Left thumb to scoot  ·  right thumb to look  ·  stay on the island', canvas.width / 2, 520);
+      }
+      else {
+        ctx.fillText('WASD to scoot  ·  mouse to look  ·  stay on the island', canvas.width / 2, 520);
+      }
     }
   });
 }
@@ -1328,11 +1531,25 @@ function paintBanner() {
 }
 
 function paintButton(sign, label, hot) {
-  paintPanel(sign, hot ? '#2f6d2b' : '#211c17', (ctx, canvas) => {
-    ctx.fillStyle = hot ? '#f4ffd8' : '#ffe08a';
-    ctx.font = '900 56px ui-sans-serif, system-ui';
-    ctx.fillText(label, canvas.width / 2, canvas.height / 2);
-  });
+  if (!sign) {
+    return;
+  }
+
+
+  const { ctx, canvas, texture } = sign;
+
+  ctx.fillStyle = hot ? '#3d8a3a' : '#1f4d1d';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#ffe08a';
+  ctx.lineWidth = 18;
+  ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#fff6d0';
+  ctx.font = '900 84px ui-sans-serif, system-ui';
+  ctx.fillText(label, canvas.width / 2, canvas.height / 2 + 4);
+  texture.needsUpdate = true;
+
 }
 
 function paintAllSigns() {
@@ -1381,6 +1598,7 @@ watchImmediate(
     banner.value,
     overTitle.value,
     hoveredWorldButton.value,
+    isTouchPlay.value,
   ],
   paintAllSigns,
 );
@@ -1392,9 +1610,9 @@ onMounted(() => {
   bestSign.value = createSign(512, 256);
   playSign.value = createSign(768, 192);
   bannerSign.value = createSign(1024, 256);
-  goSign.value = createSign(512, 192);
-  againSign.value = createSign(512, 192);
-  backSign.value = createSign(512, 192);
+  goSign.value = createSign(1024, 320);
+  againSign.value = createSign(1024, 320);
+  backSign.value = createSign(1024, 320);
   paintAllSigns();
 });
 
@@ -1423,8 +1641,7 @@ function resetRun() {
   sim.playerYaw = 0;
   sim.playerVx = 0;
   sim.playerVz = 0;
-  sim.touchX = 0;
-  sim.touchZ = 0;
+  clearTouchControls();
   sim.timeScale = 1;
   sim.fovKick = 0;
   sim.dustAcc = 0;
@@ -1471,6 +1688,7 @@ function endRun(reason) {
 
 
   unlockPointer();
+  clearTouchControls();
 
 }
 
@@ -1538,6 +1756,13 @@ function handleLoop({ delta, elapsed }) {
 
 
   updateCamera(raw);
+
+  if (playerCamera.value?.parent?.fog) {
+    playerCamera.value.parent.fog.near = 14;
+    playerCamera.value.parent.fog.far = 62;
+  }
+
+
   updatePlayer(step, elapsed);
   checkNearMisses();
 
@@ -1579,6 +1804,11 @@ async function handleStart() {
   playBeep(520, 0.08, 0.03);
 
 
+  if (isTouchPlay.value) {
+    return;
+  }
+
+
   try {
     await lockPointer();
   }
@@ -1593,7 +1823,7 @@ async function handleReplay() {
 }
 
 function handleSurfaceClick() {
-  if (phase.value === 'playing' && !isPointerLocked.value) {
+  if (phase.value === 'playing' && !isTouchPlay.value && !isPointerLocked.value) {
     lockPointer();
   }
 }
@@ -1607,7 +1837,7 @@ function handleSurfaceClick() {
     title="Runned Over">
     <div
       ref="gameSurfaceEl"
-      class="relative h-full min-h-[28rem] overflow-hidden"
+      class="relative h-full min-h-[28rem] overflow-hidden touch-none select-none overscroll-none"
       :style="{
         backgroundColor: sceneTint,
       }"
@@ -1629,8 +1859,8 @@ function handleSurfaceClick() {
         <tres-fog
           :args="[
             sceneTint,
-            14,
-            62,
+            fogNear,
+            fogFar,
           ]"
         />
 
@@ -2117,7 +2347,7 @@ function handleSurfaceClick() {
         </template>
 
         <tres-group
-          :position="[-4.85, 0, 8.05]"
+          :position="[-3.35, 0, 8.08]"
           :rotation="[0, 0.38, 0]">
           <tres-mesh
             :position="[0, 1.15, 0]"
@@ -2168,7 +2398,7 @@ function handleSurfaceClick() {
         </tres-group>
 
         <tres-group
-          :position="[4.85, 0, 8.05]"
+          :position="[3.35, 0, 8.08]"
           :rotation="[0, -0.38, 0]">
           <tres-mesh
             :position="[0, 1.15, 0]"
@@ -2442,14 +2672,16 @@ function handleSurfaceClick() {
               :position="[0, 0.78, 0.52]"
               :scale="hoveredWorldButton === 'go' ? 1.08 : 1"
               @click="handleStart"
+              @pointerdown="handleWorldButtonEnter('go')"
               @pointerenter="handleWorldButtonEnter('go')"
-              @pointerleave="handleWorldButtonLeave('go')">
+              @pointerleave="handleWorldButtonLeave('go')"
+              @pointerup="handleWorldButtonLeave('go')">
               <tres-mesh :cast-shadow="true">
                 <tres-box-geometry
                   :args="[
-                    1.46,
-                    0.4,
-                    0.28,
+                    1.84,
+                    0.56,
+                    0.22,
                   ]"
                 />
                 <tres-mesh-standard-material
@@ -2459,11 +2691,11 @@ function handleSurfaceClick() {
                   :metalness="0.08"
                 />
               </tres-mesh>
-              <tres-mesh :position="[0, 0, 0.15]">
+              <tres-mesh :position="[0, 0, 0.13]">
                 <tres-plane-geometry
                   :args="[
-                    1.34,
-                    0.3,
+                    1.74,
+                    0.48,
                   ]"
                 />
                 <tres-mesh-basic-material
@@ -2476,17 +2708,19 @@ function handleSurfaceClick() {
 
           <template v-if="phase === 'over' && againSign && backSign">
             <tres-group
-              :position="[-0.82, 0.78, 0.52]"
+              :position="[-0.95, 0.78, 0.52]"
               :scale="hoveredWorldButton === 'again' ? 1.08 : 1"
               @click="handleReplay"
+              @pointerdown="handleWorldButtonEnter('again')"
               @pointerenter="handleWorldButtonEnter('again')"
-              @pointerleave="handleWorldButtonLeave('again')">
+              @pointerleave="handleWorldButtonLeave('again')"
+              @pointerup="handleWorldButtonLeave('again')">
               <tres-mesh :cast-shadow="true">
                 <tres-box-geometry
                   :args="[
-                    1.32,
-                    0.38,
-                    0.28,
+                    1.62,
+                    0.54,
+                    0.22,
                   ]"
                 />
                 <tres-mesh-standard-material
@@ -2496,11 +2730,11 @@ function handleSurfaceClick() {
                   :metalness="0.08"
                 />
               </tres-mesh>
-              <tres-mesh :position="[0, 0, 0.15]">
+              <tres-mesh :position="[0, 0, 0.13]">
                 <tres-plane-geometry
                   :args="[
-                    1.2,
-                    0.28,
+                    1.52,
+                    0.46,
                   ]"
                 />
                 <tres-mesh-basic-material
@@ -2511,17 +2745,19 @@ function handleSurfaceClick() {
             </tres-group>
 
             <tres-group
-              :position="[0.82, 0.78, 0.52]"
+              :position="[0.95, 0.78, 0.52]"
               :scale="hoveredWorldButton === 'back' ? 1.08 : 1"
               @click="handleBackToLineup"
+              @pointerdown="handleWorldButtonEnter('back')"
               @pointerenter="handleWorldButtonEnter('back')"
-              @pointerleave="handleWorldButtonLeave('back')">
+              @pointerleave="handleWorldButtonLeave('back')"
+              @pointerup="handleWorldButtonLeave('back')">
               <tres-mesh :cast-shadow="true">
                 <tres-box-geometry
                   :args="[
-                    1.32,
-                    0.38,
-                    0.28,
+                    1.62,
+                    0.54,
+                    0.22,
                   ]"
                 />
                 <tres-mesh-standard-material
@@ -2531,11 +2767,11 @@ function handleSurfaceClick() {
                   :metalness="0.06"
                 />
               </tres-mesh>
-              <tres-mesh :position="[0, 0, 0.15]">
+              <tres-mesh :position="[0, 0, 0.13]">
                 <tres-plane-geometry
                   :args="[
-                    1.2,
-                    0.28,
+                    1.52,
+                    0.46,
                   ]"
                 />
                 <tres-mesh-basic-material
@@ -2556,47 +2792,70 @@ function handleSurfaceClick() {
         }"
       />
 
-      <template v-if="phase === 'playing' && isCoarsePointer">
-        <div class="absolute bottom-10 left-3 grid grid-cols-3 gap-1.5 pointer-events-auto">
-          <div />
-          <u-button
-            icon="lucide:chevron-up"
-            class="size-11"
-            @pointerdown="handleTouchPress('touchZ', 1, $event)"
-            @pointerup="handleTouchRelease('touchZ')"
-            @pointercancel="handleTouchRelease('touchZ')"
-          />
-          <div />
-          <u-button
-            icon="lucide:chevron-left"
-            class="size-11"
-            @pointerdown="handleTouchPress('touchX', -1, $event)"
-            @pointerup="handleTouchRelease('touchX')"
-            @pointercancel="handleTouchRelease('touchX')"
-          />
-          <u-button
-            icon="lucide:chevron-down"
-            class="size-11"
-            @pointerdown="handleTouchPress('touchZ', -1, $event)"
-            @pointerup="handleTouchRelease('touchZ')"
-            @pointercancel="handleTouchRelease('touchZ')"
-          />
-          <u-button
-            icon="lucide:chevron-right"
-            class="size-11"
-            @pointerdown="handleTouchPress('touchX', 1, $event)"
-            @pointerup="handleTouchRelease('touchX')"
-            @pointercancel="handleTouchRelease('touchX')"
-          />
-        </div>
+      <template v-if="phase === 'playing' && isTouchPlay">
+        <div
+          class="absolute inset-y-0 left-0 w-[48%] touch-none pointer-events-auto"
+          @pointerdown="handleMovePointerDown"
+          @pointermove="handleMovePointerMove"
+          @pointerup="handleMovePointerUp"
+          @pointercancel="handleMovePointerUp"
+        />
 
         <div
-          class="absolute inset-y-16 right-0 w-2/5 pointer-events-auto"
-          @pointerdown.stop="handleLookPointerDown"
-          @pointermove.stop="handleLookPointerMove"
-          @pointerup.stop="handleLookPointerUp"
-          @pointercancel.stop="handleLookPointerUp"
+          class="absolute inset-y-0 right-0 w-[48%] touch-none pointer-events-auto"
+          @pointerdown="handleLookPointerDown"
+          @pointermove="handleLookPointerMove"
+          @pointerup="handleLookPointerUp"
+          @pointercancel="handleLookPointerUp"
         />
+
+        <template v-if="moveStick.active">
+          <div
+            class="absolute size-28 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#e07a2f]/80 bg-black/40 shadow-[inset_0_0_22px_rgb(0_0_0/0.4)] pointer-events-none"
+            :style="{
+              left: `${moveStick.baseX}px`,
+              top: `${moveStick.baseY}px`,
+            }">
+            <div
+              class="absolute left-1/2 top-1/2 size-11 rounded-full border border-[#e07a2f] bg-[#efe7d8]/95"
+              :style="{
+                transform: `translate(calc(-50% + ${moveStick.knobX}px), calc(-50% + ${moveStick.knobY}px))`,
+              }"
+            />
+          </div>
+        </template>
+        <template v-else>
+          <div class="absolute left-[max(1.25rem,env(safe-area-inset-left))] bottom-[max(1.5rem,env(safe-area-inset-bottom))] size-28 rounded-full border-2 border-[#e07a2f]/45 bg-black/25 pointer-events-none">
+            <div class="absolute left-1/2 top-1/2 size-11 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#e07a2f]/70 bg-[#efe7d8]/70" />
+            <p class="absolute inset-x-0 -bottom-5 text-center text-[10px] font-bold tracking-[0.22em] text-white/70">
+              MOVE
+            </p>
+          </div>
+        </template>
+
+        <template v-if="lookStick.active">
+          <div
+            class="absolute size-28 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#efe7d8]/55 bg-black/30 shadow-[inset_0_0_22px_rgb(0_0_0/0.35)] pointer-events-none"
+            :style="{
+              left: `${lookStick.baseX}px`,
+              top: `${lookStick.baseY}px`,
+            }">
+            <div
+              class="absolute left-1/2 top-1/2 size-11 rounded-full border border-[#efe7d8]/80 bg-[#e07a2f]/90"
+              :style="{
+                transform: `translate(calc(-50% + ${lookStick.knobX}px), calc(-50% + ${lookStick.knobY}px))`,
+              }"
+            />
+          </div>
+        </template>
+        <template v-else>
+          <div class="absolute right-[max(1.25rem,env(safe-area-inset-right))] bottom-[max(1.5rem,env(safe-area-inset-bottom))] size-28 rounded-full border-2 border-[#efe7d8]/35 bg-black/20 pointer-events-none">
+            <div class="absolute left-1/2 top-1/2 size-11 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#efe7d8]/60 bg-[#e07a2f]/65" />
+            <p class="absolute inset-x-0 -bottom-5 text-center text-[10px] font-bold tracking-[0.22em] text-white/70">
+              LOOK
+            </p>
+          </div>
+        </template>
       </template>
 
     </div>

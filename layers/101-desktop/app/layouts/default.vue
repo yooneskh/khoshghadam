@@ -33,6 +33,13 @@ import BackgroundImage from '~/assets/images/background.jpg';
           },
         },
         {
+          pito: 'game-controller',
+          name: 'Minigames',
+          to: {
+            name: 'mini-games.list',
+          },
+        },
+        {
           pito: 'briefcase',
           name: 'Account Details',
           to: {

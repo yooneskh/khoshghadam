@@ -1,3 +1,5 @@
+import { useResourceName } from './use-resource-name';
+import { retrieveResourceSchema } from './retrieve-resource';
 
 
 export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {

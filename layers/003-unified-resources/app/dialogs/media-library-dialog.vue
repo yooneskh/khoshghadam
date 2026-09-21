@@ -15,6 +15,10 @@ const emit = defineEmits([
 
 /* media */
 
+import { retrieveResource, evictResource } from '../libs/retrieve-resource';
+import { truncateMiddle } from '../libs/truncate-middle';
+
+
 const itemsPerPage = ref(18);
 const currentPage = ref(1);
 

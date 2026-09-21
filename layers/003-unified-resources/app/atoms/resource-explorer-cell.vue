@@ -15,7 +15,8 @@ const emit = defineEmits([
 
 /* resource */
 
-import ResourceExplorerCellRef from '~/atoms/resource-explorer-cell-ref.vue';
+import ResourceExplorerCellRef from './resource-explorer-cell-ref.vue';
+import { launchTableDialog } from '../libs/launch-table-dialog';
 
 
 function handleViewItems() {

@@ -44,6 +44,9 @@ const { form: registerForm, formTag: registerFormTag } = useForm({
 
 /* captcha */
 
+import CaptchaChallenge from '../atoms/captcha-challenge.vue';
+
+
 const captchaChallengeEl = ref();
 const captchaId = ref('');
 const captchaCode = ref('');

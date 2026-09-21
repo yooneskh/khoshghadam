@@ -11,6 +11,10 @@ const modelValue = defineModel();
 
 /* resource */
 
+import { retrieveResource } from '../libs/retrieve-resource';
+import { launchMediaLibraryDialog } from '../libs/launch-media-library-dialog';
+
+
 const isLoading = ref(false);
 
 

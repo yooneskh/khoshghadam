@@ -10,8 +10,10 @@ const props = defineProps({
 
 /* resource */
 
-import ResourceExplorerCell from '~/atoms/resource-explorer-cell.vue';
-import ResourceExplorerColumnFilter from '~/atoms/resource-explorer-column-filter.vue';
+import ResourceExplorerCell from './resource-explorer-cell.vue';
+import ResourceExplorerColumnFilter from './resource-explorer-column-filter.vue';
+import { useResourceName } from '../libs/use-resource-name';
+import { useResourceMeta } from '../libs/use-resource-meta';
 
 
 const itemsPerPage = ref(20);

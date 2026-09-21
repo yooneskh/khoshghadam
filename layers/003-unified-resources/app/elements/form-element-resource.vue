@@ -11,6 +11,12 @@ const modelValue = defineModel();
 
 /* resource */
 
+import { useResourceName } from '../libs/use-resource-name';
+import { retrieveResource } from '../libs/retrieve-resource';
+import { truncateMiddle } from '../libs/truncate-middle';
+import { launchResourceSelectionDialog } from '../libs/launch-resource-selection-dialog';
+
+
 const isLoading = ref(false);
 
 

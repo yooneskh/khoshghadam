@@ -1,3 +1,4 @@
+import { wordToSingular, wordToPlural } from './word-pluralize';
 
 
 export function useResourceName(args: { resource: MaybeRefOrGetter<string> }) {

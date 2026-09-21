@@ -15,6 +15,11 @@ const emit = defineEmits([
 
 /* filter */
 
+import { useResourceName } from '../libs/use-resource-name';
+import { retrieveResource } from '../libs/retrieve-resource';
+import { truncateMiddle } from '../libs/truncate-middle';
+
+
 const isOpen = ref(false);
 let isSyncing = false;
 

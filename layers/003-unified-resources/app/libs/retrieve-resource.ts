@@ -1,3 +1,4 @@
+import { preemptCache, evictCache } from './preemptive-cache';
 
 
 export async function retrieveResourceSchema(args: { resourcePath: string; }) {

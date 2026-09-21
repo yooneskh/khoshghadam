@@ -16,6 +16,12 @@ const emit = defineEmits([
 
 /* resource */
 
+import ResourceExplorerTable from '../atoms/resource-explorer-table.vue';
+import { useResourceName } from '../libs/use-resource-name';
+import { retrieveResource } from '../libs/retrieve-resource';
+import { truncateMiddle } from '../libs/truncate-middle';
+
+
 const currentItems = ref(radCloneDeep(props.items || []));
 const currentItemsTitles = ref({});
 

@@ -57,6 +57,11 @@ useJsonld({
   ],
 });
 
+
+/* entries */
+
+import EntriesGrid from '../atoms/entries-grid.vue';
+
 </script>
 
 

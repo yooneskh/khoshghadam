@@ -108,7 +108,7 @@ export async function assertUser(args: { event: H3Event; fillPermissions?: boole
 
       const authorizationToken = await app.authorizationTokens.dbo.find({
         filter: {
-          'user': filledUser._id,
+          user: filledUser._id,
         },
       });
 
@@ -127,7 +127,7 @@ export async function assertUser(args: { event: H3Event; fillPermissions?: boole
 
       const authorizationRoles = await app.authorizationRoles.dbo.list({
         filter: {
-          '_id': {
+          _id: {
             $in: roles,
           },
         },

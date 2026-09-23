@@ -68,10 +68,7 @@ useJsonld(() => !flashCardsData.value ? null : {
 
 
 <template>
-  <window-base
-    pito="address-book"
-    title="Flash Cards"
-    :loading="isFlashCardsPending">
+  <window-base pito="address-book" title="Flash Cards" :loading="isFlashCardsPending">
     <entries-table
       :items="flashCardsData?.map(it => ({
         pito: 'folder-opened',

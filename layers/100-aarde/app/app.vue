@@ -39,6 +39,7 @@ useJsonld({
   <u-app>
 
     <nuxt-route-announcer />
+
     <nuxt-loading-indicator />
 
     <nuxt-layout>

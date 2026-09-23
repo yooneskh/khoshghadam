@@ -131,15 +131,15 @@ const cardsSessions = computed(() => {
 
 
   return Object.fromEntries(
-    flashCardData.value.cards.map(it => [
-      it._id,
+    flashCardData.value.cards.map(card => [
+      card._id,
       previousSessionsData.value
-        .filter(i => i.flashCard === flashCardData.value._id)
-        .map(i => ({
-          opened: i.answeredCards.find(x => x.card === it._id)?.opened,
-          createdAt: i.createdAt,
+        .filter(session => session.flashCard === flashCardData.value._id)
+        .map(session => ({
+          opened: session.answeredCards.find(it => it.card === card._id)?.opened,
+          createdAt: session.createdAt,
         }))
-        .filter(i => i.opened !== undefined)
+        .filter(answer => answer.opened !== undefined)
         .toReversed(),
     ]),
   );
@@ -211,13 +211,11 @@ async function handleCardAdvance() {
     :loading="isFlashCardPending"
     :actions="[
       {
-        variant: 'subtle',
         label: activeIndex < flashCardData?.cards.length - 1 ? 'Next' : 'Finish',
         onClick: handleCardAdvance,
       },
     ]">
     <div class="h-full w-full flex items-center justify-center">
-
       <div class="w-full flex flex-col items-center gap-3 relative overflow-hidden p-3">
 
         <template v-for="(card, index) of flashCardData.cards" :key="card._id">
@@ -228,29 +226,46 @@ async function handleCardAdvance() {
               'left-1/2 -translate-x-1/2': index === activeIndex,
               'left-full translate-x-0': index > activeIndex,
             }">
-
             <div
               class="relative w-full h-full transition-transform duration-1000 transform-3d"
               :class="{
-                'rotate-y-180': index === rotatedIndex
+                'rotate-y-180': index === rotatedIndex,
               }">
 
               <div class="absolute w-full h-full flex flex-col items-center justify-center bg-elevated border border-default rounded-xl backface-hidden" @click="rotatedIndex = index;">
+
                 <div class="text-2xl font-medium">
                   {{ card.frontText }}
                 </div>
+
                 <template v-if="cardsSessions?.[card._id]">
                   <div class="flex flex-wrap items-center gap-1 mt-1">
-                    <template v-for="(answer, index) of cardsSessions[card._id]" :key="index">
+                    <template v-for="(answer, answerIndex) of cardsSessions[card._id]" :key="answerIndex">
                       <u-tooltip :text="formatDate(answer.createdAt)">
-                        <u-badge
-                          variant="subtle"
-                          :color="answer.opened === true ? 'warning' : answer.opened === false ? 'success' : undefined"
-                        />
+
+                        <template v-if="answer.opened === true">
+                          <u-badge
+                            variant="subtle"
+                            color="warning"
+                          />
+                        </template>
+
+                        <template v-else-if="answer.opened === false">
+                          <u-badge
+                            variant="subtle"
+                            color="success"
+                          />
+                        </template>
+
+                        <template v-else>
+                          <u-badge variant="subtle" />
+                        </template>
+
                       </u-tooltip>
                     </template>
                   </div>
                 </template>
+
               </div>
 
               <div class="absolute w-full h-full flex items-center justify-center bg-accented border border-default rounded-xl backface-hidden rotate-y-180">
@@ -260,7 +275,6 @@ async function handleCardAdvance() {
               </div>
 
             </div>
-
           </div>
         </template>
 

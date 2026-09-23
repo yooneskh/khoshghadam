@@ -5,6 +5,7 @@ export default defineNitroPlugin(() => {
 
     const initialUsers = useRuntimeConfig().initialUsers as any;
 
+
     if (!Array.isArray(initialUsers) || !initialUsers?.length) {
       return;
     }
@@ -55,6 +56,7 @@ export default defineNitroPlugin(() => {
             statusMessage: 'invalid initial user permissions',
           });
         }
+
 
         await app.authorizationTokens.dbo.create({
           document: {

@@ -129,21 +129,21 @@ function getFlashCardSessionsFor(flashCardId) {
 
 
 <template>
-  <window-base
-    pito="address-book"
-    :title="journeyData?.name || 'Flash Card Journey'"
-    :loading="isJourneyPending">
+  <window-base pito="address-book" :title="journeyData?.name || 'Flash Card Journey'" :loading="isJourneyPending">
     <div class="p-3 space-y-3">
 
       <div class="flex flex-col gap-3 tablet:flex-row tablet:items-start">
 
         <div class="grow min-w-0">
+
           <h1 class="text-2xl font-semibold">
             {{ journeyData.name }}
           </h1>
+
           <p class="text-muted mt-1">
             {{ journeyData.description }}
           </p>
+
         </div>
 
         <template v-if="isUserAuthenticated && journeyData.completed">
@@ -155,6 +155,7 @@ function getFlashCardSessionsFor(flashCardId) {
             class="self-start"
           />
         </template>
+
         <template v-else-if="isUserAuthenticated">
           <u-badge
             variant="subtle"
@@ -163,6 +164,7 @@ function getFlashCardSessionsFor(flashCardId) {
             :label="`${journeyData.steps.filter(it => it.completed).length} / ${journeyData.steps.length}`"
           />
         </template>
+
         <template v-else>
           <u-badge
             variant="subtle"
@@ -228,6 +230,7 @@ function getFlashCardSessionsFor(flashCardId) {
             <div class="flex items-center gap-2 tablet:shrink-0 tablet:flex-col">
 
               <template v-if="step.unlocked">
+
                 <template v-if="!isUserAuthenticated">
                   <u-button
                     variant="subtle"
@@ -241,6 +244,7 @@ function getFlashCardSessionsFor(flashCardId) {
                     }"
                   />
                 </template>
+
                 <template v-else-if="step.completed">
                   <u-button
                     variant="subtle"
@@ -257,6 +261,7 @@ function getFlashCardSessionsFor(flashCardId) {
                     }"
                   />
                 </template>
+
                 <template v-else>
                   <u-button
                     variant="subtle"
@@ -273,6 +278,7 @@ function getFlashCardSessionsFor(flashCardId) {
                     }"
                   />
                 </template>
+
               </template>
 
               <template v-if="step.completed">
@@ -283,6 +289,7 @@ function getFlashCardSessionsFor(flashCardId) {
                   label="Completed"
                 />
               </template>
+
               <template v-else-if="!step.unlocked">
                 <u-badge
                   variant="subtle"

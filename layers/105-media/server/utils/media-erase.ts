@@ -23,11 +23,7 @@ export async function eraseMedia(mediaId: string | undefined) {
   }
 
   if (media.variants) {
-    await Promise.all(
-      Object.values(media.variants).map(it =>
-        eraseMediaFile(it as string),
-      ),
-    );
+    await Promise.all(Object.values(media.variants).map(it => eraseMediaFile(it as string)));
   }
 
 

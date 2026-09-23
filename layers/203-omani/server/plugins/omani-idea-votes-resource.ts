@@ -31,7 +31,10 @@ export default defineNitroPlugin(() => {
       },
       indexes: [
         {
-          key: { idea: 1, user: 1 },
+          key: {
+            idea: 1,
+            user: 1,
+          },
           unique: true,
         },
       ],

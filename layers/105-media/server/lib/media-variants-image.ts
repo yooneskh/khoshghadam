@@ -25,11 +25,12 @@ export async function createImageMediaVariants(media: any) {
 
     const fileName = `${generateUuid()}.${variant.extension}`;
 
-    (await sharp(sourcePath)
-      .resize(variant.size, variant.size, { fit: 'inside' })
+    await sharp(sourcePath)
+      .resize(variant.size, variant.size, {
+        fit: 'inside',
+      })
       .png()
-      .toFile(join(app.media.directory, fileName))
-    );
+      .toFile(join(app.media.directory, fileName));
 
     media = await app.media.dbo.update({
       resourceId: media._id,

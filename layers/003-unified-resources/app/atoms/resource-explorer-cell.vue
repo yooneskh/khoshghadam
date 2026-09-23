@@ -5,7 +5,13 @@
 const props = defineProps({
   column: Object,
   row: Object,
-  data: {},
+  data: [
+    String,
+    Number,
+    Boolean,
+    Object,
+    Array,
+  ],
 });
 
 const emit = defineEmits([
@@ -62,9 +68,7 @@ function handleViewItems() {
   </template>
 
   <template v-else-if="props.column.type === 'array' && props.column.items.type === 'object'">
-    <a
-      class="text-primary underline cursor-pointer"
-      @click="handleViewItems()">
+    <a class="text-primary underline cursor-pointer" @click="handleViewItems()">
       View {{ props.column?.header || 'Items' }}
     </a>
   </template>
@@ -74,6 +78,7 @@ function handleViewItems() {
   </template>
 
   <template v-else-if="props.data === true || props.data === false">
+
     <template v-if="props.data">
       <u-badge
         variant="subtle"
@@ -81,6 +86,7 @@ function handleViewItems() {
         icon="lucide:check"
       />
     </template>
+
     <template v-else>
       <u-badge
         variant="subtle"
@@ -88,6 +94,7 @@ function handleViewItems() {
         icon="lucide:x"
       />
     </template>
+
   </template>
 
   <template v-else-if="props.column.enum">

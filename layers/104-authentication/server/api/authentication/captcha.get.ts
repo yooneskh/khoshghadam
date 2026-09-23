@@ -1,6 +1,6 @@
 
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async event => {
 
   const captcha = await generateCaptcha();
 

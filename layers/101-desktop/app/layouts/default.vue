@@ -10,16 +10,13 @@ import EntriesGrid from '../atoms/entries-grid.vue';
 
 <template>
   <div
-    class="
-      h-dvh w-screen
-      relative
-      bg-center bg-cover
-    "
+    class="h-dvh w-screen relative bg-center bg-cover"
     :style="{
-      backgroundImage: `url(${BackgroundImage})`
+      backgroundImage: `url(${BackgroundImage})`,
     }">
 
     <entries-grid
+      class="text-inverted"
       :items="[
         {
           pito: 'my-documents',
@@ -50,18 +47,11 @@ import EntriesGrid from '../atoms/entries-grid.vue';
           },
         },
       ]"
-      class="text-inverted"
     />
 
     <slot />
 
-    <div
-      class="
-        h-10
-        absolute bottom-0 inset-x-0
-        flex items-center gap-3
-        bg-primary
-      ">
+    <div class="h-10 absolute bottom-0 inset-x-0 flex items-center gap-3 bg-primary">
 
       <u-button
         variant="soft"

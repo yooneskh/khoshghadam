@@ -2,14 +2,14 @@ import { useResourceName } from './use-resource-name';
 import { retrieveResourceSchema } from './retrieve-resource';
 
 
-export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
+export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
 
   const { resourcePath } = useResourceName({
     resource: args.resource,
   });
 
 
-  const schema = asyncComputed<any>(async () => {
+  const schema = computedAsync<any>(async () => {
 
     if (!resourcePath.value) {
       return [];
@@ -22,34 +22,25 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
   });
 
-
   const meta = computed(() => {
     return schema.value || [];
   });
 
   const fields = computed(() => {
-    return (
-      (meta.value
-        .filter((it: any) => !it.hidden)
-        .map(convertMetaToField)
-      )
-    );
+    return meta.value.filter((it: any) => !it.hidden).map(convertMetaToField);
   });
 
   const columns = computed(() => {
     return [
-      ...(meta.value
-        .filter((it: any) => !it.hidden && !it.hideInTable)
-        .map((it: any) => ({
-          accessorKey: it.key,
-          header: radTitle(it.key),
-          resource: it.resource,
-          type: it.type,
-          items: it.items,
-          enum: it.enum,
-          labelFormat: it.labelFormat,
-        }))
-      ),
+      ...meta.value.filter((it: any) => !it.hidden && !it.hideInTable).map((it: any) => ({
+        accessorKey: it.key,
+        header: radTitle(it.key),
+        resource: it.resource,
+        type: it.type,
+        items: it.items,
+        enum: it.enum,
+        labelFormat: it.labelFormat,
+      })),
       {
         accessorKey: 'createdAt',
         header: 'Created',
@@ -71,7 +62,6 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
   };
 
 }
-
 
 function convertMetaToField(meta: any) {
 

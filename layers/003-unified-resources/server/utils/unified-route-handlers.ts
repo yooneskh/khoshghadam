@@ -16,10 +16,10 @@ export async function handleResourceSchema(args: ResourceHandlerArgs) {
     });
   }
 
+
   return app[args.resource as keyof typeof app]?.dbo?.schema();
 
 }
-
 
 export async function handleResourceList(args: ResourceHandlerArgs) {
 
@@ -29,6 +29,7 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
       permission: args.permission!,
     });
   }
+
 
   if (getQuery(args.event)?.single === 'xtruex') {
     return app[args.resource as keyof typeof app]?.dbo?.find({
@@ -59,6 +60,7 @@ export async function handleResourceCount(args: ResourceHandlerArgs) {
     });
   }
 
+
   return app[args.resource as keyof typeof app]?.dbo?.count({
     filter: extractFilterFromEvent(args.event),
   });
@@ -73,6 +75,7 @@ export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
       permission: args.permission!,
     });
   }
+
 
   return app[args.resource as keyof typeof app]?.dbo?.retrieve({
     resourceId: getRouterParam(args.event, 'resourceId'),
@@ -90,6 +93,7 @@ export async function handleResourceCreate(args: ResourceHandlerArgs) {
     });
   }
 
+
   return app[args.resource as keyof typeof app]?.dbo?.create({
     document: await readBody(args.event),
   });
@@ -104,6 +108,7 @@ export async function handleResourceUpdate(args: ResourceHandlerArgs) {
       permission: args.permission!,
     });
   }
+
 
   return app[args.resource as keyof typeof app]?.dbo?.update({
     resourceId: getRouterParam(args.event, 'resourceId'),
@@ -121,111 +126,131 @@ export async function handleResourceDelete(args: ResourceHandlerArgs) {
     });
   }
 
+
   return app[args.resource as keyof typeof app]?.dbo?.delete({
     resourceId: getRouterParam(args.event, 'resourceId'),
   });
 
 }
 
-
 function extractFilterFromEvent(event: H3Event) {
 
   const filter = getQuery(event)?.filter ?? '';
+
 
   if (!filter) {
     return undefined;
   }
 
 
-  return (
-    String(filter)
-      .split(',')
-      .map(it => it.split(':'))
-      .reduce((acc, it) => {
+  return String(filter).split(',').map(it => it.split(':')).reduce((acc, it) => {
 
-        const key = it[0] as string;
-        const hasOperator = it.length >= 3;
-        const operator = hasOperator ? it[1] : 'is';
-        const rawValue = hasOperator ? it[2] : it[1] as string;
-        const value = guessFilterValue(rawValue);
+    const key = it[0] as string;
+    const hasOperator = it.length >= 3;
+    const operator = hasOperator ? it[1] : 'is';
+    const rawValue = hasOperator ? it[2] : it[1] as string;
+    const value = guessFilterValue(rawValue);
 
-        if (operator === 'is') {
-          acc[key] = value;
-        }
-        else if (operator === 'eq') {
-          acc[key] = { $eq: value };
-        }
-        else if (operator === 'ne') {
-          acc[key] = { $ne: value };
-        }
-        else if (operator === 'gt') {
-          acc[key] = { $gt: value };
-        }
-        else if (operator === 'gte') {
-          acc[key] = { $gte: value };
-        }
-        else if (operator === 'lt') {
-          acc[key] = { $lt: value };
-        }
-        else if (operator === 'lte') {
-          acc[key] = { $lte: value };
-        }
-        else if (operator === 'in') {
-          acc[key] = {
-            $in: String(rawValue).split(';').map(guessFilterValue),
-          };
-        }
-        else if (operator === 'nin') {
-          acc[key] = {
-            $nin: String(rawValue).split(';').map(guessFilterValue),
-          };
-        }
-        else if (operator === 'like') {
-          acc[key] = {
-            $regex: rawValue,
-            $options: 'i',
-          };
-        }
-        else if (operator === 'contains') {
-          acc[key] = {
-            $regex: escapeRegularExpression(String(value)),
-            $options: 'i',
-          };
-        }
-        else if (operator === 'on') {
-          acc[key] = {
-            $gte: Number(value),
-            $lt: Number(value) + 24 * 60 * 60 * 1000,
-          };
-        }
-        else if (operator === 'before') {
-          acc[key] = { $lt: Number(value) };
-        }
-        else if (operator === 'after') {
-          acc[key] = { $gte: Number(value) + 24 * 60 * 60 * 1000 };
-        }
-        else if (operator === 'empty') {
-          acc[key] = { $size: 0 };
-        }
-        else if (operator === 'not-empty') {
-          acc[key] = {
-            $exists: true,
-            $not: {
-              $size: 0,
-            },
-          };
-        }
-        else if (operator === 'empty-object') {
-          acc[key] = { $eq: {} };
-        }
-        else if (operator === 'not-empty-object') {
-          acc[key] = { $ne: {} };
-        }
 
-        return acc;
+    if (operator === 'is') {
+      acc[key] = value;
+    }
+    else if (operator === 'eq') {
+      acc[key] = {
+        $eq: value,
+      };
+    }
+    else if (operator === 'ne') {
+      acc[key] = {
+        $ne: value,
+      };
+    }
+    else if (operator === 'gt') {
+      acc[key] = {
+        $gt: value,
+      };
+    }
+    else if (operator === 'gte') {
+      acc[key] = {
+        $gte: value,
+      };
+    }
+    else if (operator === 'lt') {
+      acc[key] = {
+        $lt: value,
+      };
+    }
+    else if (operator === 'lte') {
+      acc[key] = {
+        $lte: value,
+      };
+    }
+    else if (operator === 'in') {
+      acc[key] = {
+        $in: String(rawValue).split(';').map(guessFilterValue),
+      };
+    }
+    else if (operator === 'nin') {
+      acc[key] = {
+        $nin: String(rawValue).split(';').map(guessFilterValue),
+      };
+    }
+    else if (operator === 'like') {
+      acc[key] = {
+        $regex: rawValue,
+        $options: 'i',
+      };
+    }
+    else if (operator === 'contains') {
+      acc[key] = {
+        $regex: escapeRegularExpression(String(value)),
+        $options: 'i',
+      };
+    }
+    else if (operator === 'on') {
+      acc[key] = {
+        $gte: Number(value),
+        $lt: Number(value) + 24 * 60 * 60 * 1000,
+      };
+    }
+    else if (operator === 'before') {
+      acc[key] = {
+        $lt: Number(value),
+      };
+    }
+    else if (operator === 'after') {
+      acc[key] = {
+        $gte: Number(value) + 24 * 60 * 60 * 1000,
+      };
+    }
+    else if (operator === 'empty') {
+      acc[key] = {
+        $size: 0,
+      };
+    }
+    else if (operator === 'not-empty') {
+      acc[key] = {
+        $exists: true,
+        $not: {
+          $size: 0,
+        },
+      };
+    }
+    else if (operator === 'empty-object') {
+      acc[key] = {
+        $eq: {},
+      };
+    }
+    else if (operator === 'not-empty-object') {
+      acc[key] = {
+        $ne: {},
+      };
+    }
 
-      }, {} as Record<string, any>)
-  );
+
+    return acc;
+
+  }, {} as Record<string, any>);
 
 }
 
@@ -252,6 +277,7 @@ function extractSelectFromEvent(event: H3Event): string[] | undefined {
 
   const select = getQuery(event)?.select;
 
+
   if (!select) {
     return undefined;
   }
@@ -265,26 +291,23 @@ function extractSortFromEvent(event: H3Event) {
 
   const sort = getQuery(event)?.sort ?? '';
 
+
   if (!sort) {
     return undefined;
   }
 
 
-  return (
-    String(sort)
-      .split(',')
-      .map(it => it.split(':'))
-      .reduce((acc, it) => {
+  return String(sort).split(',').map(it => it.split(':')).reduce((acc, it) => {
 
-        const key = it[0] as string;
-        const direction = it[1] === 'asc' ? 1 : -1;
+    const key = it[0] as string;
+    const direction = it[1] === 'asc' ? 1 : -1;
 
-        acc[key] = direction;
 
-        return acc;
+    acc[key] = direction;
 
-      }, {} as Record<string, 1 | -1>)
-  );
+    return acc;
+
+  }, {} as Record<string, 1 | -1>);
 
 }
 
@@ -292,27 +315,29 @@ function extractPopulateFromEvent(event: H3Event): Record<string, string[]> | un
 
   const populate = getQuery(event)?.populate;
 
+
   if (!populate) {
     return undefined;
   }
 
 
-  return Object.fromEntries(
-    String(populate)
-      .split(',')
-      .map(it => it.split(':'))
-      .map(([key, value]) => [key, (value || '').split(';')]),
-  );
+  return Object.fromEntries(String(populate).split(',').map(it => it.split(':')).map(([key, value]) => [
+    key,
+    (value || '').split(';'),
+  ]));
 
 }
 
-
-export async function assertUserPermission(args: { event: H3Event; permission: string; }) {
+export async function assertUserPermission(args: {
+  event: H3Event;
+  permission: string;
+}) {
 
   const user = await assertUser({
     event: args.event,
     fillPermissions: true,
   });
+
 
   if (!user.permissions?.length) {
     throw createUnauthorizedError();
@@ -337,6 +362,7 @@ function matchUserPermit(permit: string, permission: string) {
   else {
 
     const starIndex = permit.indexOf('**');
+
 
     return permit.slice(0, starIndex) === permission.slice(0, starIndex);
 

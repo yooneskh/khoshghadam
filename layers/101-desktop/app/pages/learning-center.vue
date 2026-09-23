@@ -66,9 +66,7 @@ import EntriesGrid from '../atoms/entries-grid.vue';
 
 
 <template>
-  <window-base
-    pito="address-book"
-    title="Learning Center">
+  <window-base pito="address-book" title="Learning Center">
     <entries-grid
       :items="[
         {

@@ -80,7 +80,9 @@ export default defineEventHandler(async event => {
           permissions: body.permissions,
         }),
         ...(!body.role ? {} : {
-          roles: [body.role],
+          roles: [
+            body.role,
+          ],
         }),
       },
     });

@@ -5,7 +5,10 @@ import { createImageMediaVariants } from '../../lib/media-variants-image';
 
 export default defineEventHandler(async event => {
 
-  const user = await assertUser({ event });
+  const user = await assertUser({
+    event,
+  });
+
   const form = await readFormData(event);
   const file = form.get('file') as File;
 
@@ -31,7 +34,10 @@ export default defineEventHandler(async event => {
   const mediaFileName = `${media._id}.${file.name.slice(file.name.lastIndexOf('.') + 1)}`;
   const mediaFilePath = join(app.media.directory, mediaFileName);
 
-  await mkdir(app.media.directory, { recursive: true });
+  await mkdir(app.media.directory, {
+    recursive: true,
+  });
+
   await writeFile(mediaFilePath, Buffer.from(await file.arrayBuffer()));
 
 

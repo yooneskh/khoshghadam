@@ -21,10 +21,8 @@ import { truncateMiddle } from '../libs/truncate-middle';
 
 const itemsPerPage = ref(18);
 const currentPage = ref(1);
-
 const currentItems = ref(radCloneDeep(props.items || []));
 const currentItemsTitles = ref({});
-
 const openedMedia = ref();
 const isViewerOpen = ref(false);
 
@@ -108,6 +106,7 @@ async function handleUploadMedia() {
           refreshMediaCount(),
         ]);
 
+
         toastSuccess({
           title: 'Media uploaded successfully.',
         });
@@ -145,6 +144,7 @@ async function handleDeleteMedia(media) {
             refreshMedia(),
             refreshMediaCount(),
           ]);
+
 
           toastSuccess({
             title: 'Media successfully deleted.',
@@ -196,11 +196,13 @@ function handleOpenMedia(media) {
           },
         ]"
         :actions="[
-          ...(!props.multiple ? [] : [{
-            icon: 'lucide:check',
-            label: 'Submit Selection',
-            onClick: () => handleSubmitSelection(currentItems),
-          }]),
+          ...(!props.multiple ? [] : [
+            {
+              icon: 'lucide:check',
+              label: 'Submit Selection',
+              onClick: () => handleSubmitSelection(currentItems),
+            },
+          ]),
           {
             actionType: 'spacer',
           },
@@ -214,10 +216,7 @@ function handleOpenMedia(media) {
         <template v-if="props.multiple">
           <div class="flex flex-wrap items-center gap-2 border-b border-default p-3">
             <template v-for="(item, index) of currentItems" :key="item">
-              <u-badge
-                variant="subtle"
-                trailing-icon="lucide:x"
-                :label="currentItemsTitles[item] || '-'">
+              <u-badge variant="subtle" trailing-icon="lucide:x" :label="currentItemsTitles[item] || '-'">
                 <template #trailing>
                   <u-icon
                     name="lucide:x"
@@ -253,6 +252,7 @@ function handleOpenMedia(media) {
                     class="w-full h-32 object-contain object-center"
                   />
                 </template>
+
                 <template v-else>
                   <div class="w-full h-32 flex items-center justify-center">
                     <u-icon
@@ -282,6 +282,7 @@ function handleOpenMedia(media) {
 
                 <div class="absolute top-1 inset-e-1 flex items-center gap-1" @click.stop>
                   <u-dropdown-menu
+                    :ui="{ content: 'min-w-64' }"
                     :items="[
                       {
                         icon: 'lucide:eye',
@@ -294,10 +295,7 @@ function handleOpenMedia(media) {
                         label: 'Delete Media',
                         onSelect: () => handleDeleteMedia(media),
                       },
-                    ]"
-                    :ui="{
-                      content: 'min-w-64',
-                    }">
+                    ]">
                     <u-button
                       size="xs"
                       icon="lucide:ellipsis-vertical"
@@ -310,31 +308,34 @@ function handleOpenMedia(media) {
           </div>
 
           <div class="flex items-center gap-2 p-3 border-t border-default">
+
             <u-pagination
               active-color="neutral"
               :total="mediaCountData"
               :items-per-page="itemsPerPage"
               v-model:page="currentPage"
             />
+
             <div class="grow" />
+
             <u-select
               :items="[6, 12, 18, 24, 30]"
               v-model="itemsPerPage"
             />
+
             <span class="text-sm">
               Items per page
             </span>
+
           </div>
 
         </template>
 
-        <u-modal :ui="{ content: openedMedia?.type?.startsWith('image') ? '' : 'max-w-5xl' }" scrollable v-model:open="isViewerOpen">
+        <u-modal :ui="{ content: openedMedia?.type?.startsWith('image') ? '' : 'max-w-5xl' }" v-model:open="isViewerOpen" scrollable>
           <template #content>
 
             <template v-if="openedMedia.type?.startsWith('image')">
-              <img
-                :src="openedMedia.path"
-              />
+              <img :src="openedMedia.path" />
             </template>
 
             <template v-else>

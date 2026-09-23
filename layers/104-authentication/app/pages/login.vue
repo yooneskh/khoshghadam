@@ -57,6 +57,8 @@ const captchaId = ref('');
 const captchaCode = ref('');
 
 
+/* handlers */
+
 async function handleLogin() {
   try {
 
@@ -134,7 +136,9 @@ async function handleLogin() {
       </h1>
 
       <p>
+
         Enter your account information below and click on login. If you don't have an account, you can
+
         <nuxt-link
           class="text-primary underline"
           :to="{
@@ -142,6 +146,7 @@ async function handleLogin() {
           }">
           register a new account here.
         </nuxt-link>
+
       </p>
 
       <login-form-tag />

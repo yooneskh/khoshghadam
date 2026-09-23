@@ -7,6 +7,7 @@ export default defineEventHandler(async event => {
     limit: 5,
   });
 
+
   await assertCaptchaCode({
     event,
   });
@@ -42,6 +43,7 @@ export default defineEventHandler(async event => {
       username: body.username,
     },
   });
+
 
   await app.userPasswords.dbo.create({
     document: {

@@ -2,7 +2,9 @@
 
 export default defineEventHandler(async event => {
 
-  const user = await assertUser({ event });
+  const user = await assertUser({
+    event,
+  });
 
 
   await assertRateLimit({
@@ -24,7 +26,9 @@ export default defineEventHandler(async event => {
   const idea = await app.omaniIdeas.dbo.create({
     document: {
       name: body.name,
-      ...(body.body === undefined ? {} : { body: body.body }),
+      ...(body.body === undefined ? {} : {
+        body: body.body,
+      }),
       author: user._id,
       status: 'published',
       voteCount: 0,
@@ -37,7 +41,10 @@ export default defineEventHandler(async event => {
     ...await app.omaniIdeas.dbo.retrieve({
       resourceId: idea._id,
       populate: {
-        author: ['name', 'username'],
+        author: [
+          'name',
+          'username',
+        ],
       },
     }),
     myVote: false,

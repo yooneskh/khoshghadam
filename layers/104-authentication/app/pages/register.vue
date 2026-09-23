@@ -52,6 +52,8 @@ const captchaId = ref('');
 const captchaCode = ref('');
 
 
+/* handlers */
+
 async function handleRegister() {
   try {
 
@@ -68,7 +70,6 @@ async function handleRegister() {
         password: registerForm.value.password,
       },
     });
-
 
     const identityResponse = await ufetch('/api/authentication/identity', {
       silent: true,
@@ -119,7 +120,9 @@ async function handleRegister() {
       </h1>
 
       <p>
+
         Enter your account information below and click on register. If you already have an account, you can
+
         <nuxt-link
           class="text-primary underline"
           :to="{
@@ -127,6 +130,7 @@ async function handleRegister() {
           }">
           login here.
         </nuxt-link>
+
       </p>
 
       <register-form-tag />

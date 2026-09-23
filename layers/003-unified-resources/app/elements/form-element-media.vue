@@ -6,7 +6,12 @@ const props = defineProps({
   field: Object,
 });
 
-const modelValue = defineModel();
+const modelValue = defineModel({
+  type: [
+    String,
+    Array,
+  ],
+});
 
 
 /* resource */
@@ -18,7 +23,7 @@ import { launchMediaLibraryDialog } from '../libs/launch-media-library-dialog';
 const isLoading = ref(false);
 
 
-const resources = asyncComputed(async () => {
+const resources = computedAsync(async () => {
 
   if (!modelValue.value) {
     return '';
@@ -47,14 +52,12 @@ const resources = asyncComputed(async () => {
 });
 
 const title = computed(() => {
-
   if (!resources.value?.length) {
     return '';
   }
-
-
-  return resources.value?.map(it => it.name).join(' - ');
-
+  else {
+    return resources.value?.map(it => it.name).join(' - ');
+  }
 });
 
 
@@ -78,44 +81,37 @@ async function handleSelectMedia() {
 
 <template>
   <u-form-field v-bind="radPick(props.field, [ 'label', 'hint', 'help', 'description' ])">
-    <u-input
-      trailing-icon="lucide:file-badge"
-      class="w-full"
-      v-bind="radOmit(props.field, [ 'key', 'identifier', 'label', 'hint', 'help', 'description' ])"
-      :loading="isLoading"
-      readonly
-      :model-value="title"
-      @click="handleSelectMedia()"
-      @keypress.space="handleSelectMedia()"
-      @keypress.enter="handleSelectMedia()">
-
+    <u-input trailing-icon="lucide:file-badge" class="w-full" v-bind="radOmit(props.field, [ 'key', 'identifier', 'label', 'hint', 'help', 'description' ])" :loading="isLoading" readonly :model-value="title" @click="handleSelectMedia()" @keypress.space="handleSelectMedia()" @keypress.enter="handleSelectMedia()">
       <template #trailing>
         <div class="flex items-center gap-2">
 
           <template v-for="resource of resources" :key="resource._id">
+
             <template v-if="resource.type?.startsWith('image')">
               <u-popover mode="hover">
 
                 <img
-                  :src="resource.variants?.thumb || resource.path"
                   class="size-5 rounded"
+                  :src="resource.variants?.thumb || resource.path"
                 />
 
                 <template #content>
                   <img
-                    :src="resource.variants?.small || resource.path"
                     class="max-w-sm rounded"
+                    :src="resource.variants?.small || resource.path"
                   />
                 </template>
 
               </u-popover>
             </template>
+
             <template v-else>
               <u-icon
                 name="lucide:file"
                 class="size-5"
               />
             </template>
+
           </template>
 
           <u-icon
@@ -125,7 +121,6 @@ async function handleSelectMedia() {
 
         </div>
       </template>
-
     </u-input>
   </u-form-field>
 </template>

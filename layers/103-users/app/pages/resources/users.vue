@@ -106,6 +106,7 @@ async function handleOnboardUser() {
       },
     },
   });
+
 }
 
 async function handleResetPassword(user) {

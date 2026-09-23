@@ -3,8 +3,6 @@ import { consola } from 'consola';
 
 const httpLog = consola.withTag('http');
 const taskLog = consola.withTag('task');
-
-
 const BASE_SIZE = 6;
 const STATUS_SIZE = 3;
 
@@ -42,7 +40,6 @@ export function writeLog(fields: LogFields): void {
     httpLog.info(formatHttpLine(fields));
   }
 }
-
 
 function formatHttpLine(fields: LogFields): string {
 
@@ -109,7 +106,12 @@ function formatSize(bytes: number | string | undefined): string {
   }
 
 
-  const units = ['K', 'M', 'G', 'T'];
+  const units = [
+    'K',
+    'M',
+    'G',
+    'T',
+  ];
 
   let value = bytes / 1024;
   let unit = 0;
@@ -133,11 +135,26 @@ function formatElapsed(elapsed: number | undefined): string {
 
 
   const steps: Array<[string, number]> = [
-    ['ms', 1000],
-    ['s ', 60],
-    ['m ', 60],
-    ['h ', 24],
-    ['d ', Infinity],
+    [
+      'ms',
+      1000,
+    ],
+    [
+      's ',
+      60,
+    ],
+    [
+      'm ',
+      60,
+    ],
+    [
+      'h ',
+      24,
+    ],
+    [
+      'd ',
+      Infinity,
+    ],
   ];
 
   let value = elapsed;

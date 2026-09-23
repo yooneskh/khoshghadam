@@ -27,7 +27,9 @@ export default defineEventHandler(async event => {
 
 
   const journeys = await loadFlashCardJourneyStates({
-    journeys: [journey],
+    journeys: [
+      journey,
+    ],
   });
 
 

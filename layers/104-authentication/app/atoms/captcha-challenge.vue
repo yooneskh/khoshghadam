@@ -21,9 +21,11 @@ async function refresh() {
 
   captchaCode.value = '';
 
+
   captcha.value = await ufetch('/api/authentication/captcha', {
     silent: true,
   });
+
 
   captchaId.value = captcha.value._id;
 

@@ -85,11 +85,13 @@ async function handleSubmitSelection(items) {
         :subtitle="props.multiple ? 'Select one or more ' + titlePlural : 'Select one ' + title"
         fluid-body
         :actions="[
-          ...(!props.multiple ? [] : [{
-            icon: 'lucide:check',
-            label: 'Submit Selection',
-            onClick: () => handleSubmitSelection(currentItems),
-          }]),
+          ...(!props.multiple ? [] : [
+            {
+              icon: 'lucide:check',
+              label: 'Submit Selection',
+              onClick: () => handleSubmitSelection(currentItems),
+            },
+          ]),
           {
             actionType: 'spacer',
           },
@@ -103,10 +105,7 @@ async function handleSubmitSelection(items) {
         <template v-if="props.multiple">
           <div class="flex flex-wrap items-center gap-2 border-b border-default p-3">
             <template v-for="(item, index) of currentItems" :key="item">
-              <u-badge
-                variant="subtle"
-                trailing-icon="lucide:x"
-                :label="currentItemsTitles[item] || '-'">
+              <u-badge variant="subtle" trailing-icon="lucide:x" :label="currentItemsTitles[item] || '-'">
                 <template #trailing>
                   <u-icon
                     name="lucide:x"

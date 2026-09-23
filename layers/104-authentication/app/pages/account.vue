@@ -26,6 +26,8 @@ useSeoMeta({
 const user = useUser();
 
 
+/* form */
+
 const { form, formTag } = useForm({
   target: JSON.parse(JSON.stringify(user.value)),
   fields: [
@@ -57,6 +59,9 @@ async function handleSubmit() {
   useUser().value = await ufetch('/api/authentication/identity');
 
 }
+
+
+/* logout */
 
 async function handleLogout() {
 

@@ -22,12 +22,7 @@ const emit = defineEmits([
 <template>
   <u-modal :ui="{ content: 'max-w-5xl' }" scrollable @update:open="!$event && emit('close')">
     <template #content>
-      <un-card
-        :icon="props.icon"
-        :title="props.title"
-        :subtitle="props.subtitle"
-        fluid-body
-        :actions="props.cardActions">
+      <un-card :icon="props.icon" :title="props.title" :subtitle="props.subtitle" fluid-body :actions="props.cardActions">
         <un-table
           :columns="props.columns"
           :data="props.data"

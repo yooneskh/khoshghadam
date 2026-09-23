@@ -31,6 +31,7 @@ export default defineEventHandler(async event => {
 
   const passwordHash = await hashPassword(body.password);
 
+
   const [userPasswords, authenticationTokens] = await Promise.all([
     app.userPasswords.dbo.list({
       filter: {

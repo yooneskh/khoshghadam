@@ -18,8 +18,7 @@ import { useResourceMeta } from '../libs/use-resource-meta';
 
 const itemsPerPage = ref(20);
 const currentPage = ref(1);
-const tickle = ref(0);
-
+const cellRefreshKey = ref(0);
 const sortedColumn = ref('createdAt');
 const sortDirection = ref('desc');
 const filters = ref({});
@@ -44,23 +43,15 @@ const sort = computed(() => {
 });
 
 const filter = computed(() => {
-  return (
-    Object.entries(filters.value)
-      .map(([key, item]) => `${key}:${item.operator}:${item.value ?? ''}`)
-      .join(',')
-  );
+  return Object.entries(filters.value).map(([key, item]) => `${key}:${item.operator}:${item.value ?? ''}`).join(',');
 });
 
 const activeFilters = computed(() => {
-  return (
-    Object.entries(filters.value)
-      .map(([key, item]) => ({
-        key,
-        column: columns.value.find(it => it.accessorKey === key),
-        filter: item,
-      }))
-      .filter(it => !!it.column)
-  );
+  return Object.entries(filters.value).map(([key, item]) => ({
+    key,
+    column: columns.value.find(it => it.accessorKey === key),
+    filter: item,
+  })).filter(it => !!it.column);
 });
 
 
@@ -88,12 +79,14 @@ const { data: resourcesCountData, pending: isResourcesCountPending, refresh: ref
 
 watch(
   resourcePath,
-  () => {
-    filters.value = {};
-    currentPage.value = 1;
-  },
+  handleResourcePathChange,
 );
 
+
+function handleResourcePathChange() {
+  filters.value = {};
+  currentPage.value = 1;
+}
 
 function handleSort(column) {
 
@@ -121,6 +114,7 @@ function handleFilterApply(column, value) {
     [column]: value,
   };
 
+
   currentPage.value = 1;
 
 }
@@ -133,6 +127,7 @@ function handleFilterClear(column) {
 
   delete nextFilters[column];
 
+
   filters.value = nextFilters;
   currentPage.value = 1;
 
@@ -143,51 +138,18 @@ function handleFiltersClear() {
   currentPage.value = 1;
 }
 
-function getSortIcon(column) {
-  if (sortedColumn.value !== column) {
-    return 'lucide:arrow-up-down';
-  }
-  else {
-    return sortDirection.value === 'desc' ? 'lucide:arrow-down' : 'lucide:arrow-up';
-  }
-}
-
-function getSortVariant(column) {
-  if (sortedColumn.value !== column) {
-    return 'ghost';
-  }
-  else {
-    return undefined;
-  }
-}
-
-function getSortColor(column) {
-  if (sortedColumn.value !== column) {
-    return undefined;
-  }
-  else {
-    return 'primary';
-  }
-}
-
-function getSortLabel(column) {
-  if (sortedColumn.value !== column) {
-    return `Sort ${column} descending`;
-  }
-  else if (sortDirection.value === 'desc') {
-    return `Sort ${column} ascending`;
-  }
-  else {
-    return `Clear ${column} sorting`;
-  }
-}
-
 function getFilterLabel(item) {
 
   const { column, filter } = item;
   const operator = filter.operatorLabel?.toLowerCase() || filter.operator;
 
-  if (['empty', 'not-empty', 'empty-object', 'not-empty-object'].includes(filter.operator)) {
+
+  if ([
+    'empty',
+    'not-empty',
+    'empty-object',
+    'not-empty-object',
+  ].includes(filter.operator)) {
     return `${column.header} ${operator}`;
   }
   else if (column.type === 'date' || column.labelFormat) {
@@ -202,10 +164,10 @@ function getFilterLabel(item) {
 
 }
 
-
 async function refreshAll() {
 
-  tickle.value++;
+  cellRefreshKey.value++;
+
 
   await Promise.all([
     refreshResources(),
@@ -228,6 +190,7 @@ defineExpose({
   <div>
 
     <div class="flex flex-wrap items-center gap-2 border-b border-default p-3">
+
       <span class="text-sm text-muted">
         Filters
       </span>
@@ -246,13 +209,13 @@ defineExpose({
         </template>
 
         <u-button
-          variant="ghost"
           size="xs"
           label="Clear all"
-          @click="handleFiltersClear()"
+          @click="handleFiltersClear"
         />
 
       </template>
+
       <template v-else>
         <span class="text-sm text-dimmed">
           empty
@@ -272,33 +235,57 @@ defineExpose({
 
       <template v-for="column in columns" :key="column.accessorKey" #[column.accessorKey+'-header']>
         <div class="flex items-center gap-1">
+
           <span>
             {{ column.header }}
           </span>
-          <u-button
-            :variant="getSortVariant(column.accessorKey)"
-            :color="getSortColor(column.accessorKey)"
-            size="xs"
-            :icon="getSortIcon(column.accessorKey)"
-            :aria-label="getSortLabel(column.accessorKey)"
-            @click="handleSort(column.accessorKey)"
-          />
+
+          <template v-if="sortedColumn !== column.accessorKey">
+            <u-button
+              size="xs"
+              icon="lucide:arrow-up-down"
+              :aria-label="`Sort ${column.accessorKey} descending`"
+              @click="handleSort(column.accessorKey)"
+            />
+          </template>
+
+          <template v-else-if="sortDirection === 'desc'">
+            <u-button
+              color="primary"
+              size="xs"
+              icon="lucide:arrow-down"
+              :aria-label="`Sort ${column.accessorKey} ascending`"
+              @click="handleSort(column.accessorKey)"
+            />
+          </template>
+
+          <template v-else>
+            <u-button
+              color="primary"
+              size="xs"
+              icon="lucide:arrow-up"
+              :aria-label="`Clear ${column.accessorKey} sorting`"
+              @click="handleSort(column.accessorKey)"
+            />
+          </template>
+
           <resource-explorer-column-filter
             :column="column"
             :filter="filters[column.accessorKey]"
             @apply="handleFilterApply(column.accessorKey, $event)"
             @clear="handleFilterClear(column.accessorKey)"
           />
+
         </div>
       </template>
 
       <template v-for="column in columns" :key="column.accessorKey" #[column.accessorKey+'-cell']="{ row }">
         <resource-explorer-cell
-          :key="tickle"
+          :key="cellRefreshKey"
           :column="column"
           :row="row.original"
           :data="row.original[column.accessorKey]"
-          @resource:update="refreshAll()"
+          @resource:update="refreshAll"
         />
       </template>
 

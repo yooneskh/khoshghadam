@@ -12,13 +12,14 @@ export function loadDbClient() {
 
       const config = useRuntimeConfig();
 
+
       const client = new MongoClient(config.database.url);
       await client.connect();
+
 
       return client.db(config.database.name);
 
     })();
-
 
     databasePromise.catch(() => {
       databasePromise = null;

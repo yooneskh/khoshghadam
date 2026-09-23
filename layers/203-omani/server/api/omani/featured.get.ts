@@ -12,9 +12,13 @@ export default defineEventHandler(async event => {
       featuredOn: today,
     },
     populate: {
-      author: ['name', 'username'],
+      author: [
+        'name',
+        'username',
+      ],
     },
   });
+
 
   if (existing) {
     return {
@@ -42,7 +46,10 @@ export default defineEventHandler(async event => {
     },
     limit: 1,
     populate: {
-      author: ['name', 'username'],
+      author: [
+        'name',
+        'username',
+      ],
     },
   });
 
@@ -54,6 +61,7 @@ export default defineEventHandler(async event => {
         status: 'published',
       },
     });
+
 
     if (!publishedCount) {
       return null;
@@ -68,18 +76,14 @@ export default defineEventHandler(async event => {
       },
     });
 
-    await Promise.all(
-      previouslyFeatured.map(idea =>
-        app.omaniIdeas.dbo.updateQuery({
-          resourceId: idea._id,
-          query: {
-            $unset: {
-              featuredOn: 1,
-            },
-          },
-        }),
-      ),
-    );
+    await Promise.all(previouslyFeatured.map(idea => app.omaniIdeas.dbo.updateQuery({
+      resourceId: idea._id,
+      query: {
+        $unset: {
+          featuredOn: 1,
+        },
+      },
+    })));
 
 
     [candidate] = await app.omaniIdeas.dbo.list({
@@ -92,7 +96,10 @@ export default defineEventHandler(async event => {
       },
       limit: 1,
       populate: {
-        author: ['name', 'username'],
+        author: [
+          'name',
+          'username',
+        ],
       },
     });
 

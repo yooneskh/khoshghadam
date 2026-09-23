@@ -15,6 +15,7 @@ function createCaptchaCode() {
     code += CAPTCHA_ALPHABET[Math.floor(Math.random() * CAPTCHA_ALPHABET.length)]!;
   }
 
+
   return code;
 
 }
@@ -43,6 +44,7 @@ function createCaptchaSvg(code: string) {
 
   }).join('');
 
+
   return `
     <svg xmlns="http://www.w3.org/2000/svg" width="${CAPTCHA_WIDTH}" height="${CAPTCHA_HEIGHT}" viewBox="0 0 ${CAPTCHA_WIDTH} ${CAPTCHA_HEIGHT}">
       <rect width="100%" height="100%" fill="#f3f4f6"/>
@@ -57,11 +59,8 @@ function createCaptchaSvg(code: string) {
 export async function generateCaptcha() {
 
   const code = createCaptchaCode();
+  const image = await sharp(Buffer.from(createCaptchaSvg(code))).png().toBuffer().then(buffer => buffer.toString('base64'));
 
-  const image = await sharp(Buffer.from(createCaptchaSvg(code)))
-    .png()
-    .toBuffer()
-    .then(buffer => buffer.toString('base64'));
 
   return {
     code,

@@ -7,6 +7,7 @@ export function defineLoggedTask(definition: Parameters<typeof defineTask>[0]) {
 
       const startedAt = performance.now();
 
+
       try {
         return await definition.run(event);
       }

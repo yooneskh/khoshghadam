@@ -2,7 +2,9 @@
 
 export default defineEventHandler(async event => {
 
-  const user = await assertUser({ event });
+  const user = await assertUser({
+    event,
+  });
 
 
   const authenticationTokens = await app.authenticationTokens.dbo.list({
@@ -10,6 +12,7 @@ export default defineEventHandler(async event => {
       user: user._id,
     },
   });
+
 
   for (const authenticationToken of authenticationTokens) {
     await app.authenticationTokens.dbo.update({

@@ -10,10 +10,12 @@ export default defineNuxtPlugin(() => {
     component: FormElementResource,
   });
 
+
   registerFormExtraElement({
     identifier: 'tags',
     component: FormElementTags,
   });
+
 
   registerFormExtraElement({
     identifier: 'media',

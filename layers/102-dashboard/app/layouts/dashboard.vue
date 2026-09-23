@@ -185,6 +185,7 @@ const navigationItems = computed(() => {
             src="/favicon.ico"
             class="size-7"
           />
+
           <span class="text-xl font-semibold">
             Admin Panel
           </span>
@@ -219,12 +220,14 @@ const navigationItems = computed(() => {
 
       <div class="flex items-center gap-2 p-2 border-b border-default">
         <template v-for="item of navigationItems" :key="item.label">
+
           <template v-if="!item.children">
             <u-button
               variant="subtle"
               v-bind="item"
             />
           </template>
+
           <template v-else>
             <u-dropdown-menu :items="item.children">
               <u-button
@@ -234,6 +237,7 @@ const navigationItems = computed(() => {
               />
             </u-dropdown-menu>
           </template>
+
         </template>
       </div>
 

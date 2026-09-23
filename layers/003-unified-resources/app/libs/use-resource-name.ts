@@ -1,7 +1,7 @@
 import { wordToSingular, wordToPlural } from './word-pluralize';
 
 
-export function useResourceName(args: { resource: MaybeRefOrGetter<string> }) {
+export function useResourceName(args: { resource: MaybeRefOrGetter<string>; }) {
   return {
     resource: computed(() => radPascal(wordToSingular(toValue(args.resource) || ''))),
     resourcePath: computed(() => radDash(wordToPlural(toValue(args.resource) || ''))),

@@ -5,6 +5,7 @@ export function parseSchema<const def>(schema: type.validate<def>) {
 
   const compiled = type.raw(schema);
 
+
   return {
     schema,
     type: compiled as Type<type.infer.Out<def>>,

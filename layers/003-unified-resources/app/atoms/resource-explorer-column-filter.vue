@@ -178,6 +178,7 @@ const fields = computed(() => {
 
   const valueField = getValueField();
 
+
   return [
     {
       key: 'operator',
@@ -190,24 +191,6 @@ const fields = computed(() => {
     ]),
   ];
 
-});
-
-const buttonVariant = computed(() => {
-  if (props.filter) {
-    return undefined;
-  }
-  else {
-    return 'ghost';
-  }
-});
-
-const buttonColor = computed(() => {
-  if (props.filter) {
-    return 'primary';
-  }
-  else {
-    return undefined;
-  }
 });
 
 
@@ -230,8 +213,8 @@ watchImmediate(
       value: filter?.value,
     };
 
-    await nextTick();
 
+    await nextTick();
     isSyncing = false;
 
   },
@@ -249,12 +232,7 @@ watch(
     }
 
 
-    const hasValue = (
-      ['collection', 'object'].includes(filterType.value)
-      || value.value === false
-      || value.value === 0
-      || !!value.value
-    );
+    const hasValue = ['collection', 'object'].includes(filterType.value) || value.value === false || value.value === 0 || !!value.value;
 
     if (!hasValue) {
       emit('clear');
@@ -266,6 +244,7 @@ watch(
     const currentValue = value.value;
     let displayValue = currentValue;
 
+
     if (['resource', 'resource-array'].includes(filterType.value)) {
 
       const resource = await retrieveResource({
@@ -276,6 +255,7 @@ watch(
         },
       });
 
+
       if (form.value.value !== currentValue) {
         return;
       }
@@ -284,6 +264,7 @@ watch(
       displayValue = resource.name || truncateMiddle(resource._id);
 
     }
+
 
     emit('apply', {
       operator: value.operator,
@@ -373,12 +354,21 @@ function getValueField() {
     }"
     v-model:open="isOpen">
 
-    <u-button
-      :variant="buttonVariant"
-      :color="buttonColor"
-      size="xs"
-      icon="lucide:filter"
-    />
+    <template v-if="filter">
+      <u-button
+        color="primary"
+        size="xs"
+        icon="lucide:filter"
+      />
+    </template>
+
+    <template v-else>
+      <u-button
+        variant="subtle"
+        size="xs"
+        icon="lucide:filter"
+      />
+    </template>
 
     <template #content>
       <div class="w-72 p-3">

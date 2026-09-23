@@ -1,6 +1,6 @@
 
 
-export default defineSitemapEventHandler(async () => {
+export default defineSitemapEventHandler(async event => {
 
   const [flashCards, flashCardJourneys] = await Promise.all([
     app.flashCards.dbo.list({

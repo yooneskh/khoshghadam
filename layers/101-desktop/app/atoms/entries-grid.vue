@@ -11,15 +11,8 @@ const props = defineProps({
 
 <template>
   <div class="flex flex-row items-start flex-wrap gap-3 p-3">
-
     <template v-for="item in props.items" :key="item.name">
-      <nuxt-link
-        class="
-          flex flex-col items-center gap-1
-          w-20 p-2
-          hover:bg-primary/50
-        "
-        :to="item.to">
+      <nuxt-link class="flex flex-col items-center gap-1 w-20 p-2 hover:bg-primary/50" :to="item.to">
 
         <img
           :src="`/pitos/${item.pito}.png`"
@@ -32,6 +25,5 @@ const props = defineProps({
 
       </nuxt-link>
     </template>
-
   </div>
 </template>

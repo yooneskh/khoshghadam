@@ -2,7 +2,9 @@
 
 export default defineEventHandler(async event => {
 
-  const user = await assertUser({ event });
+  const user = await assertUser({
+    event,
+  });
 
 
   await assertRateLimit({

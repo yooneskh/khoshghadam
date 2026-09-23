@@ -87,10 +87,7 @@ useJsonld(() => !journeysData.value ? null : {
 
 
 <template>
-  <window-base
-    pito="address-book"
-    title="Flash Card Journeys"
-    :loading="isJourneysPending">
+  <window-base pito="address-book" title="Flash Card Journeys" :loading="isJourneysPending">
     <div class="p-3">
 
       <template v-if="journeysData?.length">
@@ -107,12 +104,15 @@ useJsonld(() => !journeysData.value ? null : {
               <div class="flex items-start gap-3">
 
                 <div class="grow">
+
                   <h2 class="font-semibold">
                     {{ journey.name }}
                   </h2>
+
                   <p class="text-sm mt-1">
                     {{ journey.description }}
                   </p>
+
                 </div>
 
                 <template v-if="isUserAuthenticated && journey.completed">
@@ -123,6 +123,7 @@ useJsonld(() => !journeysData.value ? null : {
                     label="Completed"
                   />
                 </template>
+
                 <template v-else-if="isUserAuthenticated">
                   <u-badge
                     variant="subtle"
@@ -130,6 +131,7 @@ useJsonld(() => !journeysData.value ? null : {
                     :label="`${journey.steps.filter(it => it.completed).length} / ${journey.steps.length}`"
                   />
                 </template>
+
                 <template v-else>
                   <u-badge
                     variant="subtle"
@@ -143,15 +145,19 @@ useJsonld(() => !journeysData.value ? null : {
           </template>
         </div>
       </template>
+
       <template v-else>
         <div class="h-full flex flex-col items-center justify-center py-12 text-center">
+
           <u-icon
             name="lucide:route"
             class="size-10 text-muted"
           />
+
           <p class="mt-3 text-muted">
             No flash card journeys are available yet.
           </p>
+
         </div>
       </template>
 

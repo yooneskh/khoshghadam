@@ -14,23 +14,7 @@ function onRequest(args: any) {
   }
 }
 
-
-export const ufetch = $fetch.create({
-  onRequest,
-  onRequestError: generalHandler,
-  onResponse: generalHandler,
-  onResponseError: generalHandler,
-});
-
-export const useUFetch = createUseFetch({
-  onRequest,
-  onRequestError: generalHandler,
-  onResponse: generalHandler,
-  onResponseError: generalHandler,
-});
-
-
-function generalHandler(args: any) {
+function handleFetch(args: any) {
 
   if (args.options.handled || args.options.silent || String(args.response?.status)?.[0] === '2') {
     return;
@@ -58,3 +42,18 @@ function generalHandler(args: any) {
   });
 
 }
+
+
+export const ufetch = $fetch.create({
+  onRequest,
+  onRequestError: handleFetch,
+  onResponse: handleFetch,
+  onResponseError: handleFetch,
+});
+
+export const useUFetch = createUseFetch({
+  onRequest,
+  onRequestError: handleFetch,
+  onResponse: handleFetch,
+  onResponseError: handleFetch,
+});

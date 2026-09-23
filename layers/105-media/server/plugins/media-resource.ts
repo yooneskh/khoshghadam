@@ -7,7 +7,7 @@ const { schema, type, inferred } = parseSchema({
   'type': 'string',
   'size': 'number',
   'path': 'string',
-  'variants?': 'Record<string, string>'
+  'variants?': 'Record<string, string>',
 });
 
 

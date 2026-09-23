@@ -1,14 +1,18 @@
 
 
-const rateLimitStore = new Map<string, { count: number; resetAt: number; }>();
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
 
 
-export async function assertRateLimit(args: { event: H3Event; limit?: number; windowSeconds?: number; }) {
+export async function assertRateLimit(args: { event: H3Event; limit?: number; windowSeconds?: number }) {
 
   const limit = args.limit ?? 20;
   const windowSeconds = args.windowSeconds ?? 60;
 
-  const ip = getRequestIP(args.event, { xForwardedFor: true, }) ?? 'unknown';
+
+  const ip = getRequestIP(args.event, {
+    xForwardedFor: true,
+  }) ?? 'unknown';
+
   const storeKey = `${args.event.path}:${ip}`;
   const now = Date.now();
 
@@ -47,9 +51,9 @@ export async function assertRateLimit(args: { event: H3Event; limit?: number; wi
 
 
   if (rateLimitStore.size > 10_000) {
-    for (const [key, value] of rateLimitStore) {
-      if (value.resetAt <= now) {
-        rateLimitStore.delete(key);
+    for (const [storedKey, storedEntry] of rateLimitStore) {
+      if (storedEntry.resetAt <= now) {
+        rateLimitStore.delete(storedKey);
       }
     }
   }

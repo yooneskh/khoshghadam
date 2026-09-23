@@ -66,16 +66,6 @@ const phase = ref('menu');
 const overReason = ref('hit');
 
 
-const overTitle = computed(() => {
-  if (overReason.value === 'fall') {
-    return 'You yeeted yourself off the sky.';
-  }
-  else {
-    return 'SPLAT. They turned you into pavement.';
-  }
-});
-
-
 const sim = {
   spawnAcc: 0,
   playTime: 0,
@@ -106,6 +96,16 @@ const sim = {
 };
 
 
+const overTitle = computed(() => {
+  if (overReason.value === 'fall') {
+    return 'You yeeted yourself off the sky.';
+  }
+  else {
+    return 'SPLAT. They turned you into pavement.';
+  }
+});
+
+
 /* input */
 
 const gameSurfaceEl = useTemplateRef('gameSurfaceEl');
@@ -125,6 +125,7 @@ const moveStick = ref({
   knobX: 0,
   knobY: 0,
 });
+
 const lookStick = ref({
   active: false,
   baseX: 0,
@@ -260,6 +261,7 @@ function getSurfacePoint(event) {
 
   const rect = gameSurfaceEl.value.getBoundingClientRect();
 
+
   return {
     x: event.clientX - rect.left,
     y: event.clientY - rect.top,
@@ -271,6 +273,7 @@ function clampStickKnob(dx, dy) {
 
   const length = Math.hypot(dx, dy);
   const scale = length > touchStick.radius ? touchStick.radius / length : 1;
+
 
   return {
     x: dx * scale,
@@ -696,76 +699,6 @@ const sunChunks = [
   },
 ];
 
-
-function buildLaneDashes() {
-
-  const dashes = [];
-
-  const zs = [
-    -5.76,
-    -2.88,
-    0,
-    2.88,
-    5.76,
-  ];
-
-  for (const z of zs) {
-    for (let x = -16.2; x <= 16.2; x += 1.9) {
-      dashes.push({
-        id: `dash-${z}-${x}`,
-        x,
-        z,
-      });
-    }
-  }
-
-
-  return dashes;
-
-}
-
-function buildEdgeTeeth() {
-
-  const teeth = [];
-  let index = 0;
-
-  for (let x = -17.5; x <= 17.5; x += 0.72) {
-
-    teeth.push({
-      id: `tooth-n-${index}`,
-      position: [
-        x,
-        0.32,
-        -8.86,
-      ],
-      color: index % 2 === 0 ? '#e07a2f' : '#1c1c1c',
-    });
-
-    index += 1;
-
-    teeth.push({
-      id: `tooth-s-${index}`,
-      position: [
-        x,
-        0.32,
-        8.86,
-      ],
-      color: index % 2 === 0 ? '#e07a2f' : '#1c1c1c',
-    });
-
-    index += 1;
-
-  }
-
-
-  return teeth;
-
-}
-
-
-const laneDashes = buildLaneDashes();
-const edgeTeeth = buildEdgeTeeth();
-
 const skyIslands = [
   {
     id: 'island-1',
@@ -839,9 +772,77 @@ const skyIslands = [
   },
 ];
 
+const laneDashes = buildLaneDashes();
+const edgeTeeth = buildEdgeTeeth();
+
 
 const skyGroup = shallowRef();
 
+
+function buildLaneDashes() {
+
+  const dashes = [];
+
+  const zs = [
+    -5.76,
+    -2.88,
+    0,
+    2.88,
+    5.76,
+  ];
+
+  for (const z of zs) {
+    for (let x = -16.2; x <= 16.2; x += 1.9) {
+      dashes.push({
+        id: `dash-${z}-${x}`,
+        x,
+        z,
+      });
+    }
+  }
+
+
+  return dashes;
+
+}
+
+function buildEdgeTeeth() {
+
+  const teeth = [];
+  let index = 0;
+
+  for (let x = -17.5; x <= 17.5; x += 0.72) {
+
+    teeth.push({
+      id: `tooth-n-${index}`,
+      position: [
+        x,
+        0.32,
+        -8.86,
+      ],
+      color: index % 2 === 0 ? '#e07a2f' : '#1c1c1c',
+    });
+
+    index += 1;
+
+    teeth.push({
+      id: `tooth-s-${index}`,
+      position: [
+        x,
+        0.32,
+        8.86,
+      ],
+      color: index % 2 === 0 ? '#e07a2f' : '#1c1c1c',
+    });
+
+    index += 1;
+
+  }
+
+
+  return teeth;
+
+}
 
 function updateSky(elapsed) {
 
@@ -1013,6 +1014,7 @@ function bindHazardMesh(hazard, mesh) {
 
   hazard.mesh = mesh || null;
 
+
   if (mesh) {
     mesh.position.set(hazard.x, hazard.height * 0.5, hazard.z);
     mesh.rotation.y = hazard.speed >= 0 ? 0 : Math.PI;
@@ -1044,6 +1046,7 @@ function spawnHazard() {
 function updateHazards(step) {
 
   const keep = [];
+
 
   for (const hazard of hazards.value) {
 
@@ -1156,6 +1159,7 @@ function burstCrumbs(x, y, z, count, color, speed, spark) {
 
   const next = crumbs.value.slice();
 
+
   for (let index = 0; index < count; index += 1) {
 
     const angle = Math.random() * Math.PI * 2;
@@ -1197,6 +1201,7 @@ function bindCrumbMesh(crumb, mesh) {
 function updateCrumbs(step) {
 
   const keep = [];
+
 
   for (const crumb of crumbs.value) {
 
@@ -1285,6 +1290,7 @@ function updateCamera(step) {
 }
 
 function updateBoothCamera(step, elapsed) {
+
   if (!playerCamera.value) {
     return;
   }
@@ -1303,13 +1309,16 @@ function updateBoothCamera(step, elapsed) {
   const frameHeight = portrait ? 3.7 : 3.25;
   const verticalFov = (fov * Math.PI) / 180;
   const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * aspect);
+
   const distance = Math.max(
     (frameWidth * 0.5) / Math.tan(horizontalFov * 0.5),
     (frameHeight * 0.5) / Math.tan(verticalFov * 0.5),
   ) * 1.08;
+
   const targetX = sway;
   const targetY = lookY + (portrait ? 0.42 : 0.16) + breathe;
   const targetZ = lookZ - distance;
+
 
   camera.position.x += (targetX - camera.position.x) * follow;
   camera.position.y += (targetY - camera.position.y) * follow;
@@ -1318,6 +1327,7 @@ function updateBoothCamera(step, elapsed) {
   camera.updateProjectionMatrix();
   camera.lookAt(0, lookY + breathe * 0.2, lookZ);
   camera.updateMatrixWorld();
+
 
   if (camera.parent?.fog) {
     camera.parent.fog.near = 26;
@@ -1394,16 +1404,45 @@ const backSign = shallowRef(null);
 const hoveredWorldButton = ref('');
 
 
+watchImmediate(
+  () => [
+    phase.value,
+    score.value,
+    bestScore.value,
+    banner.value,
+    overTitle.value,
+    hoveredWorldButton.value,
+    isTouchPlay.value,
+  ],
+  paintAllSigns,
+);
+
+
+onMounted(() => {
+  boardSign.value = createSign(1024, 640);
+  scoreSign.value = createSign(512, 256);
+  bestSign.value = createSign(512, 256);
+  playSign.value = createSign(768, 192);
+  bannerSign.value = createSign(1024, 256);
+  goSign.value = createSign(1024, 320);
+  againSign.value = createSign(1024, 320);
+  backSign.value = createSign(1024, 320);
+  paintAllSigns();
+});
+
+
 function createSign(width, height) {
 
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
 
+
   const ctx = canvas.getContext('2d');
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
   texture.needsUpdate = true;
+
 
   return {
     canvas,
@@ -1419,7 +1458,9 @@ function fillParagraph(ctx, text, x, y, maxWidth, lineHeight) {
   let line = '';
   let cursorY = y;
 
+
   for (const word of words) {
+
     const next = line ? `${line} ${word}` : word;
 
     if (ctx.measureText(next).width > maxWidth && line) {
@@ -1430,6 +1471,7 @@ function fillParagraph(ctx, text, x, y, maxWidth, lineHeight) {
     else {
       line = next;
     }
+
   }
 
 
@@ -1440,12 +1482,14 @@ function fillParagraph(ctx, text, x, y, maxWidth, lineHeight) {
 }
 
 function paintPanel(sign, background, draw) {
+
   if (!sign) {
     return;
   }
 
 
   const { ctx, canvas, texture } = sign;
+
 
   ctx.fillStyle = background;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1531,12 +1575,14 @@ function paintBanner() {
 }
 
 function paintButton(sign, label, hot) {
+
   if (!sign) {
     return;
   }
 
 
   const { ctx, canvas, texture } = sign;
+
 
   ctx.fillStyle = hot ? '#3d8a3a' : '#1f4d1d';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1564,7 +1610,9 @@ function paintAllSigns() {
 }
 
 function handleWorldButtonEnter(name) {
+
   hoveredWorldButton.value = name;
+
 
   if (import.meta.client) {
     document.body.style.cursor = 'pointer';
@@ -1573,9 +1621,11 @@ function handleWorldButtonEnter(name) {
 }
 
 function handleWorldButtonLeave(name) {
+
   if (hoveredWorldButton.value === name) {
     hoveredWorldButton.value = '';
   }
+
 
   if (import.meta.client) {
     document.body.style.cursor = '';
@@ -1588,33 +1638,6 @@ function handleBackToLineup() {
     name: 'mini-games.list',
   });
 }
-
-
-watchImmediate(
-  () => [
-    phase.value,
-    score.value,
-    bestScore.value,
-    banner.value,
-    overTitle.value,
-    hoveredWorldButton.value,
-    isTouchPlay.value,
-  ],
-  paintAllSigns,
-);
-
-
-onMounted(() => {
-  boardSign.value = createSign(1024, 640);
-  scoreSign.value = createSign(512, 256);
-  bestSign.value = createSign(512, 256);
-  playSign.value = createSign(768, 192);
-  bannerSign.value = createSign(1024, 256);
-  goSign.value = createSign(1024, 320);
-  againSign.value = createSign(1024, 320);
-  backSign.value = createSign(1024, 320);
-  paintAllSigns();
-});
 
 
 /* run */
@@ -1695,9 +1718,40 @@ function endRun(reason) {
 
 /* loop */
 
+onBeforeUnmount(() => {
+
+  unlockPointer();
+  audioContext?.close();
+  audioContext = undefined;
+
+
+  if (import.meta.client) {
+    document.body.style.cursor = '';
+  }
+
+
+  const signs = [
+    boardSign.value,
+    scoreSign.value,
+    bestSign.value,
+    playSign.value,
+    bannerSign.value,
+    goSign.value,
+    againSign.value,
+    backSign.value,
+  ];
+
+  for (const sign of signs) {
+    sign?.texture?.dispose();
+  }
+
+});
+
+
 function handleReady(context) {
 
   const renderer = context.renderer?.instance ?? context.renderer;
+
 
   if (renderer?.shadowMap) {
     renderer.shadowMap.enabled = true;
@@ -1774,22 +1828,6 @@ function handleLoop({ delta, elapsed }) {
 }
 
 
-onBeforeUnmount(() => {
-  unlockPointer();
-  audioContext?.close();
-  audioContext = undefined;
-
-  if (import.meta.client) {
-    document.body.style.cursor = '';
-  }
-
-  for (const sign of [boardSign.value, scoreSign.value, bestSign.value, playSign.value, bannerSign.value, goSign.value, againSign.value, backSign.value]) {
-    sign?.texture?.dispose();
-  }
-
-});
-
-
 /* handlers */
 
 async function handleStart() {
@@ -1832,9 +1870,7 @@ function handleSurfaceClick() {
 
 
 <template>
-  <window-base
-    pito="game-controller"
-    title="Runned Over">
+  <window-base pito="game-controller" title="Runned Over">
     <div
       ref="gameSurfaceEl"
       class="relative h-full min-h-[28rem] overflow-hidden touch-none select-none overscroll-none"
@@ -1843,12 +1879,7 @@ function handleSurfaceClick() {
       }"
       @click="handleSurfaceClick">
 
-      <TresCanvas
-        shadows
-        :clear-color="sceneTint"
-        class="absolute inset-0"
-        @ready="handleReady"
-        @loop="handleLoop">
+      <TresCanvas shadows :clear-color="sceneTint" class="absolute inset-0" @ready="handleReady" @loop="handleLoop">
 
         <tres-perspective-camera
           ref="playerCamera"
@@ -1889,9 +1920,8 @@ function handleSurfaceClick() {
           :shadow-camera-bottom="-16"
         />
 
-        <tres-mesh
-          :position="[0, -0.18, 0]"
-          :receive-shadow="true">
+        <tres-mesh :position="[0, -0.18, 0]" :receive-shadow="true">
+
           <tres-box-geometry
             :args="[
               37.2,
@@ -1899,16 +1929,17 @@ function handleSurfaceClick() {
               19.2,
             ]"
           />
+
           <tres-mesh-standard-material
             color="#8d8273"
             :roughness="1"
             :metalness="0"
           />
+
         </tres-mesh>
 
-        <tres-mesh
-          :position="[0, 0, 0]"
-          :receive-shadow="true">
+        <tres-mesh :position="[0, 0, 0]" :receive-shadow="true">
+
           <tres-box-geometry
             :args="[
               world.platformWidth,
@@ -1916,17 +1947,18 @@ function handleSurfaceClick() {
               world.platformDepth,
             ]"
           />
+
           <tres-mesh-standard-material
             color="#c4b8a5"
             :roughness="0.94"
             :metalness="0.02"
           />
+
         </tres-mesh>
 
         <template v-for="dash in laneDashes" :key="dash.id">
-          <tres-mesh
-            :position="[dash.x, 0.248, dash.z]"
-            :receive-shadow="true">
+          <tres-mesh :position="[dash.x, 0.248, dash.z]" :receive-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.9,
@@ -1934,19 +1966,19 @@ function handleSurfaceClick() {
                 0.12,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#efe7d8"
               :roughness="0.62"
               :metalness="0"
             />
+
           </tres-mesh>
         </template>
 
         <template v-for="tooth in edgeTeeth" :key="tooth.id">
-          <tres-mesh
-            :position="tooth.position"
-            :cast-shadow="true"
-            :receive-shadow="true">
+          <tres-mesh :position="tooth.position" :cast-shadow="true" :receive-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.62,
@@ -1954,12 +1986,14 @@ function handleSurfaceClick() {
                 0.28,
               ]"
             />
+
             <tres-mesh-standard-material
               :color="tooth.color"
               :roughness="0.7"
               :metalness="0.04"
               :emissive="tooth.color === '#e07a2f' ? '#5a2208' : '#000000'"
             />
+
           </tres-mesh>
         </template>
 
@@ -1970,9 +2004,9 @@ function handleSurfaceClick() {
               0,
               lamp.z,
             ]">
-            <tres-mesh
-              :position="[0, 1.05, 0]"
-              :cast-shadow="true">
+
+            <tres-mesh :position="[0, 1.05, 0]" :cast-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   0.16,
@@ -1980,15 +2014,17 @@ function handleSurfaceClick() {
                   0.16,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#2d2d2d"
                 :roughness="0.55"
                 :metalness="0.2"
               />
+
             </tres-mesh>
-            <tres-mesh
-              :position="[0, 2.18, 0]"
-              :cast-shadow="true">
+
+            <tres-mesh :position="[0, 2.18, 0]" :cast-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   0.42,
@@ -1996,6 +2032,7 @@ function handleSurfaceClick() {
                   0.42,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#ffd27a"
                 :emissive="'#ffb347'"
@@ -2003,15 +2040,16 @@ function handleSurfaceClick() {
                 :roughness="0.35"
                 :metalness="0.05"
               />
+
             </tres-mesh>
+
           </tres-group>
         </template>
 
         <tres-group ref="playerGroup">
-          <tres-mesh
-            :position="[0, 0.74, 0]"
-            :cast-shadow="true"
-            :receive-shadow="true">
+
+          <tres-mesh :position="[0, 0.74, 0]" :cast-shadow="true" :receive-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.42,
@@ -2019,16 +2057,17 @@ function handleSurfaceClick() {
                 0.28,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#2a2a2a"
               :roughness="0.62"
               :metalness="0.08"
             />
+
           </tres-mesh>
 
-          <tres-mesh
-            :position="[0.2, 0.96, 0]"
-            :cast-shadow="true">
+          <tres-mesh :position="[0.2, 0.96, 0]" :cast-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.16,
@@ -2036,16 +2075,17 @@ function handleSurfaceClick() {
                 0.3,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#d8d1c5"
               :roughness="0.55"
               :metalness="0.04"
             />
+
           </tres-mesh>
 
-          <tres-mesh
-            :position="[0, 1.24, 0]"
-            :cast-shadow="true">
+          <tres-mesh :position="[0, 1.24, 0]" :cast-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.28,
@@ -2053,14 +2093,17 @@ function handleSurfaceClick() {
                 0.28,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#3a3a3a"
               :roughness="0.58"
               :metalness="0.06"
             />
+
           </tres-mesh>
 
           <tres-mesh :position="[-0.07, 1.28, 0.15]">
+
             <tres-box-geometry
               :args="[
                 0.07,
@@ -2068,6 +2111,7 @@ function handleSurfaceClick() {
                 0.05,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#7fe7ff"
               :emissive="'#3ad4ff'"
@@ -2075,9 +2119,11 @@ function handleSurfaceClick() {
               :roughness="0.2"
               :metalness="0"
             />
+
           </tres-mesh>
 
           <tres-mesh :position="[0.07, 1.28, 0.15]">
+
             <tres-box-geometry
               :args="[
                 0.07,
@@ -2085,6 +2131,7 @@ function handleSurfaceClick() {
                 0.05,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#7fe7ff"
               :emissive="'#3ad4ff'"
@@ -2092,11 +2139,11 @@ function handleSurfaceClick() {
               :roughness="0.2"
               :metalness="0"
             />
+
           </tres-mesh>
 
-          <tres-mesh
-            :position="[-0.12, 0.22, 0]"
-            :cast-shadow="true">
+          <tres-mesh :position="[-0.12, 0.22, 0]" :cast-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.14,
@@ -2104,16 +2151,17 @@ function handleSurfaceClick() {
                 0.16,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#1f1f1f"
               :roughness="0.7"
               :metalness="0.04"
             />
+
           </tres-mesh>
 
-          <tres-mesh
-            :position="[0.12, 0.22, 0]"
-            :cast-shadow="true">
+          <tres-mesh :position="[0.12, 0.22, 0]" :cast-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.14,
@@ -2121,19 +2169,22 @@ function handleSurfaceClick() {
                 0.16,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#1f1f1f"
               :roughness="0.7"
               :metalness="0.04"
             />
+
           </tres-mesh>
+
         </tres-group>
 
         <template v-for="hazard in hazards" :key="hazard.id">
           <tres-group :ref="it => bindHazardMesh(hazard, it)">
-            <tres-mesh
-              :cast-shadow="true"
-              :receive-shadow="true">
+
+            <tres-mesh :cast-shadow="true" :receive-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   hazard.length,
@@ -2141,16 +2192,17 @@ function handleSurfaceClick() {
                   hazard.width,
                 ]"
               />
+
               <tres-mesh-standard-material
                 :color="hazard.color"
                 :roughness="0.48"
                 :metalness="0.16"
               />
+
             </tres-mesh>
 
-            <tres-mesh
-              :position="[hazard.length * 0.22, hazard.height * 0.28, 0]"
-              :cast-shadow="true">
+            <tres-mesh :position="[hazard.length * 0.22, hazard.height * 0.28, 0]" :cast-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   hazard.length * 0.36,
@@ -2158,15 +2210,17 @@ function handleSurfaceClick() {
                   hazard.width * 0.7,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#d5dbe0"
                 :roughness="0.22"
                 :metalness="0.08"
               />
+
             </tres-mesh>
 
-            <tres-mesh
-              :position="[hazard.length * 0.48, -hazard.height * 0.12, hazard.width * 0.28]">
+            <tres-mesh :position="[hazard.length * 0.48, -hazard.height * 0.12, hazard.width * 0.28]">
+
               <tres-box-geometry
                 :args="[
                   0.12,
@@ -2174,6 +2228,7 @@ function handleSurfaceClick() {
                   0.12,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#ffe08a"
                 :emissive="'#ffc14d'"
@@ -2181,10 +2236,11 @@ function handleSurfaceClick() {
                 :roughness="0.3"
                 :metalness="0"
               />
+
             </tres-mesh>
 
-            <tres-mesh
-              :position="[hazard.length * 0.48, -hazard.height * 0.12, -hazard.width * 0.28]">
+            <tres-mesh :position="[hazard.length * 0.48, -hazard.height * 0.12, -hazard.width * 0.28]">
+
               <tres-box-geometry
                 :args="[
                   0.12,
@@ -2192,6 +2248,7 @@ function handleSurfaceClick() {
                   0.12,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#ffe08a"
                 :emissive="'#ffc14d'"
@@ -2199,10 +2256,11 @@ function handleSurfaceClick() {
                 :roughness="0.3"
                 :metalness="0"
               />
+
             </tres-mesh>
 
-            <tres-mesh
-              :position="[-hazard.length * 0.46, -hazard.height * 0.08, hazard.width * 0.26]">
+            <tres-mesh :position="[-hazard.length * 0.46, -hazard.height * 0.08, hazard.width * 0.26]">
+
               <tres-box-geometry
                 :args="[
                   0.1,
@@ -2210,6 +2268,7 @@ function handleSurfaceClick() {
                   0.16,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#ff4d3a"
                 :emissive="'#ff2a1a'"
@@ -2217,10 +2276,11 @@ function handleSurfaceClick() {
                 :roughness="0.35"
                 :metalness="0"
               />
+
             </tres-mesh>
 
-            <tres-mesh
-              :position="[-hazard.length * 0.46, -hazard.height * 0.08, -hazard.width * 0.26]">
+            <tres-mesh :position="[-hazard.length * 0.46, -hazard.height * 0.08, -hazard.width * 0.26]">
+
               <tres-box-geometry
                 :args="[
                   0.1,
@@ -2228,6 +2288,7 @@ function handleSurfaceClick() {
                   0.16,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#ff4d3a"
                 :emissive="'#ff2a1a'"
@@ -2235,11 +2296,11 @@ function handleSurfaceClick() {
                 :roughness="0.35"
                 :metalness="0"
               />
+
             </tres-mesh>
 
-            <tres-mesh
-              :position="[hazard.length * 0.18, -hazard.height * 0.38, hazard.width * 0.38]"
-              :cast-shadow="true">
+            <tres-mesh :position="[hazard.length * 0.18, -hazard.height * 0.38, hazard.width * 0.38]" :cast-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   hazard.length * 0.28,
@@ -2247,16 +2308,17 @@ function handleSurfaceClick() {
                   0.16,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#141414"
                 :roughness="0.8"
                 :metalness="0.15"
               />
+
             </tres-mesh>
 
-            <tres-mesh
-              :position="[hazard.length * 0.18, -hazard.height * 0.38, -hazard.width * 0.38]"
-              :cast-shadow="true">
+            <tres-mesh :position="[hazard.length * 0.18, -hazard.height * 0.38, -hazard.width * 0.38]" :cast-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   hazard.length * 0.28,
@@ -2264,17 +2326,21 @@ function handleSurfaceClick() {
                   0.16,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#141414"
                 :roughness="0.8"
                 :metalness="0.15"
               />
+
             </tres-mesh>
+
           </tres-group>
         </template>
 
         <template v-for="crumb in crumbs" :key="crumb.id">
           <tres-mesh :ref="it => bindCrumbMesh(crumb, it)">
+
             <tres-box-geometry
               :args="[
                 crumb.size,
@@ -2282,6 +2348,7 @@ function handleSurfaceClick() {
                 crumb.size,
               ]"
             />
+
             <tres-mesh-standard-material
               :color="crumb.color"
               :emissive="crumb.spark ? crumb.color : '#000000'"
@@ -2289,53 +2356,61 @@ function handleSurfaceClick() {
               :roughness="0.55"
               :metalness="0.05"
             />
+
           </tres-mesh>
         </template>
 
         <tres-group ref="skyGroup">
+
           <template v-for="island in skyIslands" :key="island.id">
-            <tres-mesh
-              :position="island.position"
-              :cast-shadow="true"
-              :receive-shadow="true">
+            <tres-mesh :position="island.position" :cast-shadow="true" :receive-shadow="true">
+
               <tres-box-geometry :args="island.size" />
+
               <tres-mesh-standard-material
                 :color="island.color"
                 :roughness="0.96"
                 :metalness="0"
               />
+
             </tres-mesh>
           </template>
 
           <template v-for="tower in skyTowers" :key="tower.id">
-            <tres-mesh
-              :position="tower.position"
-              :cast-shadow="true"
-              :receive-shadow="true">
+            <tres-mesh :position="tower.position" :cast-shadow="true" :receive-shadow="true">
+
               <tres-box-geometry :args="tower.size" />
+
               <tres-mesh-standard-material
                 :color="tower.color"
                 :roughness="0.92"
                 :metalness="0.03"
               />
+
             </tres-mesh>
           </template>
 
           <template v-for="cloud in clouds" :key="cloud.id">
             <tres-mesh :position="cloud.position">
+
               <tres-box-geometry :args="cloud.size" />
+
               <tres-mesh-standard-material
                 color="#eef4f6"
                 :roughness="1"
                 :metalness="0"
               />
+
             </tres-mesh>
           </template>
+
         </tres-group>
 
         <template v-for="chunk in sunChunks" :key="chunk.id">
           <tres-mesh :position="chunk.position">
+
             <tres-box-geometry :args="chunk.size" />
+
             <tres-mesh-standard-material
               color="#ffd36a"
               :emissive="'#ffb020'"
@@ -2343,15 +2418,14 @@ function handleSurfaceClick() {
               :roughness="0.4"
               :metalness="0"
             />
+
           </tres-mesh>
         </template>
 
-        <tres-group
-          :position="[-3.35, 0, 8.08]"
-          :rotation="[0, 0.38, 0]">
-          <tres-mesh
-            :position="[0, 1.15, 0]"
-            :cast-shadow="true">
+        <tres-group :position="[-3.35, 0, 8.08]" :rotation="[0, 0.38, 0]">
+
+          <tres-mesh :position="[0, 1.15, 0]" :cast-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.28,
@@ -2359,16 +2433,19 @@ function handleSurfaceClick() {
                 0.28,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#2a2420"
               :roughness="0.7"
               :metalness="0.08"
             />
+
           </tres-mesh>
+
           <template v-if="scoreSign">
-            <tres-mesh
-              :position="[0, 2.55, 0.12]"
-              :cast-shadow="true">
+
+            <tres-mesh :position="[0, 2.55, 0.12]" :cast-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   2.1,
@@ -2376,33 +2453,39 @@ function handleSurfaceClick() {
                   0.16,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#1b1713"
                 :roughness="0.8"
                 :metalness="0"
               />
+
             </tres-mesh>
+
             <tres-mesh :position="[0, 2.55, 0.21]">
+
               <tres-plane-geometry
                 :args="[
                   1.92,
                   0.9,
                 ]"
               />
+
               <tres-mesh-basic-material
                 :map="scoreSign.texture"
                 :tone-mapped="false"
               />
+
             </tres-mesh>
+
           </template>
+
         </tres-group>
 
-        <tres-group
-          :position="[3.35, 0, 8.08]"
-          :rotation="[0, -0.38, 0]">
-          <tres-mesh
-            :position="[0, 1.15, 0]"
-            :cast-shadow="true">
+        <tres-group :position="[3.35, 0, 8.08]" :rotation="[0, -0.38, 0]">
+
+          <tres-mesh :position="[0, 1.15, 0]" :cast-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.28,
@@ -2410,16 +2493,19 @@ function handleSurfaceClick() {
                 0.28,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#2a2420"
               :roughness="0.7"
               :metalness="0.08"
             />
+
           </tres-mesh>
+
           <template v-if="bestSign">
-            <tres-mesh
-              :position="[0, 2.55, 0.12]"
-              :cast-shadow="true">
+
+            <tres-mesh :position="[0, 2.55, 0.12]" :cast-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   2.1,
@@ -2427,30 +2513,37 @@ function handleSurfaceClick() {
                   0.16,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#1b1713"
                 :roughness="0.8"
                 :metalness="0"
               />
+
             </tres-mesh>
+
             <tres-mesh :position="[0, 2.55, 0.21]">
+
               <tres-plane-geometry
                 :args="[
                   1.92,
                   0.9,
                 ]"
               />
+
               <tres-mesh-basic-material
                 :map="bestSign.texture"
                 :tone-mapped="false"
               />
+
             </tres-mesh>
+
           </template>
+
         </tres-group>
 
-        <tres-mesh
-          :position="[-5.6, 1.7, 0]"
-          :cast-shadow="true">
+        <tres-mesh :position="[-5.6, 1.7, 0]" :cast-shadow="true">
+
           <tres-box-geometry
             :args="[
               0.26,
@@ -2458,16 +2551,17 @@ function handleSurfaceClick() {
               0.26,
             ]"
           />
+
           <tres-mesh-standard-material
             color="#2a2420"
             :roughness="0.7"
             :metalness="0.08"
           />
+
         </tres-mesh>
 
-        <tres-mesh
-          :position="[5.6, 1.7, 0]"
-          :cast-shadow="true">
+        <tres-mesh :position="[5.6, 1.7, 0]" :cast-shadow="true">
+
           <tres-box-geometry
             :args="[
               0.26,
@@ -2475,16 +2569,17 @@ function handleSurfaceClick() {
               0.26,
             ]"
           />
+
           <tres-mesh-standard-material
             color="#2a2420"
             :roughness="0.7"
             :metalness="0.08"
           />
+
         </tres-mesh>
 
-        <tres-mesh
-          :position="[0, 3.38, 0]"
-          :cast-shadow="true">
+        <tres-mesh :position="[0, 3.38, 0]" :cast-shadow="true">
+
           <tres-box-geometry
             :args="[
               11.6,
@@ -2492,15 +2587,19 @@ function handleSurfaceClick() {
               0.3,
             ]"
           />
+
           <tres-mesh-standard-material
             color="#2a2420"
             :roughness="0.68"
             :metalness="0.1"
           />
+
         </tres-mesh>
 
         <template v-if="banner && bannerSign">
+
           <tres-mesh :position="[0, 2.92, 0]">
+
             <tres-box-geometry
               :args="[
                 3.4,
@@ -2508,41 +2607,53 @@ function handleSurfaceClick() {
                 0.12,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#3a140e"
               :roughness="0.7"
               :metalness="0"
             />
+
           </tres-mesh>
+
           <tres-mesh :position="[0, 2.92, 0.07]">
+
             <tres-plane-geometry
               :args="[
                 3.2,
                 0.6,
               ]"
             />
+
             <tres-mesh-basic-material
               :map="bannerSign.texture"
               :tone-mapped="false"
             />
+
           </tres-mesh>
-          <tres-mesh
-            :position="[0, 2.92, -0.07]"
-            :rotation="[0, Math.PI, 0]">
+
+          <tres-mesh :position="[0, 2.92, -0.07]" :rotation="[0, Math.PI, 0]">
+
             <tres-plane-geometry
               :args="[
                 3.2,
                 0.6,
               ]"
             />
+
             <tres-mesh-basic-material
               :map="bannerSign.texture"
               :tone-mapped="false"
             />
+
           </tres-mesh>
+
         </template>
+
         <template v-else-if="playSign">
+
           <tres-mesh :position="[0, 2.92, 0]">
+
             <tres-box-geometry
               :args="[
                 3.4,
@@ -2550,46 +2661,53 @@ function handleSurfaceClick() {
                 0.12,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#1b1713"
               :roughness="0.78"
               :metalness="0"
             />
+
           </tres-mesh>
+
           <tres-mesh :position="[0, 2.92, 0.07]">
+
             <tres-plane-geometry
               :args="[
                 3.2,
                 0.48,
               ]"
             />
+
             <tres-mesh-basic-material
               :map="playSign.texture"
               :tone-mapped="false"
             />
+
           </tres-mesh>
-          <tres-mesh
-            :position="[0, 2.92, -0.07]"
-            :rotation="[0, Math.PI, 0]">
+
+          <tres-mesh :position="[0, 2.92, -0.07]" :rotation="[0, Math.PI, 0]">
+
             <tres-plane-geometry
               :args="[
                 3.2,
                 0.48,
               ]"
             />
+
             <tres-mesh-basic-material
               :map="playSign.texture"
               :tone-mapped="false"
             />
+
           </tres-mesh>
+
         </template>
 
-        <tres-group
-          :position="[0, 0, 8.42]"
-          :rotation="[0, Math.PI, 0]">
-          <tres-mesh
-            :position="[-1.55, 1.2, 0]"
-            :cast-shadow="true">
+        <tres-group :position="[0, 0, 8.42]" :rotation="[0, Math.PI, 0]">
+
+          <tres-mesh :position="[-1.55, 1.2, 0]" :cast-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.3,
@@ -2597,15 +2715,17 @@ function handleSurfaceClick() {
                 0.3,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#2a2420"
               :roughness="0.7"
               :metalness="0.08"
             />
+
           </tres-mesh>
-          <tres-mesh
-            :position="[1.55, 1.2, 0]"
-            :cast-shadow="true">
+
+          <tres-mesh :position="[1.55, 1.2, 0]" :cast-shadow="true">
+
             <tres-box-geometry
               :args="[
                 0.3,
@@ -2613,16 +2733,17 @@ function handleSurfaceClick() {
                 0.3,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#2a2420"
               :roughness="0.7"
               :metalness="0.08"
             />
+
           </tres-mesh>
-          <tres-mesh
-            :position="[0, 0.42, 0.38]"
-            :cast-shadow="true"
-            :receive-shadow="true">
+
+          <tres-mesh :position="[0, 0.42, 0.38]" :cast-shadow="true" :receive-shadow="true">
+
             <tres-box-geometry
               :args="[
                 3.5,
@@ -2630,16 +2751,19 @@ function handleSurfaceClick() {
                 0.9,
               ]"
             />
+
             <tres-mesh-standard-material
               color="#3d3228"
               :roughness="0.78"
               :metalness="0.04"
             />
+
           </tres-mesh>
+
           <template v-if="boardSign">
-            <tres-mesh
-              :position="[0, 2.12, 0.08]"
-              :cast-shadow="true">
+
+            <tres-mesh :position="[0, 2.12, 0.08]" :cast-shadow="true">
+
               <tres-box-geometry
                 :args="[
                   3.55,
@@ -2647,36 +2771,38 @@ function handleSurfaceClick() {
                   0.16,
                 ]"
               />
+
               <tres-mesh-standard-material
                 color="#1b1713"
                 :roughness="0.75"
                 :metalness="0.04"
               />
+
             </tres-mesh>
+
             <tres-mesh :position="[0, 2.12, 0.17]">
+
               <tres-plane-geometry
                 :args="[
                   3.32,
                   1.86,
                 ]"
               />
+
               <tres-mesh-basic-material
                 :map="boardSign.texture"
                 :tone-mapped="false"
               />
+
             </tres-mesh>
+
           </template>
 
           <template v-if="phase === 'menu' && goSign">
-            <tres-group
-              :position="[0, 0.78, 0.52]"
-              :scale="hoveredWorldButton === 'go' ? 1.08 : 1"
-              @click="handleStart"
-              @pointerdown="handleWorldButtonEnter('go')"
-              @pointerenter="handleWorldButtonEnter('go')"
-              @pointerleave="handleWorldButtonLeave('go')"
-              @pointerup="handleWorldButtonLeave('go')">
+            <tres-group :position="[0, 0.78, 0.52]" :scale="hoveredWorldButton === 'go' ? 1.08 : 1" @click="handleStart" @pointerdown="handleWorldButtonEnter('go')" @pointerenter="handleWorldButtonEnter('go')" @pointerleave="handleWorldButtonLeave('go')" @pointerup="handleWorldButtonLeave('go')">
+
               <tres-mesh :cast-shadow="true">
+
                 <tres-box-geometry
                   :args="[
                     1.84,
@@ -2684,38 +2810,41 @@ function handleSurfaceClick() {
                     0.22,
                   ]"
                 />
+
                 <tres-mesh-standard-material
                   :color="hoveredWorldButton === 'go' ? '#3d8a3a' : '#2c5f2a'"
                   :emissive="hoveredWorldButton === 'go' ? '#1d4a1c' : '#0d220c'"
                   :roughness="0.55"
                   :metalness="0.08"
                 />
+
               </tres-mesh>
+
               <tres-mesh :position="[0, 0, 0.13]">
+
                 <tres-plane-geometry
                   :args="[
                     1.74,
                     0.48,
                   ]"
                 />
+
                 <tres-mesh-basic-material
                   :map="goSign.texture"
                   :tone-mapped="false"
                 />
+
               </tres-mesh>
+
             </tres-group>
           </template>
 
           <template v-if="phase === 'over' && againSign && backSign">
-            <tres-group
-              :position="[-0.95, 0.78, 0.52]"
-              :scale="hoveredWorldButton === 'again' ? 1.08 : 1"
-              @click="handleReplay"
-              @pointerdown="handleWorldButtonEnter('again')"
-              @pointerenter="handleWorldButtonEnter('again')"
-              @pointerleave="handleWorldButtonLeave('again')"
-              @pointerup="handleWorldButtonLeave('again')">
+
+            <tres-group :position="[-0.95, 0.78, 0.52]" :scale="hoveredWorldButton === 'again' ? 1.08 : 1" @click="handleReplay" @pointerdown="handleWorldButtonEnter('again')" @pointerenter="handleWorldButtonEnter('again')" @pointerleave="handleWorldButtonLeave('again')" @pointerup="handleWorldButtonLeave('again')">
+
               <tres-mesh :cast-shadow="true">
+
                 <tres-box-geometry
                   :args="[
                     1.62,
@@ -2723,36 +2852,38 @@ function handleSurfaceClick() {
                     0.22,
                   ]"
                 />
+
                 <tres-mesh-standard-material
                   :color="hoveredWorldButton === 'again' ? '#3d8a3a' : '#2c5f2a'"
                   :emissive="hoveredWorldButton === 'again' ? '#1d4a1c' : '#0d220c'"
                   :roughness="0.55"
                   :metalness="0.08"
                 />
+
               </tres-mesh>
+
               <tres-mesh :position="[0, 0, 0.13]">
+
                 <tres-plane-geometry
                   :args="[
                     1.52,
                     0.46,
                   ]"
                 />
+
                 <tres-mesh-basic-material
                   :map="againSign.texture"
                   :tone-mapped="false"
                 />
+
               </tres-mesh>
+
             </tres-group>
 
-            <tres-group
-              :position="[0.95, 0.78, 0.52]"
-              :scale="hoveredWorldButton === 'back' ? 1.08 : 1"
-              @click="handleBackToLineup"
-              @pointerdown="handleWorldButtonEnter('back')"
-              @pointerenter="handleWorldButtonEnter('back')"
-              @pointerleave="handleWorldButtonLeave('back')"
-              @pointerup="handleWorldButtonLeave('back')">
+            <tres-group :position="[0.95, 0.78, 0.52]" :scale="hoveredWorldButton === 'back' ? 1.08 : 1" @click="handleBackToLineup" @pointerdown="handleWorldButtonEnter('back')" @pointerenter="handleWorldButtonEnter('back')" @pointerleave="handleWorldButtonLeave('back')" @pointerup="handleWorldButtonLeave('back')">
+
               <tres-mesh :cast-shadow="true">
+
                 <tres-box-geometry
                   :args="[
                     1.62,
@@ -2760,27 +2891,36 @@ function handleSurfaceClick() {
                     0.22,
                   ]"
                 />
+
                 <tres-mesh-standard-material
                   :color="hoveredWorldButton === 'back' ? '#6a5340' : '#3d3228'"
                   :emissive="hoveredWorldButton === 'back' ? '#2a2018' : '#100c09'"
                   :roughness="0.6"
                   :metalness="0.06"
                 />
+
               </tres-mesh>
+
               <tres-mesh :position="[0, 0, 0.13]">
+
                 <tres-plane-geometry
                   :args="[
                     1.52,
                     0.46,
                   ]"
                 />
+
                 <tres-mesh-basic-material
                   :map="backSign.texture"
                   :tone-mapped="false"
                 />
+
               </tres-mesh>
+
             </tres-group>
+
           </template>
+
         </tres-group>
 
       </TresCanvas>
@@ -2793,6 +2933,7 @@ function handleSurfaceClick() {
       />
 
       <template v-if="phase === 'playing' && isTouchPlay">
+
         <div
           class="absolute inset-y-0 left-0 w-[48%] touch-none pointer-events-auto"
           @pointerdown="handleMovePointerDown"
@@ -2824,12 +2965,16 @@ function handleSurfaceClick() {
             />
           </div>
         </template>
+
         <template v-else>
           <div class="absolute left-[max(1.25rem,env(safe-area-inset-left))] bottom-[max(1.5rem,env(safe-area-inset-bottom))] size-28 rounded-full border-2 border-[#e07a2f]/45 bg-black/25 pointer-events-none">
+
             <div class="absolute left-1/2 top-1/2 size-11 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#e07a2f]/70 bg-[#efe7d8]/70" />
+
             <p class="absolute inset-x-0 -bottom-5 text-center text-[10px] font-bold tracking-[0.22em] text-white/70">
               MOVE
             </p>
+
           </div>
         </template>
 
@@ -2848,14 +2993,19 @@ function handleSurfaceClick() {
             />
           </div>
         </template>
+
         <template v-else>
           <div class="absolute right-[max(1.25rem,env(safe-area-inset-right))] bottom-[max(1.5rem,env(safe-area-inset-bottom))] size-28 rounded-full border-2 border-[#efe7d8]/35 bg-black/20 pointer-events-none">
+
             <div class="absolute left-1/2 top-1/2 size-11 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#efe7d8]/60 bg-[#e07a2f]/65" />
+
             <p class="absolute inset-x-0 -bottom-5 text-center text-[10px] font-bold tracking-[0.22em] text-white/70">
               LOOK
             </p>
+
           </div>
         </template>
+
       </template>
 
     </div>

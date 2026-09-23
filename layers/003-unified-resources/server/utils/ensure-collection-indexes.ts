@@ -2,7 +2,10 @@ import { MongoServerError, type Collection, type IndexDescriptionInfo } from 'mo
 import type { UnifiedResourceIndex } from './create-unified-resource-controller';
 
 
-export async function ensureCollectionIndexes(args: { collectionName: string; indexes: UnifiedResourceIndex[]; }) {
+export async function ensureCollectionIndexes(args: {
+  collectionName: string;
+  indexes: UnifiedResourceIndex[];
+}) {
 
   validateDesiredIndexes(args.collectionName, args.indexes);
 
@@ -18,6 +21,7 @@ export async function ensureCollectionIndexes(args: { collectionName: string; in
   for (const desiredIndex of desiredIndexes) {
 
     const matchIndex = remainingExistingIndexes.findIndex(it => doesExistingMatchDesired(it, desiredIndex));
+
 
     if (matchIndex === -1) {
       indexesToCreate.push(desiredIndex);
@@ -47,11 +51,11 @@ export async function ensureCollectionIndexes(args: { collectionName: string; in
 
 }
 
-
 function validateDesiredIndexes(collectionName: string, indexes: UnifiedResourceIndex[]) {
 
   const seenKeys = new Set<string>();
   const seenNames = new Set<string>();
+
 
   for (const index of indexes) {
 
@@ -65,6 +69,7 @@ function validateDesiredIndexes(collectionName: string, indexes: UnifiedResource
 
 
     const keySignature = serializeIndexKey(index.key);
+
 
     if (seenKeys.has(keySignature)) {
       throw new Error(`resource "${collectionName}" index key is duplicated: ${keySignature}`);
@@ -139,6 +144,7 @@ function serializeIndexKey(key: UnifiedResourceIndex['key'] | IndexDescriptionIn
 function serializeIndexOptions(index: UnifiedResourceIndex | IndexDescriptionInfo) {
 
   const extras = index as IndexDescriptionInfo;
+
 
   return JSON.stringify({
     unique: index.unique === true,

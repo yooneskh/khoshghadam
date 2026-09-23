@@ -2,7 +2,9 @@
 
 export default defineEventHandler(async event => {
 
-  const user = await assertUser({ event });
+  const user = await assertUser({
+    event,
+  });
 
 
   await assertRateLimit({
@@ -53,7 +55,10 @@ export default defineEventHandler(async event => {
   return app.omaniIdeaComments.dbo.retrieve({
     resourceId: comment._id,
     populate: {
-      author: ['name', 'username'],
+      author: [
+        'name',
+        'username',
+      ],
     },
   });
 

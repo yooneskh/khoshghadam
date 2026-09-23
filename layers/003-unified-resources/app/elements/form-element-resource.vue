@@ -25,36 +25,26 @@ const { resourcePath } = useResourceName({
 });
 
 
-const title = asyncComputed(async () => {
+const title = computedAsync(async () => {
 
   if (!modelValue.value) {
     return '';
   }
 
 
-  try {
-
-    isLoading.value = true;
-
-
-    const resources = await Promise.all(
-      radCastArray(modelValue.value).map(async it =>
-        retrieveResource({
-          resourcePath: resourcePath.value,
-          id: it,
-        }),
-      ),
-    );
+  const resources = await Promise.all(
+    radCastArray(modelValue.value).map(async it =>
+      retrieveResource({
+        resourcePath: resourcePath.value,
+        id: it,
+      }),
+    ),
+  );
 
 
-    return resources.map(it => it.name || truncateMiddle(it._id)).join(' - ');
+  return resources.map(it => it.name || truncateMiddle(it._id)).join(' - ');
 
-  }
-  finally {
-    isLoading.value = false;
-  }
-
-});
+}, undefined, isLoading);
 
 
 async function handleResourceSelect() {

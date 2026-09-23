@@ -34,9 +34,10 @@ const { title, resourcePath } = useResourceName({
 });
 
 
-const resourceData = asyncComputed(async () => {
+const resourceData = computedAsync(async () => {
 
   tickle.value;
+
 
   if (!props.column.resource || !props.data) {
     return;
@@ -111,9 +112,11 @@ async function handleResourceClick() {
 
 
 <template>
+
   <template v-if="isLoading">
     <un-spinner />
   </template>
+
   <template v-else-if="!resourceData">
     <u-tooltip text="Deleted">
       <u-icon
@@ -122,8 +125,10 @@ async function handleResourceClick() {
       />
     </u-tooltip>
   </template>
+
   <template v-else-if="props.column.resource === 'media'">
     <nuxt-link :href="resourceData?.path" target="_blank">
+
       <template v-if="resourceData?.type?.startsWith('image')">
         <u-popover mode="hover">
 
@@ -141,17 +146,21 @@ async function handleResourceClick() {
 
         </u-popover>
       </template>
+
       <template v-else>
         <u-badge
           variant="subtle"
           icon="lucide:file"
         />
       </template>
+
     </nuxt-link>
   </template>
+
   <template v-else>
     <a class="text-primary underline cursor-pointer" @click="handleResourceClick()">
       {{ resourceData.name || truncateMiddle(resourceData._id) }}
     </a>
   </template>
+
 </template>

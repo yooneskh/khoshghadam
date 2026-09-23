@@ -6,6 +6,7 @@ export default defineEventHandler(async event => {
     event,
   });
 
+
   const journeySlug = getRouterParam(event, 'journeySlug');
 
   if (!journeySlug) {
@@ -31,7 +32,9 @@ export default defineEventHandler(async event => {
 
 
   const journeys = await loadFlashCardJourneyStates({
-    journeys: [journey],
+    journeys: [
+      journey,
+    ],
     userId: user._id,
   });
 

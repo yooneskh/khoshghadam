@@ -36,22 +36,36 @@ export default defineNitroPlugin(() => {
         },
         status: {
           enum: [
-            { label: 'Published', value: 'published' },
-            { label: 'Hidden', value: 'hidden' },
+            {
+              label: 'Published',
+              value: 'published',
+            },
+            {
+              label: 'Hidden',
+              value: 'hidden',
+            },
           ],
         },
       },
       indexes: [
         {
-          key: { featuredOn: 1 },
+          key: {
+            featuredOn: 1,
+          },
           unique: true,
           sparse: true,
         },
         {
-          key: { status: 1, voteCount: -1 },
+          key: {
+            status: 1,
+            voteCount: -1,
+          },
         },
         {
-          key: { status: 1, createdAt: -1 },
+          key: {
+            status: 1,
+            createdAt: -1,
+          },
         },
       ],
     }),

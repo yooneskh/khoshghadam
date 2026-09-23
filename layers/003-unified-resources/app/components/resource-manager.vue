@@ -29,11 +29,6 @@ const { fields } = useResourceMeta({
 });
 
 
-useHead({
-  title: titlePlural,
-});
-
-
 const actions = computed(() => {
   return [
     {
@@ -182,6 +177,13 @@ async function handleResourceDelete(resource) {
 }
 
 
+/* seo */
+
+useHead({
+  title: titlePlural,
+});
+
+
 /* outlets */
 
 defineExpose({
@@ -192,10 +194,7 @@ defineExpose({
 
 
 <template>
-  <un-card
-    :title="`Manage ${titlePlural}`"
-    fluid-body
-    :append-actions="actions">
+  <un-card :title="`Manage ${titlePlural}`" fluid-body :append-actions="actions">
     <resource-explorer-table
       ref="resourceExplorerTable"
       :resource="resource"

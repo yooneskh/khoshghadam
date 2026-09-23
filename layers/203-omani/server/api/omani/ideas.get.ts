@@ -1,5 +1,20 @@
 
 
+function getIdeasSort(sort: string) {
+  if (sort === 'new') {
+    return {
+      createdAt: -1,
+    };
+  }
+  else {
+    return {
+      voteCount: -1,
+      createdAt: -1,
+    };
+  }
+}
+
+
 export default defineEventHandler(async event => {
 
   const user = await tryAssertUser(event);
@@ -26,18 +41,21 @@ export default defineEventHandler(async event => {
 
   const ideas = await app.omaniIdeas.dbo.list({
     filter,
-    sort: sort === 'new' ? { createdAt: -1 } : { voteCount: -1, createdAt: -1 },
+    sort: getIdeasSort(sort),
     skip,
     limit,
     populate: {
-      author: ['name', 'username'],
+      author: [
+        'name',
+        'username',
+      ],
     },
   });
 
 
   if (!user) {
-    return ideas.map(idea => ({
-      ...idea,
+    return ideas.map(it => ({
+      ...it,
       myVote: false,
     }));
   }
@@ -47,18 +65,18 @@ export default defineEventHandler(async event => {
     filter: {
       user: user._id,
       idea: {
-        $in: ideas.map(idea => idea._id),
+        $in: ideas.map(it => it._id),
       },
     },
   });
 
 
-  const votedIds = new Set(votes.map(vote => vote.idea));
+  const votedIds = new Set(votes.map(it => it.idea));
 
 
-  return ideas.map(idea => ({
-    ...idea,
-    myVote: votedIds.has(idea._id),
+  return ideas.map(it => ({
+    ...it,
+    myVote: votedIds.has(it._id),
   }));
 
 });

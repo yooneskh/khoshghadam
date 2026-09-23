@@ -13,7 +13,7 @@ const props = defineProps({
 /* window */
 
 const isMaximized = ref(false);
-const elHeader = useTemplateRef('elHeader')
+const elHeader = useTemplateRef('elHeader');
 
 
 const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -52,7 +52,10 @@ const resizeStartData = ref({
 });
 
 
-function startResize(direction, event) {
+onBeforeUnmount(handleResizeStop);
+
+
+function handleResizeStart(direction, event) {
 
   if (isMaximized.value) {
     return;
@@ -77,8 +80,14 @@ function startResize(direction, event) {
 
   const cursorClass = getCursorClass(direction);
 
-  document.addEventListener('mousemove', handleResizeMove, { passive: false });
-  document.addEventListener('mouseup', stopResize, { once: true });
+  document.addEventListener('mousemove', handleResizeMove, {
+    passive: false,
+  });
+
+  document.addEventListener('mouseup', handleResizeStop, {
+    once: true,
+  });
+
   document.body.classList.add('select-none', cursorClass);
 
 }
@@ -165,7 +174,7 @@ function handleResizeMove(event) {
 
 }
 
-function stopResize() {
+function handleResizeStop() {
 
   if (!isResizing.value) {
     return;
@@ -173,7 +182,7 @@ function stopResize() {
 
 
   document.removeEventListener('mousemove', handleResizeMove);
-  document.removeEventListener('mouseup', stopResize);
+  document.removeEventListener('mouseup', handleResizeStop);
 
   document.body.classList.remove('select-none', getCursorClass(resizeDirection.value));
 
@@ -195,11 +204,6 @@ function getCursorClass(direction) {
     'sw': 'cursor-sw-resize',
   }[direction] || 'cursor-default';
 }
-
-
-onBeforeUnmount(() => {
-  stopResize();
-});
 
 
 /* dimensions */
@@ -227,13 +231,7 @@ const effectiveX = computed(() => {
     return 0;
   }
   else {
-    return Math.max(
-      0,
-      Math.min(
-        x.value,
-        windowWidth.value - width.value,
-      ),
-    );
+    return Math.max(0, Math.min(x.value, windowWidth.value - width.value));
   }
 });
 
@@ -242,13 +240,7 @@ const effectiveY = computed(() => {
     return 0;
   }
   else {
-    return Math.max(
-      0,
-      Math.min(
-        y.value,
-        windowHeight.value - height.value - taskBarHeight,
-      ),
-    );
+    return Math.max(0, Math.min(y.value, windowHeight.value - height.value - taskBarHeight));
   }
 });
 
@@ -278,38 +270,47 @@ const effectiveY = computed(() => {
     }">
 
     <template v-if="!isMaximized">
+
       <div
         class="absolute -top-2 left-5 right-5 h-4 cursor-n-resize z-1100"
-        @mousedown="startResize('n', $event)"
+        @mousedown="handleResizeStart('n', $event)"
       />
+
       <div
         class="absolute -bottom-2 left-5 right-5 h-4 cursor-s-resize z-1100"
-        @mousedown="startResize('s', $event)"
+        @mousedown="handleResizeStart('s', $event)"
       />
+
       <div
         class="absolute top-5 bottom-5 -left-2 w-4 cursor-w-resize z-1100"
-        @mousedown="startResize('w', $event)"
+        @mousedown="handleResizeStart('w', $event)"
       />
+
       <div
         class="absolute top-5 bottom-5 -right-2 w-4 cursor-e-resize z-1100"
-        @mousedown="startResize('e', $event)"
+        @mousedown="handleResizeStart('e', $event)"
       />
+
       <div
         class="absolute -top-2 -left-2 w-6 h-6 cursor-nw-resize z-1100"
-        @mousedown="startResize('nw', $event)"
+        @mousedown="handleResizeStart('nw', $event)"
       />
+
       <div
         class="absolute -top-2 -right-2 w-6 h-6 cursor-ne-resize z-1100"
-        @mousedown="startResize('ne', $event)"
+        @mousedown="handleResizeStart('ne', $event)"
       />
+
       <div
         class="absolute -bottom-2 -left-2 w-6 h-6 cursor-sw-resize z-1100"
-        @mousedown="startResize('sw', $event)"
+        @mousedown="handleResizeStart('sw', $event)"
       />
+
       <div
         class="absolute -bottom-2 -right-2 w-6 h-6 cursor-se-resize z-1100"
-        @mousedown="startResize('se', $event)"
+        @mousedown="handleResizeStart('se', $event)"
       />
+
     </template>
 
     <header
@@ -360,17 +361,18 @@ const effectiveY = computed(() => {
         'tablet:border-x-3 tablet:border-b-3 tablet:border-[#0059F4]': !isMaximized,
       }">
 
-      <!-- <div /> to be filled with actions strip -->
-
       <div class="h-0 grow overflow-y-auto">
+
         <template v-if="props.loading">
           <div class="h-full w-full flex items-center justify-center">
             <un-spinner />
           </div>
         </template>
+
         <template v-else>
           <slot />
         </template>
+
       </div>
 
       <template v-if="props.actions?.length">

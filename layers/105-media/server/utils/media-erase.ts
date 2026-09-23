@@ -18,7 +18,6 @@ export async function eraseMedia(mediaId: string | undefined) {
   }
 
 
-
   if (media.path) {
     await eraseMediaFile(media.path);
   }

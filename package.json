@@ -18,7 +18,7 @@
     "nuxt": "4.5.2",
     "nuxt-gtag": "5.0.0",
     "nuxt-jsonld": "2.3.0",
-    "nuxt-unified-ui": "0.5.12",
+    "nuxt-unified-ui": "0.5.15",
     "sharp": "0.35.4",
     "three": "0.186.0",
     "vue": "3.5.43"

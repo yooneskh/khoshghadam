@@ -32,106 +32,106 @@ const { resourcePath } = useResourceName({
 const operatorItems = {
   'string': [
     {
-      label: 'Contains',
       value: 'contains',
+      label: 'Contains',
     },
     {
-      label: 'Equals',
       value: 'eq',
+      label: 'Equals',
     },
     {
-      label: 'Does not equal',
       value: 'ne',
+      label: 'Does not equal',
     },
   ],
   'number': [
     {
-      label: 'Equals',
       value: 'eq',
+      label: 'Equals',
     },
     {
-      label: 'Does not equal',
       value: 'ne',
+      label: 'Does not equal',
     },
     {
-      label: 'Greater than',
       value: 'gt',
+      label: 'Greater than',
     },
     {
-      label: 'Greater than or equal',
       value: 'gte',
+      label: 'Greater than or equal',
     },
     {
-      label: 'Less than',
       value: 'lt',
+      label: 'Less than',
     },
     {
-      label: 'Less than or equal',
       value: 'lte',
+      label: 'Less than or equal',
     },
   ],
   'date': [
     {
-      label: 'On',
       value: 'on',
+      label: 'On',
     },
     {
-      label: 'Before',
       value: 'before',
+      label: 'Before',
     },
     {
-      label: 'After',
       value: 'after',
+      label: 'After',
     },
   ],
   'array': [
     {
-      label: 'Contains',
       value: 'eq',
+      label: 'Contains',
     },
     {
-      label: 'Does not contain',
       value: 'ne',
+      label: 'Does not contain',
     },
   ],
   'resource-array': [
     {
-      label: 'Contains',
       value: 'eq',
+      label: 'Contains',
     },
     {
-      label: 'Does not contain',
       value: 'ne',
+      label: 'Does not contain',
     },
   ],
   'collection': [
     {
-      label: 'Is empty',
       value: 'empty',
+      label: 'Is empty',
     },
     {
-      label: 'Is not empty',
       value: 'not-empty',
+      label: 'Is not empty',
     },
   ],
   'object': [
     {
-      label: 'Is empty',
       value: 'empty-object',
+      label: 'Is empty',
     },
     {
-      label: 'Is not empty',
       value: 'not-empty-object',
+      label: 'Is not empty',
     },
   ],
   'exact': [
     {
-      label: 'Equals',
       value: 'eq',
+      label: 'Equals',
     },
     {
-      label: 'Does not equal',
       value: 'ne',
+      label: 'Does not equal',
     },
   ],
 };
@@ -216,7 +216,7 @@ const { form, formTag } = useForm({
 });
 
 
-watch(
+watchImmediate(
   [
     () => props.filter,
     filterType,
@@ -237,7 +237,6 @@ watch(
   },
   {
     deep: true,
-    immediate: true,
   },
 );
 
@@ -316,12 +315,12 @@ function getValueField() {
       identifier: 'select',
       items: [
         {
-          label: 'True',
           value: true,
+          label: 'True',
         },
         {
-          label: 'False',
           value: false,
+          label: 'False',
         },
       ],
       placeholder: 'Value',

@@ -86,10 +86,13 @@ const { data: resourcesCountData, pending: isResourcesCountPending, refresh: ref
 );
 
 
-watch(resourcePath, () => {
-  filters.value = {};
-  currentPage.value = 1;
-});
+watch(
+  resourcePath,
+  () => {
+    filters.value = {};
+    currentPage.value = 1;
+  },
+);
 
 
 function handleSort(column) {

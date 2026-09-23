@@ -1,5 +1,7 @@
 <script setup>
 
+/* layout */
+
 import BackgroundImage from '~/assets/images/background.jpg';
 import EntriesGrid from '../atoms/entries-grid.vue';
 

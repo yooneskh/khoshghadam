@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Builds the 401 errors that server routes
+// throw for failed authentication.
+
 
 export function createUnauthenticatedError() {
   return createError({

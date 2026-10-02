@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Stores an uploaded file as a media
+// owned by the current user.
+
+
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createImageMediaVariants } from '../../lib/media-variants-image';
@@ -8,6 +15,7 @@ export default defineEventHandler(async event => {
   const user = await assertUser({
     event,
   });
+
 
   const form = await readFormData(event);
   const file = form.get('file') as File;

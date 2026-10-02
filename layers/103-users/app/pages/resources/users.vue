@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Manages dashboard users with
+// onboarding and password reset actions.
+
+
 /* page */
 
 definePageMeta({
@@ -22,7 +28,7 @@ useSeoMeta({
 });
 
 
-/* actions */
+/* users */
 
 const resourceManagerEl = useTemplateRef('resourceManager');
 
@@ -99,7 +105,7 @@ async function handleOnboardUser() {
         await resourceManagerEl.value?.refreshResources();
 
         toastSuccess({
-          title: 'User onboard successfully.',
+          title: 'User onboarded successfully.',
           description: `${response.name} can now sign in as ${response.username}.`,
         });
 
@@ -158,6 +164,7 @@ async function handleResetPassword(user) {
     resource="users"
     :actions="[
       {
+        variant: 'subtle',
         icon: 'lucide:user-plus',
         label: 'Onboard User',
         onClick: handleOnboardUser,

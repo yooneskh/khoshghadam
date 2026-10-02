@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Lets the user pick one or more
+// documents of a resource in a modal.
+
+
 /* interface */
 
 const props = defineProps({
@@ -16,7 +22,7 @@ const emit = defineEmits([
 
 /* resource */
 
-import ResourceExplorerTable from '../atoms/resource-explorer-table.vue';
+import ResourceExplorerTable from './resource-explorer-table.vue';
 import { useResourceName } from '../libs/use-resource-name';
 import { retrieveResource } from '../libs/retrieve-resource';
 import { truncateMiddle } from '../libs/truncate-middle';
@@ -31,10 +37,7 @@ const { resourcePath, title, titlePlural } = useResourceName({
 });
 
 
-watchImmediate(
-  currentItems,
-  loadCurrentItemTitles,
-);
+watchImmediate(currentItems, loadCurrentItemTitles);
 
 
 async function loadCurrentItemTitles() {
@@ -83,7 +86,6 @@ async function handleSubmitSelection(items) {
         icon="lucide:bookmark"
         :title="`Select ${props.multiple ? titlePlural : title}`"
         :subtitle="props.multiple ? 'Select one or more ' + titlePlural : 'Select one ' + title"
-        fluid-body
         :actions="[
           ...(!props.multiple ? [] : [
             {
@@ -100,7 +102,8 @@ async function handleSubmitSelection(items) {
             label: $t('common.cancel'),
             onClick: () => emit('close'),
           },
-        ]">
+        ]"
+        fluid-body>
 
         <template v-if="props.multiple">
           <div class="flex flex-wrap items-center gap-2 border-b border-default p-3">

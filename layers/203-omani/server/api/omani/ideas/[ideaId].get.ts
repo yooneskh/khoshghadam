@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Returns one published idea
+// with its comments and the caller's vote.
+
 
 export default defineEventHandler(async event => {
 
@@ -8,7 +13,10 @@ export default defineEventHandler(async event => {
   const idea = await app.omaniIdeas.dbo.find({
     resourceId: getRouterParam(event, 'ideaId'),
     populate: {
-      author: ['name', 'username'],
+      author: [
+        'name',
+        'username',
+      ],
     },
   });
 
@@ -28,7 +36,10 @@ export default defineEventHandler(async event => {
       createdAt: 1,
     },
     populate: {
-      author: ['name', 'username'],
+      author: [
+        'name',
+        'username',
+      ],
     },
   });
 

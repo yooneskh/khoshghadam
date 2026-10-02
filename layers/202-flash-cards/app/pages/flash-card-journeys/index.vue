@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Lists the flash card journeys
+// with the user's progress on each.
+
+
 /* page */
 
 definePageMeta({

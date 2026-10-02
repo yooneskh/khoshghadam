@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders a wrapping grid of icon links
+// for the given entries.
+
+
 /* interface */
 
 const props = defineProps({

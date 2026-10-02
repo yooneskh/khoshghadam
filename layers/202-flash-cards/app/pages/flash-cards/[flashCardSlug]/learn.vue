@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Runs a flash card learning session,
+// flipping through the deck and saving the answers.
+
+
 /* page */
 
 definePageMeta({
@@ -134,18 +140,20 @@ const cardsSessions = computed(() => {
     flashCardData.value.cards.map(card => [
       card._id,
       previousSessionsData.value
-        .filter(session => session.flashCard === flashCardData.value._id)
+        .filter(it => it.flashCard === flashCardData.value._id)
         .map(session => ({
           opened: session.answeredCards.find(it => it.card === card._id)?.opened,
           createdAt: session.createdAt,
         }))
-        .filter(answer => answer.opened !== undefined)
+        .filter(it => it.opened !== undefined)
         .toReversed(),
     ]),
   );
 
 });
 
+
+/* handlers */
 
 async function handleCardAdvance() {
 
@@ -211,6 +219,7 @@ async function handleCardAdvance() {
     :loading="isFlashCardPending"
     :actions="[
       {
+        variant: 'subtle',
         label: activeIndex < flashCardData?.cards.length - 1 ? 'Next' : 'Finish',
         onClick: handleCardAdvance,
       },
@@ -226,13 +235,9 @@ async function handleCardAdvance() {
               'left-1/2 -translate-x-1/2': index === activeIndex,
               'left-full translate-x-0': index > activeIndex,
             }">
-            <div
-              class="relative w-full h-full transition-transform duration-1000 transform-3d"
-              :class="{
-                'rotate-y-180': index === rotatedIndex,
-              }">
+            <div class="relative w-full h-full transition-transform duration-1000 transform-3d" :class="{ 'rotate-y-180': index === rotatedIndex }">
 
-              <div class="absolute w-full h-full flex flex-col items-center justify-center bg-elevated border border-default rounded-xl backface-hidden" @click="rotatedIndex = index;">
+              <div class="absolute w-full h-full flex flex-col items-center justify-center bg-elevated border border-default rounded-xl backface-hidden" @click="rotatedIndex = index">
 
                 <div class="text-2xl font-medium">
                   {{ card.frontText }}

@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Writes one aligned console line
+// per HTTP request or task run.
+
+
 import { consola } from 'consola';
 
 
@@ -101,7 +108,7 @@ function fit(value: string | number, width: number): string {
 
 function formatSize(bytes: number | string | undefined): string {
 
-  if (typeof bytes !== 'number' || isNaN(bytes)) {
+  if (!radIsNumber(bytes)) {
     return '-';
   }
 

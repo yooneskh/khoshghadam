@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Lists the minigames
+// with links to each game.
+
+
 /* page */
 
 definePageMeta({
@@ -79,8 +85,8 @@ const games = [
               <div class="flex items-start gap-3">
 
                 <img
-                  class="size-11 shrink-0"
                   :src="`/pitos/${game.pito}.png`"
+                  class="size-11 shrink-0"
                 />
 
                 <div class="grow min-w-0">

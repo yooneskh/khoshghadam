@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Registers the captcha codes resource
+// on the unified app registry.
+
 
 const { schema, type, inferred } = parseSchema({
   'code': 'string',

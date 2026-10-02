@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Signs the user in with credentials and captcha
+// and sends them to their return destination.
+
+
 /* page */
 
 definePageMeta({
@@ -65,6 +71,10 @@ async function handleLogin() {
     const loginResponse = await ufetch('/api/authentication/login', {
       silent: true,
       method: 'post',
+      body: {
+        username: loginForm.value.username,
+        password: loginForm.value.password,
+      },
       headers: {
         'x-captcha-id': captchaId.value,
         'x-captcha-code': captchaCode.value,
@@ -124,6 +134,7 @@ async function handleLogin() {
     title="Login"
     :actions="[
       {
+        variant: 'subtle',
         label: 'Login',
         disabled: !loginForm.username || !loginForm.password || !captchaId || !captchaCode,
         onClick: handleLogin,
@@ -139,11 +150,7 @@ async function handleLogin() {
 
         Enter your account information below and click on login. If you don't have an account, you can
 
-        <nuxt-link
-          class="text-primary underline"
-          :to="{
-            name: 'authentication.register',
-          }">
+        <nuxt-link class="text-primary underline" :to="{ name: 'authentication.register' }">
           register a new account here.
         </nuxt-link>
 

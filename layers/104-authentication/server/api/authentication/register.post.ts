@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Creates a new user with a password
+// and issues its authentication token.
+
 
 export default defineEventHandler(async event => {
 
@@ -6,7 +11,6 @@ export default defineEventHandler(async event => {
     event,
     limit: 5,
   });
-
 
   await assertCaptchaCode({
     event,

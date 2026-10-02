@@ -1,3 +1,11 @@
+
+/* responsibility */
+
+// Registers the media resource
+// and its storage directory
+// on the unified app registry.
+
+
 import { join } from 'node:path';
 
 

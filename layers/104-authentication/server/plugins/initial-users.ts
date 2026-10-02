@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Seeds the users listed in runtime config
+// with their passwords and permissions.
+
 
 export default defineNitroPlugin(() => {
   Promise.resolve().then(async () => {

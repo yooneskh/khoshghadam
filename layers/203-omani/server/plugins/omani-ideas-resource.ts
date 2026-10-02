@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Registers the omani ideas resource
+// on the unified app registry.
+
 
 const { schema, type, inferred } = parseSchema({
   'name': 'string',
@@ -37,12 +42,12 @@ export default defineNitroPlugin(() => {
         status: {
           enum: [
             {
-              label: 'Published',
               value: 'published',
+              label: 'Published',
             },
             {
-              label: 'Hidden',
               value: 'hidden',
+              label: 'Hidden',
             },
           ],
         },

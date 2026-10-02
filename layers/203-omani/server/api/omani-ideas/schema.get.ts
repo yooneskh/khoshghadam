@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Serves the omani ideas resource schema
+// to admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceSchema({

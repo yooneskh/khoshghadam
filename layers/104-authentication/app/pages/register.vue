@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Registers a new account
+// and signs the user in.
+
+
 /* page */
 
 definePageMeta({
@@ -108,6 +114,7 @@ async function handleRegister() {
     title="Register"
     :actions="[
       {
+        variant: 'subtle',
         label: 'Register',
         disabled: !registerForm.name || !registerForm.username || !registerForm.password || !captchaId || !captchaCode,
         onClick: handleRegister,
@@ -123,11 +130,7 @@ async function handleRegister() {
 
         Enter your account information below and click on register. If you already have an account, you can
 
-        <nuxt-link
-          class="text-primary underline"
-          :to="{
-            name: 'authentication.login',
-          }">
+        <nuxt-link class="text-primary underline" :to="{ name: 'authentication.login' }">
           login here.
         </nuxt-link>
 

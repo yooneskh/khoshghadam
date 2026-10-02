@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Lists authorization tokens
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceList({

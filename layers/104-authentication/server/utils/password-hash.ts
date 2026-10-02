@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Hashes passwords with bcrypt
+// and verifies them against stored hashes.
+
+
 import { hash, compare } from 'bcryptjs';
 
 

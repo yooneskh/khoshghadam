@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Lists omani idea votes
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceList({

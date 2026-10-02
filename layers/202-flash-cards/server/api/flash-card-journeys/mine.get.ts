@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Lists every valid flash card journey
+// with the signed-in user's progress state.
+
 
 export default defineEventHandler(async event => {
 

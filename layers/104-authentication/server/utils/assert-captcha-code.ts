@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Rejects a request with 400 unless its captcha headers
+// match an active captcha, then consumes that captcha.
+
 
 export async function assertCaptchaCode(args: { event: H3Event }) {
 

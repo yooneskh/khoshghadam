@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Manages any standard resource
+// named by the route.
+
+
 /* page */
 
 definePageMeta({
@@ -24,7 +30,7 @@ const resourceName = computed(() => {
 /* seo */
 
 useHead({
-  title: () => resourceName.value,
+  title: () => radTitle(resourceName.value),
 });
 
 useSeoMeta({

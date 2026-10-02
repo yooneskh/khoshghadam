@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Shows one flash card deck
+// with its details and past sessions.
+
+
 /* page */
 
 definePageMeta({
@@ -95,24 +101,7 @@ useJsonld(() => !flashCardData.value ? null : {
 
 /* sessions */
 
-const { data: sessionsData } = useUFetch(
-  '/api/flash-card-sessions/mine',
-  {
-    enabled: useIsUserAuthenticated(),
-  },
-);
-
-
-const flashCardSessions = computed(() => {
-
-  if (!flashCardData.value || !sessionsData.value) {
-    return [];
-  }
-
-
-  return sessionsData.value.filter(it => it.flashCard === flashCardData.value._id);
-
-});
+import FlashCardPastSessions from '../../../atoms/flash-card-past-sessions.vue';
 
 </script>
 
@@ -124,6 +113,7 @@ const flashCardSessions = computed(() => {
     :loading="isFlashCardPending"
     :actions="[
       {
+        variant: 'subtle',
         icon: 'lucide:play',
         label: 'Start Learning',
         to: {
@@ -141,7 +131,7 @@ const flashCardSessions = computed(() => {
         {{ flashCardData?.name }}
       </h1>
 
-      <h2 class="mt-1">
+      <h2 class="mt-1 text-sm">
         {{ flashCardData?.category?.name }} - by {{ flashCardData?.owner?.name }}
       </h2>
 
@@ -149,6 +139,7 @@ const flashCardSessions = computed(() => {
         <template v-for="tag of flashCardData?.tags" :key="tag">
           <u-badge
             variant="subtle"
+            icon="lucide:tag"
             :label="tag"
           />
         </template>
@@ -160,41 +151,7 @@ const flashCardSessions = computed(() => {
 
     </div>
 
-    <template v-if="flashCardSessions.length">
-      <div class="p-3 border-t border-default">
-
-        <p>
-          Your past sessions
-        </p>
-
-        <div class="mt-3 space-y-3">
-          <template v-for="session of flashCardSessions" :key="session._id">
-            <div class="flex items-center gap-3">
-
-              <div class="flex flex-wrap items-center gap-1">
-                <template v-for="answer of session.answeredCards" :key="answer._id">
-                  <u-tooltip :text="flashCardData?.cards?.find(it => it._id === answer.card)?.frontText">
-                    <u-badge
-                      variant="subtle"
-                      :color="answer.opened ? 'warning' : 'success'"
-                      class="size-3"
-                    />
-                  </u-tooltip>
-                </template>
-              </div>
-
-              <div class="grow" />
-
-              <span class="text-xs tabular-nums">
-                {{ formatDate(session.createdAt) }}
-              </span>
-
-            </div>
-          </template>
-        </div>
-
-      </div>
-    </template>
+    <flash-card-past-sessions :flash-card="flashCardData" />
 
   </window-base>
 </template>

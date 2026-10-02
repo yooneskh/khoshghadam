@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Logs every finished request
+// with its status, sizes, and elapsed time.
+
 
 export default defineNitroPlugin(nitroApp => {
 

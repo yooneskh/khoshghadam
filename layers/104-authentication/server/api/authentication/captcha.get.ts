@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Issues a new captcha challenge
+// and stores its code for later checks.
+
 
 export default defineEventHandler(async event => {
 

@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Derives a resource's API path and display titles
+// from its name.
+
+
 import { wordToSingular, wordToPlural } from './word-pluralize';
 
 

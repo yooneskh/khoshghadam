@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Generates resized image variants of a media file
+// and records their paths on the media document.
+
+
 import { join } from 'node:path';
 import sharp from 'sharp';
 

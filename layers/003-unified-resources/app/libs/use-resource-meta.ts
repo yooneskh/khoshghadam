@@ -1,8 +1,15 @@
+
+/* responsibility */
+
+// Maps a resource's schema
+// to form fields and table columns.
+
+
 import { useResourceName } from './use-resource-name';
 import { retrieveResourceSchema } from './retrieve-resource';
 
 
-export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
+export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
   const { resourcePath } = useResourceName({
     resource: args.resource,
@@ -27,12 +34,12 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
   });
 
   const fields = computed(() => {
-    return meta.value.filter((it: any) => !it.hidden).map(convertMetaToField);
+    return meta.value.filter(it => !it.hidden).map(convertMetaToField);
   });
 
   const columns = computed(() => {
     return [
-      ...meta.value.filter((it: any) => !it.hidden && !it.hideInTable).map((it: any) => ({
+      ...meta.value.filter(it => !it.hidden && !it.hideInTable).map(it => ({
         accessorKey: it.key,
         header: radTitle(it.key),
         resource: it.resource,

@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Returns the users resource schema
+// to admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceSchema({

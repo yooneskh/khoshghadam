@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Lets a form field pick related resources
+// and shows their names in a read-only input.
+
+
 /* interface */
 
 const props = defineProps({
@@ -72,9 +78,9 @@ async function handleResourceSelect() {
       trailing-icon="lucide:clipboard-list"
       class="w-full"
       v-bind="radOmit(props.field, [ 'key', 'identifier', 'label', 'hint', 'help', 'description' ])"
+      :model-value="title"
       :loading="isLoading"
       readonly
-      :model-value="title"
       @click="handleResourceSelect()"
       @keypress.space="handleResourceSelect()"
       @keypress.enter="handleResourceSelect()"

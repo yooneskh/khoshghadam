@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Picks media items for a form field
+// and previews the selected ones.
+
+
 /* interface */
 
 const props = defineProps({
@@ -14,7 +20,7 @@ const modelValue = defineModel({
 });
 
 
-/* resource */
+/* media */
 
 import { retrieveResource } from '../libs/retrieve-resource';
 import { launchMediaLibraryDialog } from '../libs/launch-media-library-dialog';
@@ -26,37 +32,27 @@ const isLoading = ref(false);
 const resources = computedAsync(async () => {
 
   if (!modelValue.value) {
-    return '';
+    return [];
   }
 
 
-  try {
+  return await Promise.all(
+    radCastArray(modelValue.value).map(async it =>
+      retrieveResource({
+        resourcePath: 'media',
+        id: it,
+      }),
+    ),
+  );
 
-    isLoading.value = true;
-
-
-    return await Promise.all(
-      radCastArray(modelValue.value).map(async it =>
-        retrieveResource({
-          resourcePath: 'media',
-          id: it,
-        }),
-      ),
-    );
-
-  }
-  finally {
-    isLoading.value = false;
-  }
-
-});
+}, undefined, isLoading);
 
 const title = computed(() => {
   if (!resources.value?.length) {
     return '';
   }
   else {
-    return resources.value?.map(it => it.name).join(' - ');
+    return resources.value.map(it => it.name).join(' - ');
   }
 });
 
@@ -91,14 +87,14 @@ async function handleSelectMedia() {
               <u-popover mode="hover">
 
                 <img
-                  class="size-5 rounded"
                   :src="resource.variants?.thumb || resource.path"
+                  class="size-5 rounded"
                 />
 
                 <template #content>
                   <img
-                    class="max-w-sm rounded"
                     :src="resource.variants?.small || resource.path"
+                    class="max-w-sm rounded"
                   />
                 </template>
 

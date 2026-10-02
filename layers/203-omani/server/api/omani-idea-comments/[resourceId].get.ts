@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Retrieves one omani idea comment
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceRetrieve({

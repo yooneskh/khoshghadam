@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Lets the user pick one or more media
+// from the paginated media library.
+
+
 /* interface */
 
 const props = defineProps({
@@ -17,14 +23,13 @@ const emit = defineEmits([
 
 import { retrieveResource, evictResource } from '../libs/retrieve-resource';
 import { truncateMiddle } from '../libs/truncate-middle';
+import { launchMediaViewerDialog } from '../libs/launch-media-viewer-dialog';
 
 
 const itemsPerPage = ref(18);
 const currentPage = ref(1);
 const currentItems = ref(radCloneDeep(props.items || []));
 const currentItemsTitles = ref({});
-const openedMedia = ref();
-const isViewerOpen = ref(false);
 
 
 const { data: mediaData, pending: isMediaPending, refresh: refreshMedia } = useUFetch(
@@ -43,30 +48,25 @@ const { data: mediaCountData, refresh: refreshMediaCount } = useUFetch(
 );
 
 
-watchImmediate(
-  currentItems,
-  loadCurrentItemTitles,
-);
+watchImmediate(currentItems, loadCurrentItemTitles);
 
 
 async function loadCurrentItemTitles() {
-  await Promise.all(
-    currentItems.value.map(async itemId => {
+  await Promise.all(currentItems.value.map(async itemId => {
 
-      if (currentItemsTitles.value[itemId]) {
-        return;
-      }
+    if (currentItemsTitles.value[itemId]) {
+      return;
+    }
 
 
-      const resource = await retrieveResource({
-        resourcePath: 'media',
-        id: itemId,
-      });
+    const resource = await retrieveResource({
+      resourcePath: 'media',
+      id: itemId,
+    });
 
-      currentItemsTitles.value[itemId] = resource.name || truncateMiddle(resource._id);
+    currentItemsTitles.value[itemId] = resource.name || truncateMiddle(resource._id);
 
-    }),
-  );
+  }));
 }
 
 async function handleUploadMedia() {
@@ -92,6 +92,7 @@ async function handleUploadMedia() {
 
           const body = new FormData();
           body.append('file', file);
+
 
           await ufetch('/api/media/upload', {
             method: 'post',
@@ -173,8 +174,9 @@ async function handleSubmitSelection(items) {
 }
 
 function handleOpenMedia(media) {
-  openedMedia.value = media;
-  isViewerOpen.value = true;
+  return launchMediaViewerDialog({
+    media,
+  });
 }
 
 </script>
@@ -187,9 +189,9 @@ function handleOpenMedia(media) {
         icon="lucide:file-badge"
         title="Select Media"
         :subtitle="props.multiple ? 'Select one or more media' : 'Select one media'"
-        fluid-body
         :append-actions="[
           {
+            variant: 'subtle',
             icon: 'lucide:plus',
             label: 'Upload New',
             onClick: handleUploadMedia,
@@ -211,7 +213,8 @@ function handleOpenMedia(media) {
             label: $t('common.cancel'),
             onClick: () => emit('close'),
           },
-        ]">
+        ]"
+        fluid-body>
 
         <template v-if="props.multiple">
           <div class="flex flex-wrap items-center gap-2 border-b border-default p-3">
@@ -290,13 +293,14 @@ function handleOpenMedia(media) {
                         onSelect: () => handleOpenMedia(media),
                       },
                       {
-                        color: 'error',
                         icon: 'lucide:trash',
                         label: 'Delete Media',
+                        color: 'error',
                         onSelect: () => handleDeleteMedia(media),
                       },
                     ]">
                     <u-button
+                      variant="subtle"
                       size="xs"
                       icon="lucide:ellipsis-vertical"
                     />
@@ -330,24 +334,6 @@ function handleOpenMedia(media) {
           </div>
 
         </template>
-
-        <u-modal :ui="{ content: openedMedia?.type?.startsWith('image') ? '' : 'max-w-5xl' }" v-model:open="isViewerOpen" scrollable>
-          <template #content>
-
-            <template v-if="openedMedia.type?.startsWith('image')">
-              <img :src="openedMedia.path" />
-            </template>
-
-            <template v-else>
-              <object
-                :type="openedMedia.type"
-                :data="openedMedia.path"
-                class="w-full! h-128"
-              />
-            </template>
-
-          </template>
-        </u-modal>
 
       </un-card>
     </template>

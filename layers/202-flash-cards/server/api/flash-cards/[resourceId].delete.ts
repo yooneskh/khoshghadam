@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Deletes a flash card
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceDelete({

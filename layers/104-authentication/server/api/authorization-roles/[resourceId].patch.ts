@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Updates one authorization role
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceUpdate({

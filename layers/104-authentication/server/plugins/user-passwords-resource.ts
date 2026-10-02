@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Registers the user passwords resource
+// on the unified app registry.
+
 
 const { schema, type, inferred } = parseSchema({
   'user': 'string',

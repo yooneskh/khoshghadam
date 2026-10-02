@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Shows one flash card journey
+// with its steps and the user's progress.
+
+
 /* page */
 
 definePageMeta({
@@ -98,12 +104,12 @@ useJsonld(() => !journeyData.value ? null : {
         'price': 0,
         'priceCurrency': 'USD',
       },
-      'hasPart': journeyData.value.steps.map((it, index) => {
+      'hasPart': journeyData.value.steps.map((step, index) => {
         return {
           '@type': 'LearningResource',
           'position': index + 1,
-          'name': it.flashCard.name,
-          'url': `https://khoshghadam.com/flash-cards/${it.flashCard.slug}`,
+          'name': step.flashCard.name,
+          'url': `https://khoshghadam.com/flash-cards/${step.flashCard.slug}`,
         };
       }),
     },
@@ -140,7 +146,7 @@ function getFlashCardSessionsFor(flashCardId) {
             {{ journeyData.name }}
           </h1>
 
-          <p class="text-muted mt-1">
+          <p class="text-sm text-muted mt-1">
             {{ journeyData.description }}
           </p>
 
@@ -177,11 +183,7 @@ function getFlashCardSessionsFor(flashCardId) {
       </div>
 
       <template v-for="(step, index) of journeyData.steps" :key="step._id">
-        <div
-          class="flex items-start gap-3 p-3 border border-default rounded-xl"
-          :class="{
-            'opacity-50': !step.unlocked,
-          }">
+        <div class="flex items-start gap-3 p-3 border border-default rounded-xl" :class="{ 'opacity-50': !step.unlocked }">
 
           <div class="size-9 shrink-0 flex items-center justify-center bg-elevated rounded-full font-semibold">
             {{ index + 1 }}

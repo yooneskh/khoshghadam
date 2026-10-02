@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Lists users
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceList({

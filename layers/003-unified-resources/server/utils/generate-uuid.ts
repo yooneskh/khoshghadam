@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Generates a time-ordered
+// UUIDv7 string.
+
+
 import { generateUUIDv7 } from '@quentinadam/uuidv7';
 
 

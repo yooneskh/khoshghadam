@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders the app shell
+// with site-wide title template and JSON-LD.
+
+
 /* seo */
 
 const config = useAppConfig();

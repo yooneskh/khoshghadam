@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Defines a Nitro task that logs its name,
+// payload, and run time after each run.
+
 
 export function defineLoggedTask(definition: Parameters<typeof defineTask>[0]) {
   return defineTask({

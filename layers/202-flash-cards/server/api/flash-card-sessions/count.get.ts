@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Counts flash card sessions
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceCount({

@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Updates an omani idea vote
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceUpdate({

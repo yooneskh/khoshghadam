@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Converts English words between
+// singular and plural forms.
+
+
 import pluralize from '@theothergothamdev/pluralize-ts';
 
 

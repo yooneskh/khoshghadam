@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Retrieves one flash card session
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceRetrieve({

@@ -1,4 +1,10 @@
 
+/* responsibility */
+
+// Creates the app's API fetchers
+// that send the auth token
+// and toast failed requests.
+
 
 declare module 'ofetch' {
   interface FetchOptions {

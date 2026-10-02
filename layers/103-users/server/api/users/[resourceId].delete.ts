@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Deletes one user
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceDelete({

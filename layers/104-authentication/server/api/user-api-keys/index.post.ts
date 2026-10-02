@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Creates a user API key
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceCreate({

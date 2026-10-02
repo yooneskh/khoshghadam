@@ -1,19 +1,25 @@
 <script setup>
 
-/* layout */
+/* responsibility */
+
+// Frames pages as a desktop
+// with wallpaper, shortcuts, and a taskbar.
+
+
+/* background */
 
 import BackgroundImage from '~/assets/images/background.jpg';
+
+
+/* entries */
+
 import EntriesGrid from '../atoms/entries-grid.vue';
 
 </script>
 
 
 <template>
-  <div
-    class="h-dvh w-screen relative bg-center bg-cover"
-    :style="{
-      backgroundImage: `url(${BackgroundImage})`,
-    }">
+  <div class="h-dvh w-screen relative bg-center bg-cover" :style="{ backgroundImage: `url(${BackgroundImage})` }">
 
     <entries-grid
       class="text-inverted"
@@ -54,7 +60,7 @@ import EntriesGrid from '../atoms/entries-grid.vue';
     <div class="h-10 absolute bottom-0 inset-x-0 flex items-center gap-3 bg-primary">
 
       <u-button
-        variant="soft"
+        variant="subtle"
         label="Begin"
         class="h-full font-bold rounded-s-none bg-green-600 text-white px-8"
       />

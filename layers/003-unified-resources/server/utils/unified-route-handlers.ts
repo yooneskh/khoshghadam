@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Implements standard REST handlers
+// for unified resources.
+
 
 interface ResourceHandlerArgs {
   resource: string;
@@ -12,7 +17,7 @@ export async function handleResourceSchema(args: ResourceHandlerArgs) {
   if (args.permission) {
     await assertUserPermission({
       event: args.event,
-      permission: args.permission!,
+      permission: args.permission,
     });
   }
 
@@ -26,7 +31,7 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
   if (args.permission) {
     await assertUserPermission({
       event: args.event,
-      permission: args.permission!,
+      permission: args.permission,
     });
   }
 
@@ -56,7 +61,7 @@ export async function handleResourceCount(args: ResourceHandlerArgs) {
   if (args.permission) {
     await assertUserPermission({
       event: args.event,
-      permission: args.permission!,
+      permission: args.permission,
     });
   }
 
@@ -72,7 +77,7 @@ export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
   if (args.permission) {
     await assertUserPermission({
       event: args.event,
-      permission: args.permission!,
+      permission: args.permission,
     });
   }
 
@@ -89,7 +94,7 @@ export async function handleResourceCreate(args: ResourceHandlerArgs) {
   if (args.permission) {
     await assertUserPermission({
       event: args.event,
-      permission: args.permission!,
+      permission: args.permission,
     });
   }
 
@@ -105,7 +110,7 @@ export async function handleResourceUpdate(args: ResourceHandlerArgs) {
   if (args.permission) {
     await assertUserPermission({
       event: args.event,
-      permission: args.permission!,
+      permission: args.permission,
     });
   }
 
@@ -122,7 +127,7 @@ export async function handleResourceDelete(args: ResourceHandlerArgs) {
   if (args.permission) {
     await assertUserPermission({
       event: args.event,
-      permission: args.permission!,
+      permission: args.permission,
     });
   }
 
@@ -187,12 +192,12 @@ function extractFilterFromEvent(event: H3Event) {
     }
     else if (operator === 'in') {
       acc[key] = {
-        $in: String(rawValue).split(';').map(guessFilterValue),
+        $in: String(rawValue).split(';').map(it => guessFilterValue(it)),
       };
     }
     else if (operator === 'nin') {
       acc[key] = {
-        $nin: String(rawValue).split(';').map(guessFilterValue),
+        $nin: String(rawValue).split(';').map(it => guessFilterValue(it)),
       };
     }
     else if (operator === 'like') {
@@ -283,7 +288,7 @@ function extractSelectFromEvent(event: H3Event): string[] | undefined {
   }
 
 
-  return String(select).split(',').map(it => it.trim()).filter(Boolean);
+  return String(select).split(',').map(it => it.trim()).filter(it => Boolean(it));
 
 }
 
@@ -305,6 +310,7 @@ function extractSortFromEvent(event: H3Event) {
 
     acc[key] = direction;
 
+
     return acc;
 
   }, {} as Record<string, 1 | -1>);
@@ -321,50 +327,9 @@ function extractPopulateFromEvent(event: H3Event): Record<string, string[]> | un
   }
 
 
-  return Object.fromEntries(String(populate).split(',').map(it => it.split(':')).map(([key, value]) => [
-    key,
-    (value || '').split(';'),
+  return Object.fromEntries(String(populate).split(',').map(it => it.split(':')).map(it => [
+    it[0],
+    (it[1] || '').split(';'),
   ]));
 
-}
-
-export async function assertUserPermission(args: {
-  event: H3Event;
-  permission: string;
-}) {
-
-  const user = await assertUser({
-    event: args.event,
-    fillPermissions: true,
-  });
-
-
-  if (!user.permissions?.length) {
-    throw createUnauthorizedError();
-  }
-
-
-  const hasPermission = user.permissions.some(it => matchUserPermit(it, args.permission!));
-
-  if (!hasPermission) {
-    throw createUnauthorizedError();
-  }
-
-
-  return user;
-
-}
-
-function matchUserPermit(permit: string, permission: string) {
-  if (!permit.includes('**')) {
-    return permit === permission;
-  }
-  else {
-
-    const starIndex = permit.indexOf('**');
-
-
-    return permit.slice(0, starIndex) === permission.slice(0, starIndex);
-
-  }
 }

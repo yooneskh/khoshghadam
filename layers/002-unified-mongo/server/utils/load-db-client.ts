@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Connects to MongoDB once
+// and shares the configured database.
+
+
 import { Db, MongoClient } from 'mongodb';
 
 

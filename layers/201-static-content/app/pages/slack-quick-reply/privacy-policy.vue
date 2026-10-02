@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Shows the privacy policy
+// of the Slack Quick Reply Chrome extension.
+
+
 /* page */
 
 definePageMeta({

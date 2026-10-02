@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Returns today's featured idea,
+// picking and rotating a new one when needed.
+
 
 export default defineEventHandler(async event => {
 
@@ -62,7 +67,6 @@ export default defineEventHandler(async event => {
       },
     });
 
-
     if (!publishedCount) {
       return null;
     }
@@ -76,8 +80,8 @@ export default defineEventHandler(async event => {
       },
     });
 
-    await Promise.all(previouslyFeatured.map(idea => app.omaniIdeas.dbo.updateQuery({
-      resourceId: idea._id,
+    await Promise.all(previouslyFeatured.map(it => app.omaniIdeas.dbo.updateQuery({
+      resourceId: it._id,
       query: {
         $unset: {
           featuredOn: 1,

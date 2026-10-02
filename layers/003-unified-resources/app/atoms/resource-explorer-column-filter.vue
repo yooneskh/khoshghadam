@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders the filter popover
+// for one resource table column.
+
+
 /* interface */
 
 const props = defineProps({
@@ -204,82 +210,88 @@ watchImmediate(
     () => props.filter,
     filterType,
   ],
-  async ([filter]) => {
-
-    isSyncing = true;
-
-    form.value = {
-      operator: filter?.operator ?? (['collection', 'object'].includes(filterType.value) ? undefined : operators.value[0]?.value),
-      value: filter?.value,
-    };
-
-
-    await nextTick();
-    isSyncing = false;
-
-  },
+  handleFilterChange,
   {
     deep: true,
   },
 );
 
-watch(
-  form,
-  async value => {
-
-    if (isSyncing) {
-      return;
-    }
+watch(form, handleFormChange, {
+  deep: true,
+});
 
 
-    const hasValue = ['collection', 'object'].includes(filterType.value) || value.value === false || value.value === 0 || !!value.value;
+async function handleFilterChange([filter]) {
 
-    if (!hasValue) {
-      emit('clear');
-      return;
-    }
+  isSyncing = true;
 
 
-    const operator = operators.value.find(it => it.value === value.operator);
-    const currentValue = value.value;
-    let displayValue = currentValue;
+  const isCollectionOrObject = [
+    'collection',
+    'object',
+  ].includes(filterType.value);
+
+  form.value = {
+    operator: filter?.operator ?? (isCollectionOrObject ? undefined : operators.value[0]?.value),
+    value: filter?.value,
+  };
 
 
-    if (['resource', 'resource-array'].includes(filterType.value)) {
+  await nextTick();
+  isSyncing = false;
 
-      const resource = await retrieveResource({
-        resourcePath: resourcePath.value,
-        id: currentValue,
-        options: {
-          silent: true,
-        },
-      });
+}
 
+async function handleFormChange(value) {
 
-      if (form.value.value !== currentValue) {
-        return;
-      }
+  if (isSyncing) {
+    return;
+  }
 
 
-      displayValue = resource.name || truncateMiddle(resource._id);
+  const hasValue = ['collection', 'object'].includes(filterType.value) || value.value === false || value.value === 0 || !!value.value;
 
-    }
+  if (!hasValue) {
+    emit('clear');
+    return;
+  }
 
 
-    emit('apply', {
-      operator: value.operator,
-      operatorLabel: operator?.label,
-      value: currentValue,
-      inputValue: currentValue,
-      displayValue,
+  const operator = operators.value.find(it => it.value === value.operator);
+  const currentValue = value.value;
+  let displayValue = currentValue;
+
+
+  if (['resource', 'resource-array'].includes(filterType.value)) {
+
+    const resource = await retrieveResource({
+      resourcePath: resourcePath.value,
+      id: currentValue,
+      options: {
+        silent: true,
+      },
     });
 
-  },
-  {
-    deep: true,
-  },
-);
 
+    if (form.value.value !== currentValue) {
+      return;
+    }
+
+
+    displayValue = resource.name || truncateMiddle(resource._id);
+
+  }
+
+
+  emit('apply', {
+    operator: value.operator,
+    operatorLabel: operator?.label,
+    value: currentValue,
+    inputValue: currentValue,
+    displayValue,
+  });
+
+}
 
 function getValueField() {
   if (['resource', 'resource-array'].includes(filterType.value)) {
@@ -356,6 +368,7 @@ function getValueField() {
 
     <template v-if="filter">
       <u-button
+        variant="subtle"
         color="primary"
         size="xs"
         icon="lucide:filter"

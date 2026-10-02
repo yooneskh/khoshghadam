@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Counts authorization roles
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceCount({

@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Frames dashboard pages
+// with the admin header and navigation bar.
+
+
 /* seo */
 
 useSeoMeta({
@@ -7,10 +13,28 @@ useSeoMeta({
 });
 
 
-/* navigation */
+/* user */
 
 const user = useUser();
 
+
+const userMenuItems = computed(() => {
+  return [
+    {
+      icon: 'lucide:user',
+      label: user.value?.name,
+      description: user.value?.username,
+    },
+    {
+      icon: 'lucide:log-out',
+      label: 'Logout',
+      color: 'error',
+    },
+  ];
+});
+
+
+/* navigation */
 
 const navigationItems = computed(() => {
   return [
@@ -192,20 +216,7 @@ const navigationItems = computed(() => {
 
           <div class="grow" />
 
-          <u-dropdown-menu
-            :ui="{ content: 'min-w-xs' }"
-            :items="[
-              {
-                icon: 'lucide:user',
-                label: user?.name,
-                description: user?.username,
-              },
-              {
-                color: 'error',
-                icon: 'lucide:log-out',
-                label: 'Logout',
-              },
-            ]">
+          <u-dropdown-menu :ui="{ content: 'min-w-xs' }" :items="userMenuItems">
             <u-button
               variant="subtle"
               icon="lucide:user"

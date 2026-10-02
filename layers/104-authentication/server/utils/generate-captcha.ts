@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Generates a random captcha code
+// and renders it as a base64 PNG image.
+
+
 import sharp from 'sharp';
 
 
@@ -11,6 +18,7 @@ function createCaptchaCode() {
 
   let code = '';
 
+
   for (let index = 0; index < CAPTCHA_LENGTH; index++) {
     code += CAPTCHA_ALPHABET[Math.floor(Math.random() * CAPTCHA_ALPHABET.length)]!;
   }
@@ -20,7 +28,6 @@ function createCaptchaCode() {
 
 }
 
-
 function createCaptchaSvg(code: string) {
 
   const characters = code.split('').map((character, index) => {
@@ -29,16 +36,20 @@ function createCaptchaSvg(code: string) {
     const y = 34 + (Math.random() * 10 - 5);
     const rotate = Math.random() * 30 - 15;
 
+
     return `<text x="${x}" y="${y}" transform="rotate(${rotate} ${x} ${y})" fill="#1f2937" font-size="28" font-family="monospace" font-weight="700">${character}</text>`;
 
   }).join('');
 
-  const lines = Array.from({ length: 16 }, () => {
+  const lines = Array.from({
+    length: 16,
+  }, () => {
 
     const x1 = Math.random() * CAPTCHA_WIDTH;
     const y1 = Math.random() * CAPTCHA_HEIGHT;
     const x2 = Math.random() * CAPTCHA_WIDTH;
     const y2 = Math.random() * CAPTCHA_HEIGHT;
+
 
     return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#212121" stroke-width="1"/>`;
 
@@ -55,11 +66,10 @@ function createCaptchaSvg(code: string) {
 
 }
 
-
 export async function generateCaptcha() {
 
   const code = createCaptchaCode();
-  const image = await sharp(Buffer.from(createCaptchaSvg(code))).png().toBuffer().then(buffer => buffer.toString('base64'));
+  const image = await sharp(Buffer.from(createCaptchaSvg(code))).png().toBuffer().then(it => it.toString('base64'));
 
 
   return {

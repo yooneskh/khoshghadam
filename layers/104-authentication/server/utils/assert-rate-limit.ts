@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Rejects a request with 429
+// when its route and IP exceed an in-memory request limit.
+
 
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
 

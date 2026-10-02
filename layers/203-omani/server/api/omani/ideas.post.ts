@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Publishes a new omani idea
+// for the signed-in user.
+
 
 export default defineEventHandler(async event => {
 

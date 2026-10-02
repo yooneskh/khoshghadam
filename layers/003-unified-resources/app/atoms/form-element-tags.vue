@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders a tags input
+// for a tags form field.
+
+
 /* interface */
 
 const props = defineProps({

@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Shows a captcha image with a refresh button
+// and binds its id and typed code.
+
+
 /* interface */
 
 const captchaId = defineModel('id', {
@@ -60,7 +66,8 @@ defineExpose({
       <u-button
         variant="subtle"
         icon="lucide:refresh-ccw"
-        @click="refresh"
+        loading-auto
+        @click="refresh()"
       />
 
     </div>

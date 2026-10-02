@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Configures the base app layer
+// on top of nuxt-unified-ui.
+
+
 import { pathRelativeToBase } from 'nuxt-unified-ui';
 
 

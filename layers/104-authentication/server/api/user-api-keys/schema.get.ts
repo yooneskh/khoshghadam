@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Returns the user API keys schema
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceSchema({

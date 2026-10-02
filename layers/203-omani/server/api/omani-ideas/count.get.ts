@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Counts omani ideas
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceCount({

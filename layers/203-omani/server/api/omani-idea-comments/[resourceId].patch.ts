@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Updates one omani idea comment
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceUpdate({

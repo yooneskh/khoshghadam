@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Deletes an omani idea comment
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceDelete({

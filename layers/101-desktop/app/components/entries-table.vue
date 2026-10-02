@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders a selectable list of icon entries
+// as a single-column name table.
+
+
 /* interface */
 
 const props = defineProps({

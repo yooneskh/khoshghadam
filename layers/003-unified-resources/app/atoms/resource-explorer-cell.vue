@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders one resource field value
+// inside a resource explorer table cell.
+
+
 /* interface */
 
 const props = defineProps({
@@ -25,8 +31,8 @@ import ResourceExplorerCellRef from './resource-explorer-cell-ref.vue';
 import { launchTableDialog } from '../libs/launch-table-dialog';
 
 
-function handleViewItems() {
-  launchTableDialog({
+async function handleViewItems() {
+  await launchTableDialog({
     icon: 'lucide:list',
     title: 'View Items',
     subtitle: 'View items of this field',

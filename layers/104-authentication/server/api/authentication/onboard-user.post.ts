@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Lets an admin create a user with a password,
+// role, and permissions, rolling back on failure.
+
 
 export default defineEventHandler(async event => {
 
@@ -52,6 +57,7 @@ export default defineEventHandler(async event => {
 
   const passwordHash = await hashPassword(body.password);
 
+
   let user: any;
   let userPassword: any;
 
@@ -100,7 +106,7 @@ export default defineEventHandler(async event => {
     }
 
     if (userPassword) {
-      app.userPasswords.dbo.delete({
+      await app.userPasswords.dbo.delete({
         resourceId: userPassword._id,
       });
     }

@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Lets an admin set a new password for a user
+// and revoke their old passwords and tokens.
+
 
 export default defineEventHandler(async event => {
 
@@ -23,8 +28,8 @@ export default defineEventHandler(async event => {
 
   if (!user) {
     throw createError({
-      status: 404,
-      statusText: 'User not found.',
+      statusCode: 404,
+      statusMessage: 'user not found',
     });
   }
 

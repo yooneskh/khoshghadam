@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Streams a stored media file
+// from the media directory in development.
+
+
 import { access } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import { relative, resolve } from 'node:path';

@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Issues an authentication token
+// after checking the login credentials.
+
 
 export default defineEventHandler(async event => {
 

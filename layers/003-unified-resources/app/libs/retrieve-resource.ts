@@ -1,7 +1,14 @@
+
+/* responsibility */
+
+// Retrieves resource schemas and documents
+// through the preemptive cache.
+
+
 import { preemptCache, evictCache } from './preemptive-cache';
 
 
-export async function retrieveResourceSchema(args: { resourcePath: string; }) {
+export async function retrieveResourceSchema(args: { resourcePath: string }) {
   return preemptCache({
     key: `--unified-resources-resource-schema-${args.resourcePath}--`,
     run: async () => {
@@ -10,7 +17,7 @@ export async function retrieveResourceSchema(args: { resourcePath: string; }) {
   });
 }
 
-export async function retrieveResource(args: { resourcePath: string; id: string; options: any; }) {
+export async function retrieveResource(args: { resourcePath: string, id: string, options?: any }) {
   return preemptCache({
     key: `--unified-resources-resource-${args.resourcePath}-${args.id}--`,
     run: async () => {
@@ -19,7 +26,7 @@ export async function retrieveResource(args: { resourcePath: string; id: string;
   });
 }
 
-export async function evictResource(args: { resourcePath: string; id: string; }) {
+export async function evictResource(args: { resourcePath: string, id: string }) {
   return evictCache({
     key: `--unified-resources-resource-${args.resourcePath}-${args.id}--`,
   });

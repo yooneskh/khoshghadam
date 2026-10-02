@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Resolves the requesting user from its auth token or API key,
+// optionally filling in the user's effective permissions.
+
 
 export async function assertUser(args: { event: H3Event; fillPermissions?: boolean }) {
 
@@ -133,12 +138,10 @@ export async function assertUser(args: { event: H3Event; fillPermissions?: boole
         },
       });
 
-      filledUser.permissions = [
-        ...new Set([
-          ...permissions,
-          ...authorizationRoles.map(it => it.permissions).flat(),
-        ]),
-      ];
+      filledUser.permissions = radUnique([
+        ...permissions,
+        ...authorizationRoles.map(it => it.permissions).flat(),
+      ]);
 
     }
 

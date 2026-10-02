@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Shows the dashboard landing page
+// with a welcome placeholder.
+
+
 /* page */
 
 definePageMeta({
@@ -25,12 +31,10 @@ useSeoMeta({
 
 
 <template>
-  <div>
-    <u-empty
-      variant="naked"
-      icon="lucide:layout-dashboard"
-      title="Dashboard"
-      description="Welcome to the dashboard"
-    />
-  </div>
+  <u-empty
+    variant="naked"
+    icon="lucide:layout-dashboard"
+    title="Dashboard"
+    description="Welcome to the dashboard"
+  />
 </template>

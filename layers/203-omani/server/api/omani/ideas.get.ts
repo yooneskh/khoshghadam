@@ -1,4 +1,10 @@
 
+/* responsibility */
+
+// Lists published ideas for the public board
+// with search, sorting, and paging,
+// marking the ones the caller voted for.
+
 
 function getIdeasSort(sort: string) {
   if (sort === 'new') {
@@ -24,7 +30,7 @@ export default defineEventHandler(async event => {
   const sort = typeof query.sort === 'string' ? query.sort : 'hot';
   const search = typeof query.q === 'string' ? query.q : '';
   const skip = Math.max(0, Math.trunc(Number(query.skip ?? 0)) || 0);
-  const limit = Math.min(50, Math.max(1, Math.trunc(Number(query.limit ?? 30)) || 30));
+  const limit = radClamp(Math.trunc(Number(query.limit ?? 30)) || 30, 1, 50);
 
 
   const filter: Record<string, unknown> = {

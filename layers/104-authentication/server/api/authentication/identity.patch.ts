@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Updates the signed-in user's
+// own profile name.
+
 
 export default defineEventHandler(async event => {
 

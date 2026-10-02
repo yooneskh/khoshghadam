@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Lists one page of a resource
+// with filter chips and sortable headers.
+
+
 /* interface */
 
 const props = defineProps({
@@ -16,7 +22,7 @@ import { useResourceName } from '../libs/use-resource-name';
 import { useResourceMeta } from '../libs/use-resource-meta';
 
 
-const itemsPerPage = ref(20);
+const itemsPerPage = ref(25);
 const currentPage = ref(1);
 const cellRefreshKey = ref(0);
 const sortedColumn = ref('createdAt');
@@ -77,10 +83,7 @@ const { data: resourcesCountData, pending: isResourcesCountPending, refresh: ref
 );
 
 
-watch(
-  resourcePath,
-  handleResourcePathChange,
-);
+watch(resourcePath, handleResourcePathChange);
 
 
 function handleResourcePathChange() {
@@ -120,17 +123,8 @@ function handleFilterApply(column, value) {
 }
 
 function handleFilterClear(column) {
-
-  const nextFilters = {
-    ...filters.value,
-  };
-
-  delete nextFilters[column];
-
-
-  filters.value = nextFilters;
+  filters.value = radOmit(filters.value, [column]);
   currentPage.value = 1;
-
 }
 
 function handleFiltersClear() {
@@ -153,7 +147,7 @@ function getFilterLabel(item) {
     return `${column.header} ${operator}`;
   }
   else if (column.type === 'date' || column.labelFormat) {
-    return `${column.header} ${operator} ${new Date(filter.value).toLocaleDateString()}`;
+    return `${column.header} ${operator} ${formatDate(filter.value, column.labelFormat === 'default' ? undefined : column.labelFormat)}`;
   }
   else if (filter.displayValue === true || filter.displayValue === false) {
     return `${column.header} ${operator} ${filter.displayValue ? 'True' : 'False'}`;
@@ -209,9 +203,10 @@ defineExpose({
         </template>
 
         <u-button
+          variant="subtle"
           size="xs"
           label="Clear all"
-          @click="handleFiltersClear"
+          @click="handleFiltersClear()"
         />
 
       </template>
@@ -224,14 +219,7 @@ defineExpose({
 
     </div>
 
-    <un-table
-      :columns="columns"
-      :loading="isResourcesPending || isResourcesCountPending"
-      :data="resourcesData"
-      :total-items="resourcesCountData"
-      v-model:items-per-page="itemsPerPage"
-      v-model:current-page="currentPage"
-      :actions="props.actions">
+    <un-table :columns="columns" :loading="isResourcesPending || isResourcesCountPending" :data="resourcesData" :total-items="resourcesCountData" v-model:items-per-page="itemsPerPage" v-model:current-page="currentPage" :actions="props.actions">
 
       <template v-for="column in columns" :key="column.accessorKey" #[column.accessorKey+'-header']>
         <div class="flex items-center gap-1">
@@ -242,6 +230,7 @@ defineExpose({
 
           <template v-if="sortedColumn !== column.accessorKey">
             <u-button
+              variant="subtle"
               size="xs"
               icon="lucide:arrow-up-down"
               :aria-label="`Sort ${column.accessorKey} descending`"
@@ -251,6 +240,7 @@ defineExpose({
 
           <template v-else-if="sortDirection === 'desc'">
             <u-button
+              variant="subtle"
               color="primary"
               size="xs"
               icon="lucide:arrow-down"
@@ -261,6 +251,7 @@ defineExpose({
 
           <template v-else>
             <u-button
+              variant="subtle"
               color="primary"
               size="xs"
               icon="lucide:arrow-up"
@@ -285,7 +276,7 @@ defineExpose({
           :column="column"
           :row="row.original"
           :data="row.original[column.accessorKey]"
-          @resource:update="refreshAll"
+          @resource:update="refreshAll()"
         />
       </template>
 

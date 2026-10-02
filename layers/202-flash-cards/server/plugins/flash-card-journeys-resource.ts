@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Registers the flash card journeys resource
+// on the unified app registry.
+
 
 const { schema, type, inferred } = parseSchema({
   'name': 'string',

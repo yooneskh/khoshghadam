@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Creates a user
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceCreate({

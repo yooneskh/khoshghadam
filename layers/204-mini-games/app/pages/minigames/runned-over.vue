@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Runs the Runned Over minigame,
+// a 3D dodge game on a floating platform.
+
+
 /* page */
 
 definePageMeta({
@@ -109,14 +115,11 @@ const overTitle = computed(() => {
 /* input */
 
 const gameSurfaceEl = useTemplateRef('gameSurfaceEl');
-
-
 const documentVisibility = useDocumentVisibility();
 const isCoarsePointer = useMediaQuery('(pointer: coarse)');
 const isHoverless = useMediaQuery('(hover: none)');
 const { w, a, s, d, arrowup, arrowdown, arrowleft, arrowright } = useMagicKeys();
 const { lock: lockPointer, unlock: unlockPointer, element: pointerLockElement } = usePointerLock(gameSurfaceEl);
-
 
 const moveStick = ref({
   active: false,
@@ -133,7 +136,6 @@ const lookStick = ref({
   knobX: 0,
   knobY: 0,
 });
-
 
 const touchStick = {
   radius: 54,
@@ -172,20 +174,11 @@ const fogFar = computed(() => {
 });
 
 
-useEventListener(
-  document,
-  'mousemove',
-  handleMouseLook,
-);
+useEventListener(document, 'mousemove', handleMouseLook);
 
-useEventListener(
-  document,
-  'keydown',
-  handlePlayKeydown,
-  {
-    passive: false,
-  },
-);
+useEventListener(document, 'keydown', handlePlayKeydown, {
+  passive: false,
+});
 
 
 function readMoveInput() {
@@ -442,407 +435,11 @@ function handleLookPointerUp(event) {
 
 /* world */
 
-const world = {
-  platformWidth: 36,
-  platformDepth: 18,
-  platformHalfWidth: 18,
-  platformHalfDepth: 9,
-  spawnX: 21,
-  moveSpeed: 6.35,
-  gravity: 24,
-  playerHalfWidth: 0.22,
-  playerHalfDepth: 0.18,
-  lanes: [
-    -7.2,
-    -4.32,
-    -1.44,
-    1.44,
-    4.32,
-    7.2,
-  ],
-  vehicleColors: [
-    '#7a2e2a',
-    '#2b2b2b',
-    '#5c4a32',
-    '#2f4454',
-    '#4a3b2f',
-    '#3d2a33',
-  ],
-};
-
-const lamps = [
-  {
-    id: 'lamp-1',
-    x: -16.4,
-    z: -7.6,
-  },
-  {
-    id: 'lamp-2',
-    x: 16.4,
-    z: -7.6,
-  },
-  {
-    id: 'lamp-3',
-    x: -16.4,
-    z: 7.6,
-  },
-  {
-    id: 'lamp-4',
-    x: 16.4,
-    z: 7.6,
-  },
-  {
-    id: 'lamp-5',
-    x: 0,
-    z: -8.2,
-  },
-  {
-    id: 'lamp-6',
-    x: 5.4,
-    z: 8.2,
-  },
-];
-
-const clouds = [
-  {
-    id: 'cloud-1',
-    position: [
-      10,
-      11,
-      -14,
-    ],
-    size: [
-      3.4,
-      0.7,
-      1.8,
-    ],
-  },
-  {
-    id: 'cloud-2',
-    position: [
-      11.6,
-      11.5,
-      -13.2,
-    ],
-    size: [
-      1.8,
-      0.55,
-      1.3,
-    ],
-  },
-  {
-    id: 'cloud-3',
-    position: [
-      -14,
-      10.2,
-      8,
-    ],
-    size: [
-      2.8,
-      0.6,
-      1.6,
-    ],
-  },
-  {
-    id: 'cloud-4',
-    position: [
-      -12.6,
-      10.7,
-      8.6,
-    ],
-    size: [
-      1.5,
-      0.45,
-      1.1,
-    ],
-  },
-  {
-    id: 'cloud-5',
-    position: [
-      4,
-      12.4,
-      16,
-    ],
-    size: [
-      3.8,
-      0.65,
-      2,
-    ],
-  },
-];
-
-const skyTowers = [
-  {
-    id: 'tower-1',
-    position: [
-      -24,
-      4.2,
-      -12,
-    ],
-    size: [
-      1.4,
-      8.2,
-      1.4,
-    ],
-    color: '#6d736e',
-  },
-  {
-    id: 'tower-2',
-    position: [
-      -22.4,
-      2.6,
-      -10.6,
-    ],
-    size: [
-      1,
-      5.1,
-      1,
-    ],
-    color: '#7d6f62',
-  },
-  {
-    id: 'tower-3',
-    position: [
-      23,
-      5.1,
-      11,
-    ],
-    size: [
-      1.6,
-      9.8,
-      1.3,
-    ],
-    color: '#5e6866',
-  },
-  {
-    id: 'tower-4',
-    position: [
-      24.6,
-      3.4,
-      12.4,
-    ],
-    size: [
-      0.9,
-      6.4,
-      0.9,
-    ],
-    color: '#8a7b6a',
-  },
-  {
-    id: 'tower-5',
-    position: [
-      -8,
-      3.8,
-      24,
-    ],
-    size: [
-      1.2,
-      7.4,
-      1.2,
-    ],
-    color: '#71786f',
-  },
-];
-
-const sunChunks = [
-  {
-    id: 'sun-core',
-    position: [
-      18,
-      16,
-      -22,
-    ],
-    size: [
-      2.4,
-      2.4,
-      2.4,
-    ],
-  },
-  {
-    id: 'sun-a',
-    position: [
-      19.6,
-      16.2,
-      -21.4,
-    ],
-    size: [
-      1.1,
-      1.1,
-      1.1,
-    ],
-  },
-  {
-    id: 'sun-b',
-    position: [
-      17,
-      17.2,
-      -22.6,
-    ],
-    size: [
-      1,
-      1,
-      1,
-    ],
-  },
-  {
-    id: 'sun-c',
-    position: [
-      16.8,
-      15.1,
-      -21.2,
-    ],
-    size: [
-      0.85,
-      0.85,
-      0.85,
-    ],
-  },
-];
-
-const skyIslands = [
-  {
-    id: 'island-1',
-    position: [
-      20,
-      7.2,
-      -17,
-    ],
-    size: [
-      3.4,
-      0.42,
-      2.5,
-    ],
-    color: '#b7c4b3',
-  },
-  {
-    id: 'island-2',
-    position: [
-      -18,
-      5.4,
-      -20,
-    ],
-    size: [
-      2.6,
-      0.36,
-      2.1,
-    ],
-    color: '#c3b49c',
-  },
-  {
-    id: 'island-3',
-    position: [
-      8,
-      9.5,
-      22,
-    ],
-    size: [
-      4.1,
-      0.4,
-      2.8,
-    ],
-    color: '#aeb9b4',
-  },
-  {
-    id: 'island-4',
-    position: [
-      -22,
-      8.1,
-      14,
-    ],
-    size: [
-      2.2,
-      0.34,
-      1.8,
-    ],
-    color: '#c9c2b4',
-  },
-  {
-    id: 'island-5',
-    position: [
-      26,
-      4.8,
-      6,
-    ],
-    size: [
-      1.8,
-      0.3,
-      1.6,
-    ],
-    color: '#9eaaa6',
-  },
-];
-
-const laneDashes = buildLaneDashes();
-const edgeTeeth = buildEdgeTeeth();
+import { world, lamps, clouds, skyTowers, sunChunks, skyIslands, laneDashes, edgeTeeth } from '../../libs/runned-over-world';
 
 
 const skyGroup = shallowRef();
 
-
-function buildLaneDashes() {
-
-  const dashes = [];
-
-  const zs = [
-    -5.76,
-    -2.88,
-    0,
-    2.88,
-    5.76,
-  ];
-
-  for (const z of zs) {
-    for (let x = -16.2; x <= 16.2; x += 1.9) {
-      dashes.push({
-        id: `dash-${z}-${x}`,
-        x,
-        z,
-      });
-    }
-  }
-
-
-  return dashes;
-
-}
-
-function buildEdgeTeeth() {
-
-  const teeth = [];
-  let index = 0;
-
-  for (let x = -17.5; x <= 17.5; x += 0.72) {
-
-    teeth.push({
-      id: `tooth-n-${index}`,
-      position: [
-        x,
-        0.32,
-        -8.86,
-      ],
-      color: index % 2 === 0 ? '#e07a2f' : '#1c1c1c',
-    });
-
-    index += 1;
-
-    teeth.push({
-      id: `tooth-s-${index}`,
-      position: [
-        x,
-        0.32,
-        8.86,
-      ],
-      color: index % 2 === 0 ? '#e07a2f' : '#1c1c1c',
-    });
-
-    index += 1;
-
-  }
-
-
-  return teeth;
-
-}
 
 function updateSky(elapsed) {
 
@@ -884,10 +481,10 @@ function getMoveAxes() {
 
 
   const elements = camera.matrixWorld.elements;
-  let rightX = elements[0];
-  let rightZ = elements[2];
-  let forwardX = -elements[8];
-  let forwardZ = -elements[10];
+  const rightX = elements[0];
+  const rightZ = elements[2];
+  const forwardX = -elements[8];
+  const forwardZ = -elements[10];
   const rightLength = Math.hypot(rightX, rightZ);
   const forwardLength = Math.hypot(forwardX, forwardZ);
 
@@ -936,13 +533,11 @@ function updatePlayer(step, elapsed) {
     sim.playerY = 0;
   }
   else {
-
     sim.playerY -= world.gravity * step;
 
     if (sim.playerY < -10) {
       endRun('fall');
     }
-
   }
 
 
@@ -964,14 +559,12 @@ function updatePlayer(step, elapsed) {
 
 
   if (moving && sim.playerY >= 0 && phase.value === 'playing') {
-
     sim.dustAcc += step;
 
     if (sim.dustAcc > 0.11) {
       sim.dustAcc = 0;
       burstCrumbs(sim.playerX, 0.08, sim.playerZ, 2, '#c4b8a5', 1.1, false);
     }
-
   }
 
 }
@@ -1049,7 +642,6 @@ function updateHazards(step) {
 
 
   for (const hazard of hazards.value) {
-
     hazard.x += hazard.speed * step;
 
     if (hazard.mesh) {
@@ -1059,7 +651,6 @@ function updateHazards(step) {
     if (Math.abs(hazard.x) < world.spawnX + 2) {
       keep.push(hazard);
     }
-
   }
 
 
@@ -1094,14 +685,12 @@ function spawnTraffic(step, rate) {
 function isPlayerHit() {
 
   for (const hazard of hazards.value) {
-
     const overlapX = Math.abs(sim.playerX - hazard.x) < world.playerHalfWidth + hazard.length * 0.5;
     const overlapZ = Math.abs(sim.playerZ - hazard.z) < world.playerHalfDepth + hazard.width * 0.5;
 
     if (overlapX && overlapZ && sim.playerY > -0.15) {
       return true;
     }
-
   }
 
 
@@ -1161,7 +750,6 @@ function burstCrumbs(x, y, z, count, color, speed, spark) {
 
 
   for (let index = 0; index < count; index += 1) {
-
     const angle = Math.random() * Math.PI * 2;
     const lift = 2.4 + Math.random() * 5.5;
 
@@ -1179,7 +767,6 @@ function burstCrumbs(x, y, z, count, color, speed, spark) {
       spark,
       mesh: null,
     });
-
   }
 
 
@@ -1204,7 +791,6 @@ function updateCrumbs(step) {
 
 
   for (const crumb of crumbs.value) {
-
     crumb.vy -= 22 * step;
     crumb.x += crumb.vx * step;
     crumb.y += crumb.vy * step;
@@ -1227,7 +813,6 @@ function updateCrumbs(step) {
     if (crumb.life > 0) {
       keep.push(crumb);
     }
-
   }
 
 
@@ -1309,12 +894,7 @@ function updateBoothCamera(step, elapsed) {
   const frameHeight = portrait ? 3.7 : 3.25;
   const verticalFov = (fov * Math.PI) / 180;
   const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * aspect);
-
-  const distance = Math.max(
-    (frameWidth * 0.5) / Math.tan(horizontalFov * 0.5),
-    (frameHeight * 0.5) / Math.tan(verticalFov * 0.5),
-  ) * 1.08;
-
+  const distance = Math.max((frameWidth * 0.5) / Math.tan(horizontalFov * 0.5), (frameHeight * 0.5) / Math.tan(verticalFov * 0.5)) * 1.08;
   const targetX = sway;
   const targetY = lookY + (portrait ? 0.42 : 0.16) + breathe;
   const targetZ = lookZ - distance;
@@ -1339,58 +919,12 @@ function updateBoothCamera(step, elapsed) {
 
 /* audio */
 
-let audioContext;
-
-
-function getAudioContext() {
-
-  if (import.meta.server) {
-    return null;
-  }
-
-
-  if (!audioContext) {
-    audioContext = new AudioContext();
-  }
-
-
-  return audioContext;
-
-}
-
-function playBeep(frequency, duration, gainValue) {
-
-  const context = getAudioContext();
-
-  if (!context) {
-    return;
-  }
-
-
-  if (context.state === 'suspended') {
-    context.resume();
-  }
-
-
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
-
-  oscillator.type = 'square';
-  oscillator.frequency.value = frequency;
-  gain.gain.value = gainValue;
-
-  oscillator.connect(gain);
-  gain.connect(context.destination);
-  oscillator.start();
-  gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + duration);
-  oscillator.stop(context.currentTime + duration);
-
-}
+import { playBeep, closeAudioContext } from '../../libs/runned-over-audio';
 
 
 /* signs */
 
-import { CanvasTexture, SRGBColorSpace } from 'three';
+import { createSign, fillParagraph, paintPanel, paintButton } from '../../libs/runned-over-signs';
 
 
 const boardSign = shallowRef(null);
@@ -1417,7 +951,6 @@ watchImmediate(
   paintAllSigns,
 );
 
-
 onMounted(() => {
   boardSign.value = createSign(1024, 640);
   scoreSign.value = createSign(512, 256);
@@ -1430,78 +963,6 @@ onMounted(() => {
   paintAllSigns();
 });
 
-
-function createSign(width, height) {
-
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-
-
-  const ctx = canvas.getContext('2d');
-  const texture = new CanvasTexture(canvas);
-  texture.colorSpace = SRGBColorSpace;
-  texture.needsUpdate = true;
-
-
-  return {
-    canvas,
-    ctx,
-    texture,
-  };
-
-}
-
-function fillParagraph(ctx, text, x, y, maxWidth, lineHeight) {
-
-  const words = text.split(' ');
-  let line = '';
-  let cursorY = y;
-
-
-  for (const word of words) {
-
-    const next = line ? `${line} ${word}` : word;
-
-    if (ctx.measureText(next).width > maxWidth && line) {
-      ctx.fillText(line, x, cursorY);
-      line = word;
-      cursorY += lineHeight;
-    }
-    else {
-      line = next;
-    }
-
-  }
-
-
-  if (line) {
-    ctx.fillText(line, x, cursorY);
-  }
-
-}
-
-function paintPanel(sign, background, draw) {
-
-  if (!sign) {
-    return;
-  }
-
-
-  const { ctx, canvas, texture } = sign;
-
-
-  ctx.fillStyle = background;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = '#e07a2f';
-  ctx.lineWidth = Math.max(10, canvas.height * 0.045);
-  ctx.strokeRect(14, 14, canvas.width - 28, canvas.height - 28);
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  draw(ctx, canvas);
-  texture.needsUpdate = true;
-
-}
 
 function paintBoard() {
   paintPanel(boardSign.value, '#161410', (ctx, canvas) => {
@@ -1574,30 +1035,6 @@ function paintBanner() {
   });
 }
 
-function paintButton(sign, label, hot) {
-
-  if (!sign) {
-    return;
-  }
-
-
-  const { ctx, canvas, texture } = sign;
-
-
-  ctx.fillStyle = hot ? '#3d8a3a' : '#1f4d1d';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = '#ffe08a';
-  ctx.lineWidth = 18;
-  ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#fff6d0';
-  ctx.font = '900 84px ui-sans-serif, system-ui';
-  ctx.fillText(label, canvas.width / 2, canvas.height / 2 + 4);
-  texture.needsUpdate = true;
-
-}
-
 function paintAllSigns() {
   paintBoard();
   paintScore();
@@ -1631,12 +1068,6 @@ function handleWorldButtonLeave(name) {
     document.body.style.cursor = '';
   }
 
-}
-
-function handleBackToLineup() {
-  navigateTo({
-    name: 'mini-games.list',
-  });
 }
 
 
@@ -1721,8 +1152,7 @@ function endRun(reason) {
 onBeforeUnmount(() => {
 
   unlockPointer();
-  audioContext?.close();
-  audioContext = undefined;
+  closeAudioContext();
 
 
   if (import.meta.client) {
@@ -1860,6 +1290,12 @@ async function handleReplay() {
   await handleStart();
 }
 
+function handleBackToLineup() {
+  navigateTo({
+    name: 'mini-games.list',
+  });
+}
+
 function handleSurfaceClick() {
   if (phase.value === 'playing' && !isTouchPlay.value && !isPointerLocked.value) {
     lockPointer();
@@ -1871,20 +1307,23 @@ function handleSurfaceClick() {
 
 <template>
   <window-base pito="game-controller" title="Runned Over">
-    <div
-      ref="gameSurfaceEl"
-      class="relative h-full min-h-[28rem] overflow-hidden touch-none select-none overscroll-none"
-      :style="{
-        backgroundColor: sceneTint,
-      }"
-      @click="handleSurfaceClick">
+    <div ref="gameSurfaceEl" class="relative h-full min-h-[28rem] overflow-hidden touch-none select-none overscroll-none" :style="{ backgroundColor: sceneTint }" @click="handleSurfaceClick()">
 
-      <TresCanvas shadows :clear-color="sceneTint" class="absolute inset-0" @ready="handleReady" @loop="handleLoop">
+      <tres-canvas shadows :clear-color="sceneTint" class="absolute inset-0" @ready="handleReady($event)" @loop="handleLoop($event)">
 
         <tres-perspective-camera
           ref="playerCamera"
-          :args="[58, 1, 0.12, 160]"
-          :position="[2.4, 1.7, -3.1]"
+          :args="[
+            58,
+            1,
+            0.12,
+            160,
+          ]"
+          :position="[
+            2.4,
+            1.7,
+            -3.1,
+          ]"
         />
 
         <tres-fog
@@ -1906,7 +1345,11 @@ function handleSurfaceClick() {
         <tres-ambient-light :intensity="0.22" />
 
         <tres-directional-light
-          :position="[16, 24, 10]"
+          :position="[
+            16,
+            24,
+            10,
+          ]"
           :intensity="3.15"
           :cast-shadow="true"
           :shadow-mapSize-width="2048"
@@ -1920,7 +1363,13 @@ function handleSurfaceClick() {
           :shadow-camera-bottom="-16"
         />
 
-        <tres-mesh :position="[0, -0.18, 0]" :receive-shadow="true">
+        <tres-mesh
+          :position="[
+            0,
+            -0.18,
+            0,
+          ]"
+          :receive-shadow="true">
 
           <tres-box-geometry
             :args="[
@@ -1938,7 +1387,13 @@ function handleSurfaceClick() {
 
         </tres-mesh>
 
-        <tres-mesh :position="[0, 0, 0]" :receive-shadow="true">
+        <tres-mesh
+          :position="[
+            0,
+            0,
+            0,
+          ]"
+          :receive-shadow="true">
 
           <tres-box-geometry
             :args="[
@@ -1957,7 +1412,13 @@ function handleSurfaceClick() {
         </tres-mesh>
 
         <template v-for="dash in laneDashes" :key="dash.id">
-          <tres-mesh :position="[dash.x, 0.248, dash.z]" :receive-shadow="true">
+          <tres-mesh
+            :position="[
+              dash.x,
+              0.248,
+              dash.z,
+            ]"
+            :receive-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2005,7 +1466,13 @@ function handleSurfaceClick() {
               lamp.z,
             ]">
 
-            <tres-mesh :position="[0, 1.05, 0]" :cast-shadow="true">
+            <tres-mesh
+              :position="[
+                0,
+                1.05,
+                0,
+              ]"
+              :cast-shadow="true">
 
               <tres-box-geometry
                 :args="[
@@ -2023,7 +1490,13 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[0, 2.18, 0]" :cast-shadow="true">
+            <tres-mesh
+              :position="[
+                0,
+                2.18,
+                0,
+              ]"
+              :cast-shadow="true">
 
               <tres-box-geometry
                 :args="[
@@ -2048,7 +1521,14 @@ function handleSurfaceClick() {
 
         <tres-group ref="playerGroup">
 
-          <tres-mesh :position="[0, 0.74, 0]" :cast-shadow="true" :receive-shadow="true">
+          <tres-mesh
+            :position="[
+              0,
+              0.74,
+              0,
+            ]"
+            :cast-shadow="true"
+            :receive-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2066,7 +1546,13 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0.2, 0.96, 0]" :cast-shadow="true">
+          <tres-mesh
+            :position="[
+              0.2,
+              0.96,
+              0,
+            ]"
+            :cast-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2084,7 +1570,13 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0, 1.24, 0]" :cast-shadow="true">
+          <tres-mesh
+            :position="[
+              0,
+              1.24,
+              0,
+            ]"
+            :cast-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2102,7 +1594,12 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[-0.07, 1.28, 0.15]">
+          <tres-mesh
+            :position="[
+              -0.07,
+              1.28,
+              0.15,
+            ]">
 
             <tres-box-geometry
               :args="[
@@ -2122,7 +1619,12 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0.07, 1.28, 0.15]">
+          <tres-mesh
+            :position="[
+              0.07,
+              1.28,
+              0.15,
+            ]">
 
             <tres-box-geometry
               :args="[
@@ -2142,7 +1644,13 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[-0.12, 0.22, 0]" :cast-shadow="true">
+          <tres-mesh
+            :position="[
+              -0.12,
+              0.22,
+              0,
+            ]"
+            :cast-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2160,7 +1668,13 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0.12, 0.22, 0]" :cast-shadow="true">
+          <tres-mesh
+            :position="[
+              0.12,
+              0.22,
+              0,
+            ]"
+            :cast-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2201,7 +1715,13 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[hazard.length * 0.22, hazard.height * 0.28, 0]" :cast-shadow="true">
+            <tres-mesh
+              :position="[
+                hazard.length * 0.22,
+                hazard.height * 0.28,
+                0,
+              ]"
+              :cast-shadow="true">
 
               <tres-box-geometry
                 :args="[
@@ -2219,7 +1739,12 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[hazard.length * 0.48, -hazard.height * 0.12, hazard.width * 0.28]">
+            <tres-mesh
+              :position="[
+                hazard.length * 0.48,
+                -hazard.height * 0.12,
+                hazard.width * 0.28,
+              ]">
 
               <tres-box-geometry
                 :args="[
@@ -2239,7 +1764,12 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[hazard.length * 0.48, -hazard.height * 0.12, -hazard.width * 0.28]">
+            <tres-mesh
+              :position="[
+                hazard.length * 0.48,
+                -hazard.height * 0.12,
+                -hazard.width * 0.28,
+              ]">
 
               <tres-box-geometry
                 :args="[
@@ -2259,7 +1789,12 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[-hazard.length * 0.46, -hazard.height * 0.08, hazard.width * 0.26]">
+            <tres-mesh
+              :position="[
+                -hazard.length * 0.46,
+                -hazard.height * 0.08,
+                hazard.width * 0.26,
+              ]">
 
               <tres-box-geometry
                 :args="[
@@ -2279,7 +1814,12 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[-hazard.length * 0.46, -hazard.height * 0.08, -hazard.width * 0.26]">
+            <tres-mesh
+              :position="[
+                -hazard.length * 0.46,
+                -hazard.height * 0.08,
+                -hazard.width * 0.26,
+              ]">
 
               <tres-box-geometry
                 :args="[
@@ -2299,7 +1839,13 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[hazard.length * 0.18, -hazard.height * 0.38, hazard.width * 0.38]" :cast-shadow="true">
+            <tres-mesh
+              :position="[
+                hazard.length * 0.18,
+                -hazard.height * 0.38,
+                hazard.width * 0.38,
+              ]"
+              :cast-shadow="true">
 
               <tres-box-geometry
                 :args="[
@@ -2317,7 +1863,13 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[hazard.length * 0.18, -hazard.height * 0.38, -hazard.width * 0.38]" :cast-shadow="true">
+            <tres-mesh
+              :position="[
+                hazard.length * 0.18,
+                -hazard.height * 0.38,
+                -hazard.width * 0.38,
+              ]"
+              :cast-shadow="true">
 
               <tres-box-geometry
                 :args="[
@@ -2422,9 +1974,25 @@ function handleSurfaceClick() {
           </tres-mesh>
         </template>
 
-        <tres-group :position="[-3.35, 0, 8.08]" :rotation="[0, 0.38, 0]">
+        <tres-group
+          :position="[
+            -3.35,
+            0,
+            8.08,
+          ]"
+          :rotation="[
+            0,
+            0.38,
+            0,
+          ]">
 
-          <tres-mesh :position="[0, 1.15, 0]" :cast-shadow="true">
+          <tres-mesh
+            :position="[
+              0,
+              1.15,
+              0,
+            ]"
+            :cast-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2444,7 +2012,13 @@ function handleSurfaceClick() {
 
           <template v-if="scoreSign">
 
-            <tres-mesh :position="[0, 2.55, 0.12]" :cast-shadow="true">
+            <tres-mesh
+              :position="[
+                0,
+                2.55,
+                0.12,
+              ]"
+              :cast-shadow="true">
 
               <tres-box-geometry
                 :args="[
@@ -2462,7 +2036,12 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[0, 2.55, 0.21]">
+            <tres-mesh
+              :position="[
+                0,
+                2.55,
+                0.21,
+              ]">
 
               <tres-plane-geometry
                 :args="[
@@ -2482,9 +2061,25 @@ function handleSurfaceClick() {
 
         </tres-group>
 
-        <tres-group :position="[3.35, 0, 8.08]" :rotation="[0, -0.38, 0]">
+        <tres-group
+          :position="[
+            3.35,
+            0,
+            8.08,
+          ]"
+          :rotation="[
+            0,
+            -0.38,
+            0,
+          ]">
 
-          <tres-mesh :position="[0, 1.15, 0]" :cast-shadow="true">
+          <tres-mesh
+            :position="[
+              0,
+              1.15,
+              0,
+            ]"
+            :cast-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2504,7 +2099,13 @@ function handleSurfaceClick() {
 
           <template v-if="bestSign">
 
-            <tres-mesh :position="[0, 2.55, 0.12]" :cast-shadow="true">
+            <tres-mesh
+              :position="[
+                0,
+                2.55,
+                0.12,
+              ]"
+              :cast-shadow="true">
 
               <tres-box-geometry
                 :args="[
@@ -2522,7 +2123,12 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[0, 2.55, 0.21]">
+            <tres-mesh
+              :position="[
+                0,
+                2.55,
+                0.21,
+              ]">
 
               <tres-plane-geometry
                 :args="[
@@ -2542,7 +2148,13 @@ function handleSurfaceClick() {
 
         </tres-group>
 
-        <tres-mesh :position="[-5.6, 1.7, 0]" :cast-shadow="true">
+        <tres-mesh
+          :position="[
+            -5.6,
+            1.7,
+            0,
+          ]"
+          :cast-shadow="true">
 
           <tres-box-geometry
             :args="[
@@ -2560,7 +2172,13 @@ function handleSurfaceClick() {
 
         </tres-mesh>
 
-        <tres-mesh :position="[5.6, 1.7, 0]" :cast-shadow="true">
+        <tres-mesh
+          :position="[
+            5.6,
+            1.7,
+            0,
+          ]"
+          :cast-shadow="true">
 
           <tres-box-geometry
             :args="[
@@ -2578,7 +2196,13 @@ function handleSurfaceClick() {
 
         </tres-mesh>
 
-        <tres-mesh :position="[0, 3.38, 0]" :cast-shadow="true">
+        <tres-mesh
+          :position="[
+            0,
+            3.38,
+            0,
+          ]"
+          :cast-shadow="true">
 
           <tres-box-geometry
             :args="[
@@ -2598,7 +2222,12 @@ function handleSurfaceClick() {
 
         <template v-if="banner && bannerSign">
 
-          <tres-mesh :position="[0, 2.92, 0]">
+          <tres-mesh
+            :position="[
+              0,
+              2.92,
+              0,
+            ]">
 
             <tres-box-geometry
               :args="[
@@ -2616,7 +2245,12 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0, 2.92, 0.07]">
+          <tres-mesh
+            :position="[
+              0,
+              2.92,
+              0.07,
+            ]">
 
             <tres-plane-geometry
               :args="[
@@ -2632,7 +2266,17 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0, 2.92, -0.07]" :rotation="[0, Math.PI, 0]">
+          <tres-mesh
+            :position="[
+              0,
+              2.92,
+              -0.07,
+            ]"
+            :rotation="[
+              0,
+              Math.PI,
+              0,
+            ]">
 
             <tres-plane-geometry
               :args="[
@@ -2652,7 +2296,12 @@ function handleSurfaceClick() {
 
         <template v-else-if="playSign">
 
-          <tres-mesh :position="[0, 2.92, 0]">
+          <tres-mesh
+            :position="[
+              0,
+              2.92,
+              0,
+            ]">
 
             <tres-box-geometry
               :args="[
@@ -2670,7 +2319,12 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0, 2.92, 0.07]">
+          <tres-mesh
+            :position="[
+              0,
+              2.92,
+              0.07,
+            ]">
 
             <tres-plane-geometry
               :args="[
@@ -2686,7 +2340,17 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0, 2.92, -0.07]" :rotation="[0, Math.PI, 0]">
+          <tres-mesh
+            :position="[
+              0,
+              2.92,
+              -0.07,
+            ]"
+            :rotation="[
+              0,
+              Math.PI,
+              0,
+            ]">
 
             <tres-plane-geometry
               :args="[
@@ -2704,27 +2368,25 @@ function handleSurfaceClick() {
 
         </template>
 
-        <tres-group :position="[0, 0, 8.42]" :rotation="[0, Math.PI, 0]">
+        <tres-group
+          :position="[
+            0,
+            0,
+            8.42,
+          ]"
+          :rotation="[
+            0,
+            Math.PI,
+            0,
+          ]">
 
-          <tres-mesh :position="[-1.55, 1.2, 0]" :cast-shadow="true">
-
-            <tres-box-geometry
-              :args="[
-                0.3,
-                2.4,
-                0.3,
-              ]"
-            />
-
-            <tres-mesh-standard-material
-              color="#2a2420"
-              :roughness="0.7"
-              :metalness="0.08"
-            />
-
-          </tres-mesh>
-
-          <tres-mesh :position="[1.55, 1.2, 0]" :cast-shadow="true">
+          <tres-mesh
+            :position="[
+              -1.55,
+              1.2,
+              0,
+            ]"
+            :cast-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2742,7 +2404,38 @@ function handleSurfaceClick() {
 
           </tres-mesh>
 
-          <tres-mesh :position="[0, 0.42, 0.38]" :cast-shadow="true" :receive-shadow="true">
+          <tres-mesh
+            :position="[
+              1.55,
+              1.2,
+              0,
+            ]"
+            :cast-shadow="true">
+
+            <tres-box-geometry
+              :args="[
+                0.3,
+                2.4,
+                0.3,
+              ]"
+            />
+
+            <tres-mesh-standard-material
+              color="#2a2420"
+              :roughness="0.7"
+              :metalness="0.08"
+            />
+
+          </tres-mesh>
+
+          <tres-mesh
+            :position="[
+              0,
+              0.42,
+              0.38,
+            ]"
+            :cast-shadow="true"
+            :receive-shadow="true">
 
             <tres-box-geometry
               :args="[
@@ -2762,7 +2455,13 @@ function handleSurfaceClick() {
 
           <template v-if="boardSign">
 
-            <tres-mesh :position="[0, 2.12, 0.08]" :cast-shadow="true">
+            <tres-mesh
+              :position="[
+                0,
+                2.12,
+                0.08,
+              ]"
+              :cast-shadow="true">
 
               <tres-box-geometry
                 :args="[
@@ -2780,7 +2479,12 @@ function handleSurfaceClick() {
 
             </tres-mesh>
 
-            <tres-mesh :position="[0, 2.12, 0.17]">
+            <tres-mesh
+              :position="[
+                0,
+                2.12,
+                0.17,
+              ]">
 
               <tres-plane-geometry
                 :args="[
@@ -2799,7 +2503,18 @@ function handleSurfaceClick() {
           </template>
 
           <template v-if="phase === 'menu' && goSign">
-            <tres-group :position="[0, 0.78, 0.52]" :scale="hoveredWorldButton === 'go' ? 1.08 : 1" @click="handleStart" @pointerdown="handleWorldButtonEnter('go')" @pointerenter="handleWorldButtonEnter('go')" @pointerleave="handleWorldButtonLeave('go')" @pointerup="handleWorldButtonLeave('go')">
+            <tres-group
+              :position="[
+                0,
+                0.78,
+                0.52,
+              ]"
+              :scale="hoveredWorldButton === 'go' ? 1.08 : 1"
+              @click="handleStart()"
+              @pointerdown="handleWorldButtonEnter('go')"
+              @pointerenter="handleWorldButtonEnter('go')"
+              @pointerleave="handleWorldButtonLeave('go')"
+              @pointerup="handleWorldButtonLeave('go')">
 
               <tres-mesh :cast-shadow="true">
 
@@ -2820,7 +2535,12 @@ function handleSurfaceClick() {
 
               </tres-mesh>
 
-              <tres-mesh :position="[0, 0, 0.13]">
+              <tres-mesh
+                :position="[
+                  0,
+                  0,
+                  0.13,
+                ]">
 
                 <tres-plane-geometry
                   :args="[
@@ -2841,7 +2561,18 @@ function handleSurfaceClick() {
 
           <template v-if="phase === 'over' && againSign && backSign">
 
-            <tres-group :position="[-0.95, 0.78, 0.52]" :scale="hoveredWorldButton === 'again' ? 1.08 : 1" @click="handleReplay" @pointerdown="handleWorldButtonEnter('again')" @pointerenter="handleWorldButtonEnter('again')" @pointerleave="handleWorldButtonLeave('again')" @pointerup="handleWorldButtonLeave('again')">
+            <tres-group
+              :position="[
+                -0.95,
+                0.78,
+                0.52,
+              ]"
+              :scale="hoveredWorldButton === 'again' ? 1.08 : 1"
+              @click="handleReplay()"
+              @pointerdown="handleWorldButtonEnter('again')"
+              @pointerenter="handleWorldButtonEnter('again')"
+              @pointerleave="handleWorldButtonLeave('again')"
+              @pointerup="handleWorldButtonLeave('again')">
 
               <tres-mesh :cast-shadow="true">
 
@@ -2862,7 +2593,12 @@ function handleSurfaceClick() {
 
               </tres-mesh>
 
-              <tres-mesh :position="[0, 0, 0.13]">
+              <tres-mesh
+                :position="[
+                  0,
+                  0,
+                  0.13,
+                ]">
 
                 <tres-plane-geometry
                   :args="[
@@ -2880,7 +2616,18 @@ function handleSurfaceClick() {
 
             </tres-group>
 
-            <tres-group :position="[0.95, 0.78, 0.52]" :scale="hoveredWorldButton === 'back' ? 1.08 : 1" @click="handleBackToLineup" @pointerdown="handleWorldButtonEnter('back')" @pointerenter="handleWorldButtonEnter('back')" @pointerleave="handleWorldButtonLeave('back')" @pointerup="handleWorldButtonLeave('back')">
+            <tres-group
+              :position="[
+                0.95,
+                0.78,
+                0.52,
+              ]"
+              :scale="hoveredWorldButton === 'back' ? 1.08 : 1"
+              @click="handleBackToLineup()"
+              @pointerdown="handleWorldButtonEnter('back')"
+              @pointerenter="handleWorldButtonEnter('back')"
+              @pointerleave="handleWorldButtonLeave('back')"
+              @pointerup="handleWorldButtonLeave('back')">
 
               <tres-mesh :cast-shadow="true">
 
@@ -2901,7 +2648,12 @@ function handleSurfaceClick() {
 
               </tres-mesh>
 
-              <tres-mesh :position="[0, 0, 0.13]">
+              <tres-mesh
+                :position="[
+                  0,
+                  0,
+                  0.13,
+                ]">
 
                 <tres-plane-geometry
                   :args="[
@@ -2923,7 +2675,7 @@ function handleSurfaceClick() {
 
         </tres-group>
 
-      </TresCanvas>
+      </tres-canvas>
 
       <div
         class="absolute inset-0 pointer-events-none"
@@ -2936,18 +2688,18 @@ function handleSurfaceClick() {
 
         <div
           class="absolute inset-y-0 left-0 w-[48%] touch-none pointer-events-auto"
-          @pointerdown="handleMovePointerDown"
-          @pointermove="handleMovePointerMove"
-          @pointerup="handleMovePointerUp"
-          @pointercancel="handleMovePointerUp"
+          @pointerdown="handleMovePointerDown($event)"
+          @pointermove="handleMovePointerMove($event)"
+          @pointerup="handleMovePointerUp($event)"
+          @pointercancel="handleMovePointerUp($event)"
         />
 
         <div
           class="absolute inset-y-0 right-0 w-[48%] touch-none pointer-events-auto"
-          @pointerdown="handleLookPointerDown"
-          @pointermove="handleLookPointerMove"
-          @pointerup="handleLookPointerUp"
-          @pointercancel="handleLookPointerUp"
+          @pointerdown="handleLookPointerDown($event)"
+          @pointermove="handleLookPointerMove($event)"
+          @pointerup="handleLookPointerUp($event)"
+          @pointercancel="handleLookPointerUp($event)"
         />
 
         <template v-if="moveStick.active">

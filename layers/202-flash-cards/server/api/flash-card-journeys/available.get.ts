@@ -1,6 +1,11 @@
 
+/* responsibility */
 
-export default defineEventHandler(async () => {
+// Lists every valid flash card journey
+// with its state, for any visitor.
+
+
+export default defineEventHandler(async event => {
 
   const journeys = await app.flashCardJourneys.dbo.list({
     sort: {

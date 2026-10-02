@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Creates a flash card journey
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceCreate({

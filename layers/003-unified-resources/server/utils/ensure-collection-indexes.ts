@@ -1,11 +1,15 @@
+
+/* responsibility */
+
+// Syncs a collection's Mongo indexes
+// with a resource's declared indexes.
+
+
 import { MongoServerError, type Collection, type IndexDescriptionInfo } from 'mongodb';
 import type { UnifiedResourceIndex } from './create-unified-resource-controller';
 
 
-export async function ensureCollectionIndexes(args: {
-  collectionName: string;
-  indexes: UnifiedResourceIndex[];
-}) {
+export async function ensureCollectionIndexes(args: { collectionName: string, indexes: UnifiedResourceIndex[] }) {
 
   validateDesiredIndexes(args.collectionName, args.indexes);
 
@@ -17,6 +21,7 @@ export async function ensureCollectionIndexes(args: {
   const desiredIndexes = args.indexes.filter(it => !isIdIndex(it));
   const remainingExistingIndexes = existingIndexes.filter(it => !isIdIndex(it));
   const indexesToCreate: UnifiedResourceIndex[] = [];
+
 
   for (const desiredIndex of desiredIndexes) {
 

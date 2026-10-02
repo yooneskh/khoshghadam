@@ -1,16 +1,17 @@
+
+/* responsibility */
+
+// Reads a request body and validates it
+// against an arktype schema, throwing a 400 when invalid.
+
+
 import { type } from 'arktype';
 import { createError, type H3Event, readBody } from 'h3';
 
 
-export function assertBody<const def>(args: {
-  event: H3Event;
-  schema: type.validate<def>;
-}): Promise<type.infer.Out<def>>;
+export function assertBody<const def>(args: { event: H3Event, schema: type.validate<def> }): Promise<type.infer.Out<def>>;
 
-export async function assertBody(args: {
-  event: H3Event;
-  schema: unknown;
-}): Promise<unknown> {
+export async function assertBody(args: { event: H3Event, schema: unknown }): Promise<unknown> {
 
   const body = await readBody(args.event, {
     strict: true,

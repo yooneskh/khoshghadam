@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Lists the flash card and journey URLs
+// for the sitemap.
+
 
 export default defineSitemapEventHandler(async event => {
 

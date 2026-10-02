@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Returns one flash card journey by slug
+// with the signed-in user's progress state.
+
 
 export default defineEventHandler(async event => {
 

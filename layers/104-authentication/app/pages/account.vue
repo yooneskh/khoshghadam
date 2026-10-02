@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Lets the signed-in user update
+// their account details or log out.
+
+
 /* page */
 
 definePageMeta({
@@ -21,15 +27,13 @@ useSeoMeta({
 });
 
 
-/* user */
+/* account */
 
 const user = useUser();
 
 
-/* form */
-
 const { form, formTag } = useForm({
-  target: JSON.parse(JSON.stringify(user.value)),
+  target: radCloneDeep(user.value),
   fields: [
     {
       key: 'name',
@@ -46,6 +50,8 @@ const { form, formTag } = useForm({
 });
 
 
+/* handlers */
+
 async function handleSubmit() {
 
   await ufetch('/api/authentication/identity', {
@@ -56,12 +62,9 @@ async function handleSubmit() {
   });
 
 
-  useUser().value = await ufetch('/api/authentication/identity');
+  user.value = await ufetch('/api/authentication/identity');
 
 }
-
-
-/* logout */
 
 async function handleLogout() {
 
@@ -71,7 +74,7 @@ async function handleLogout() {
 
 
   useToken().value = '';
-  useUser().value = undefined;
+  user.value = undefined;
 
 
   await navigateTo({
@@ -89,6 +92,7 @@ async function handleLogout() {
     title="Account"
     :actions="[
       {
+        variant: 'subtle',
         color: 'error',
         label: 'Logout',
         onClick: handleLogout,
@@ -97,6 +101,7 @@ async function handleLogout() {
         type: 'spacer',
       },
       {
+        variant: 'subtle',
         label: 'Submit Information',
         onClick: handleSubmit,
       },

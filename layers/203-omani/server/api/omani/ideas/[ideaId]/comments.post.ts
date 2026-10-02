@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Adds a comment to a published idea
+// and bumps its comment count.
+
 
 export default defineEventHandler(async event => {
 

@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Records a flash card session for the current user
+// and marks it finished when all cards are answered.
+
 
 export default defineEventHandler(async event => {
 

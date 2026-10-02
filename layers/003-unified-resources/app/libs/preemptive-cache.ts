@@ -1,13 +1,15 @@
 
+/* responsibility */
+
+// Caches async results by key,
+// sharing in-flight promises until they settle.
+
 
 const cache: Record<string, any> = {};
 const promiseCache: Record<string, Promise<any>> = {};
 
 
-export function preemptCache(args: {
-  key: string;
-  run: () => Promise<any>;
-}) {
+export function preemptCache(args: { key: string, run: () => Promise<any> }) {
 
   if (args.key in cache) {
     return cache[args.key];
@@ -37,9 +39,7 @@ export function preemptCache(args: {
 
 }
 
-export function evictCache(args: {
-  key: string;
-}) {
+export function evictCache(args: { key: string }) {
   delete cache[args.key];
   delete promiseCache[args.key];
 }

@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Lists the current user's flash card sessions,
+// newest first.
+
 
 export default defineEventHandler(async event => {
 

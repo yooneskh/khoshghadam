@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Toggles the current user's vote
+// on a published idea.
+
 
 export default defineEventHandler(async event => {
 
@@ -75,7 +80,10 @@ export default defineEventHandler(async event => {
     ...await app.omaniIdeas.dbo.retrieve({
       resourceId: idea._id,
       populate: {
-        author: ['name', 'username'],
+        author: [
+          'name',
+          'username',
+        ],
       },
     }),
     myVote: !existingVote,

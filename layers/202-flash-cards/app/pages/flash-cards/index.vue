@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Lists the flash card decks
+// with links to each deck.
+
+
 /* page */
 
 definePageMeta({

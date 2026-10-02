@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Compiles a resource schema DSL
+// into its arktype type and inferred shape.
+
+
 import { type, Type } from 'arktype';
 
 

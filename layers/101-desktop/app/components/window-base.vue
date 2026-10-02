@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders a draggable, resizable desktop window
+// with a title bar, body, and action row.
+
+
 /* interface */
 
 const props = defineProps({
@@ -25,6 +31,7 @@ const width = ref(800);
 const height = ref(600);
 const minWidth = ref(400);
 const minHeight = ref(300);
+
 
 const taskBarHeight = 40;
 
@@ -183,7 +190,6 @@ function handleResizeStop() {
 
   document.removeEventListener('mousemove', handleResizeMove);
   document.removeEventListener('mouseup', handleResizeStop);
-
   document.body.classList.remove('select-none', getCursorClass(resizeDirection.value));
 
 
@@ -249,18 +255,8 @@ const effectiveY = computed(() => {
 
 <template>
   <div
-    class="
-      fixed
-      top-0 left-0 w-screen h-[calc(100dvh-var(--window-task-bar-height))]
-      tablet:left-(--window-x) tablet:top-(--window-y) tablet:w-(--window-width) tablet:h-(--window-height)
-      z-1
-      flex flex-col
-      bg-default
-      overflow-clip
-    "
-    :class="{
-      'tablet:rounded-t-lg': !isMaximized,
-    }"
+    class="fixed top-0 left-0 w-screen h-[calc(100dvh-var(--window-task-bar-height))] tablet:left-(--window-x) tablet:top-(--window-y) tablet:w-(--window-width) tablet:h-(--window-height) z-1 flex flex-col bg-default overflow-clip"
+    :class="{ 'tablet:rounded-t-lg': !isMaximized }"
     :style="{
       '--window-x': `${effectiveX}px`,
       '--window-y': `${effectiveY}px`,
@@ -313,17 +309,7 @@ const effectiveY = computed(() => {
 
     </template>
 
-    <header
-      ref="elHeader"
-      class="
-        shrink-0
-        bg-primary-600
-        flex items-center gap-1
-        text-inverted
-        p-2
-        cursor-pointer
-      "
-      @dblclick="isMaximized = !isMaximized;">
+    <header ref="elHeader" class="shrink-0 bg-primary-600 flex items-center gap-1 text-inverted p-2 cursor-pointer" @dblclick="isMaximized = !isMaximized">
 
       <template v-if="props.pito">
         <img
@@ -339,27 +325,24 @@ const effectiveY = computed(() => {
       <div class="grow" />
 
       <u-button
+        variant="subtle"
         size="sm"
         :icon="!isMaximized ? 'lucide:maximize' : 'lucide:minimize'"
         class="max-tablet:hidden"
-        @click="isMaximized = !isMaximized;"
+        @click="isMaximized = !isMaximized"
       />
 
-      <nuxt-link :to="{ name: 'desktop.home' }">
-        <u-button
-          size="sm"
-          color="error"
-          icon="lucide:x"
-        />
-      </nuxt-link>
+      <u-button
+        variant="ghost"
+        color="error"
+        size="sm"
+        icon="lucide:x"
+        :to="{ name: 'desktop.home' }"
+      />
 
     </header>
 
-    <div
-      class="h-0 grow flex flex-col"
-      :class="{
-        'tablet:border-x-3 tablet:border-b-3 tablet:border-[#0059F4]': !isMaximized,
-      }">
+    <div class="h-0 grow flex flex-col" :class="{ 'tablet:border-x-3 tablet:border-b-3 tablet:border-[#0059F4]': !isMaximized }">
 
       <div class="h-0 grow overflow-y-auto">
 
@@ -378,9 +361,9 @@ const effectiveY = computed(() => {
       <template v-if="props.actions?.length">
         <div class="flex items-center justify-end gap-2 p-2 border-t border-default">
           <slot name="actions">
-            <template v-for="action in props.actions" :key="action.label">
+            <template v-for="(action, index) in props.actions" :key="action.label || index">
 
-              <template v-if="action.type === 'spacer'">
+              <template v-if="action.actionType === 'spacer' || action.type === 'spacer'">
                 <div class="grow" />
               </template>
 

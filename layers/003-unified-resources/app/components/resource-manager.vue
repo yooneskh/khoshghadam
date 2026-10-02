@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders the CRUD dashboard card
+// for one unified resource.
+
+
 /* interface */
 
 const props = defineProps({
@@ -32,12 +38,14 @@ const { fields } = useResourceMeta({
 const actions = computed(() => {
   return [
     {
+      variant: 'subtle',
       icon: 'lucide:plus',
       label: `Create a ${title.value}`,
       onClick: handleResourceCreate,
     },
     ...(props.actions || []),
     {
+      variant: 'subtle',
       icon: 'lucide:refresh-ccw',
       onClick: refreshResources,
     },
@@ -112,7 +120,11 @@ async function handleResourceUpdate(resource) {
       },
     },
     fields: fields.value,
-    initialForm: radOmit(resource, ['_id', 'createdAt', 'updatedAt']),
+    initialForm: radOmit(resource, [
+      '_id',
+      'createdAt',
+      'updatedAt',
+    ]),
     submitButton: {
       icon: 'lucide:pencil',
       label: 'Update',

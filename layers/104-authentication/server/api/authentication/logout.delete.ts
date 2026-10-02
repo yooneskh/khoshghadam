@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Logs the current user out
+// by deactivating all of their authentication tokens.
+
 
 export default defineEventHandler(async event => {
 

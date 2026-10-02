@@ -1,6 +1,13 @@
-import FormElementResource from '../elements/form-element-resource.vue';
-import FormElementTags from '../elements/form-element-tags.vue';
-import FormElementMedia from '../elements/form-element-media.vue';
+
+/* responsibility */
+
+// Registers the resource, tags, and media
+// custom form elements.
+
+
+import FormElementResource from '../atoms/form-element-resource.vue';
+import FormElementTags from '../atoms/form-element-tags.vue';
+import FormElementMedia from '../atoms/form-element-media.vue';
 
 
 export default defineNuxtPlugin(() => {

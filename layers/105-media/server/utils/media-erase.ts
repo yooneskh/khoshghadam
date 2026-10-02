@@ -1,3 +1,10 @@
+
+/* responsibility */
+
+// Deletes a media document
+// together with its stored file and variants.
+
+
 import { join } from 'node:path';
 import { unlink } from 'node:fs/promises';
 

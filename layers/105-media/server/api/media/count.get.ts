@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Counts media files
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceCount({

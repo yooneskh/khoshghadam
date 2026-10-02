@@ -1,48 +1,14 @@
 
+/* responsibility */
 
-interface FlashCardAnswer {
-  card: string;
-  opened: boolean;
-}
-
-interface FlashCardSessionForCompletion {
-  flashCard: string;
-  answeredCards: FlashCardAnswer[];
-  successful?: boolean;
-}
-
-interface FlashCardDeckForCompletion {
-  _id: string;
-  cards: {
-    _id: string;
-  }[];
-}
+// Derives each flash card journey's progress
+// from the user's flash card sessions.
 
 
-export function calculateFlashCardSessionCompletion(args: {
-  session: FlashCardSessionForCompletion;
-  flashCard: FlashCardDeckForCompletion;
-}) {
-
-  const canonicalCardIds = args.flashCard.cards.map(it => it._id);
-  const answeredCardIds = args.session.answeredCards.map(it => it.card);
-  const uniqueAnsweredCardIds = new Set(answeredCardIds);
-  const finished = canonicalCardIds.length > 0 && answeredCardIds.length === canonicalCardIds.length && uniqueAnsweredCardIds.size === canonicalCardIds.length && canonicalCardIds.every(it => uniqueAnsweredCardIds.has(it));
-  const successful = finished && args.session.answeredCards.every(it => it.opened === false);
+import type { FlashCardSessionForCompletion } from './flash-card-session-completion';
 
 
-  return {
-    finished,
-    successful,
-  };
-
-}
-
-export async function loadFlashCardJourneyStates(args: {
-  journeys: any[];
-  userId?: string;
-  skipInvalid?: boolean;
-}) {
+export async function loadFlashCardJourneyStates(args: { journeys: any[], userId?: string, skipInvalid?: boolean }) {
 
   if (!args.journeys.length) {
     return [];
@@ -50,7 +16,7 @@ export async function loadFlashCardJourneyStates(args: {
 
 
   const flashCardIds = [
-    ...new Set(args.journeys.flatMap(it => it.steps?.map((step: any) => step.flashCard) ?? [])),
+    ...new Set(args.journeys.flatMap(it => it.steps?.map(it => it.flashCard) ?? [])),
   ];
 
   const flashCards = await app.flashCards.dbo.list({
@@ -93,11 +59,7 @@ export async function loadFlashCardJourneyStates(args: {
 
 }
 
-export function deriveFlashCardJourneyState(args: {
-  journey: any;
-  flashCards: any[];
-  sessions: FlashCardSessionForCompletion[];
-}) {
+export function deriveFlashCardJourneyState(args: { journey: any, flashCards: any[], sessions: FlashCardSessionForCompletion[] }) {
 
   if (!args.journey.steps?.length) {
     throw createError({
@@ -107,7 +69,10 @@ export function deriveFlashCardJourneyState(args: {
   }
 
 
-  const flashCardsById = new Map(args.flashCards.map(it => [it._id, it]));
+  const flashCardsById = new Map(args.flashCards.map(it => [
+    it._id,
+    it,
+  ]));
 
   for (const step of args.journey.steps) {
     const flashCard = flashCardsById.get(step.flashCard);
@@ -168,7 +133,7 @@ export function deriveFlashCardJourneyState(args: {
   return {
     ...args.journey,
     steps,
-    completed: steps.every((it: any) => it.completed),
+    completed: steps.every(it => it.completed),
   };
 
 }

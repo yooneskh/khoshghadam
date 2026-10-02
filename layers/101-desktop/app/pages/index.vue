@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Serves the desktop home route
+// and sets its portfolio SEO.
+
+
 /* page */
 
 definePageMeta({

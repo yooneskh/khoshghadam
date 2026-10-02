@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Creates an authorization role
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceCreate({

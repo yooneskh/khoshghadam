@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Shows the learning center window
+// with links to flash lessons and journeys.
+
+
 /* page */
 
 definePageMeta({

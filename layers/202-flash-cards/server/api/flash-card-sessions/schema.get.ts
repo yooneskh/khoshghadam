@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Returns the flash card sessions schema
+// for admins.
+
 
 export default defineEventHandler(async event => {
   return handleResourceSchema({

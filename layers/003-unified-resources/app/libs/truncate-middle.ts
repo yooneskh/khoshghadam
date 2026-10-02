@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Shortens a long string to a max length
+// by replacing its middle with an ellipsis.
+
 
 export function truncateMiddle(string: string, maxLength = 12): string {
   if (string.length <= maxLength) {

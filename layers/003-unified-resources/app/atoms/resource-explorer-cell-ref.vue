@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Renders a referenced resource inside a table cell
+// and lets the user edit it in place.
+
+
 /* interface */
 
 const props = defineProps({
@@ -48,6 +54,7 @@ const resourceData = computedAsync(async () => {
 
     isLoading.value = true;
 
+
     return await retrieveResource({
       resourcePath: resourcePath.value,
       id: props.data,
@@ -76,7 +83,11 @@ async function handleResourceClick() {
       },
     },
     fields: fields.value,
-    initialForm: radOmit(resourceData.value, ['_id', 'createdAt', 'updatedAt']),
+    initialForm: radOmit(resourceData.value, [
+      '_id',
+      'createdAt',
+      'updatedAt',
+    ]),
     submitButton: {
       icon: 'lucide:pencil',
       label: 'Update',
@@ -151,6 +162,7 @@ async function handleResourceClick() {
         <u-badge
           variant="subtle"
           icon="lucide:file"
+          label="File"
         />
       </template>
 

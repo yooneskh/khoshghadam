@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Registers the flash card sessions resource
+// on the unified app registry.
+
 
 const { schema, type, inferred } = parseSchema({
   'flashCard': 'string',

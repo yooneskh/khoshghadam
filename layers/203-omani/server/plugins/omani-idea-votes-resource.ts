@@ -1,4 +1,9 @@
 
+/* responsibility */
+
+// Registers the omani idea votes resource
+// on the unified app registry.
+
 
 const { schema, type, inferred } = parseSchema({
   'idea': 'string',

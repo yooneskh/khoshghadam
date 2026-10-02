@@ -1,5 +1,11 @@
 <script setup>
 
+/* responsibility */
+
+// Shows a list of rows
+// as a table inside a modal card.
+
+
 /* interface */
 
 const props = defineProps({

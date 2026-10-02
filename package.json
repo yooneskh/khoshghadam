@@ -8,23 +8,23 @@
     "build": "nuxt build"
   },
   "dependencies": {
-    "@nuxtjs/sitemap": "8.5.1",
+    "@nuxtjs/sitemap": "8.6.1",
     "@quentinadam/uuidv7": "0.1.9",
     "@theothergothamdev/pluralize-ts": "1.1.0",
-    "@tresjs/nuxt": "5.7.0",
-    "arktype": "2.2.3",
+    "@tresjs/nuxt": "5.7.2",
+    "arktype": "2.2.7",
     "bcryptjs": "3.0.3",
-    "mongodb": "7.6.0",
+    "mongodb": "7.7.0",
     "nuxt": "4.5.2",
     "nuxt-gtag": "5.0.0",
     "nuxt-jsonld": "2.3.0",
-    "nuxt-unified-ui": "0.5.15",
-    "sharp": "0.35.4",
-    "three": "0.186.0",
+    "nuxt-unified-ui": "0.5.16",
+    "sharp": "0.35.5",
+    "three": "0.186.1",
     "vue": "3.5.43"
   },
   "devDependencies": {
-    "@types/node": "26.6.2",
+    "@types/node": "26.6.4",
     "@types/three": "0.186.0"
   }
 }

@@ -11,7 +11,7 @@
       "source": "nuxt/ui",
       "sourceType": "github",
       "skillPath": "skills/nuxt-ui/SKILL.md",
-      "computedHash": "8464b84fce4b31f45156168aaa3da2831db3ca234ad2295734b8599707534199"
+      "computedHash": "dc0ff4be425744b032627e2b8cc4fa5f0a063e8389df176c5ff531b053e9ff99"
     },
     "nuxt-unified-ui": {
       "source": "yooneskh/nuxt-unified-ui",
@@ -20,10 +20,10 @@
       "computedHash": "1a36f34250e36af76422915ef34d1f0289b4301db5fb33ecbfd7022620e24a22"
     },
     "vueuse-functions": {
-      "source": "antfu/skills",
+      "source": "vueuse/skills",
       "sourceType": "github",
       "skillPath": "skills/vueuse-functions/SKILL.md",
-      "computedHash": "5f32cd5f744671178284887c9ffc27a080e0e3316c0f7c3b22f4459c760daf49"
+      "computedHash": "70b65fb127323568380de490290eaf195b165da23c1f4fa27df10b386ca0dab2"
     }
   }
 }

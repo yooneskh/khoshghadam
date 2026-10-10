@@ -33,7 +33,28 @@ export default defineNitroPlugin(() => {
       });
 
       if (existingUser) {
+
+        const existingUserPassword = await app.userPasswords.dbo.find({
+          filter: {
+            user: existingUser._id,
+          },
+        });
+
+        if (existingUserPassword) {
+          continue;
+        }
+
+
+        await app.userPasswords.dbo.create({
+          document: {
+            user: existingUser._id,
+            passwordHash: await hashPassword(initialUser.password),
+            isActive: true,
+          },
+        });
+
         continue;
+
       }
 
 

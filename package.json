@@ -15,16 +15,16 @@
     "arktype": "2.2.8",
     "bcryptjs": "3.0.3",
     "mongodb": "7.7.0",
-    "nuxt": "4.6.0",
+    "nuxt": "4.6.1",
     "nuxt-gtag": "5.0.0",
     "nuxt-jsonld": "3.0.0",
-    "nuxt-unified-ui": "0.5.18",
+    "nuxt-unified-ui": "0.5.20",
     "sharp": "0.35.5",
     "three": "0.186.1",
     "vue": "3.5.43"
   },
   "devDependencies": {
-    "@types/node": "26.6.4",
+    "@types/node": "26.6.5",
     "@types/three": "0.186.0"
   }
 }

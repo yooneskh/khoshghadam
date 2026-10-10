@@ -26,70 +26,63 @@ export default defineNitroPlugin(() => {
       }
 
 
-      const existingUser = await app.users.dbo.find({
+      if (initialUser.permissions !== undefined && !Array.isArray(initialUser.permissions)) {
+        throw createError({
+          statusCode: 500,
+          statusMessage: 'invalid initial user permissions',
+        });
+      }
+
+
+      let user = await app.users.dbo.find({
         filter: {
           username: initialUser.username,
         },
       });
 
-      if (existingUser) {
-
-        const existingUserPassword = await app.userPasswords.dbo.find({
-          filter: {
-            user: existingUser._id,
+      if (!user) {
+        user = await app.users.dbo.create({
+          document: {
+            name: initialUser.name,
+            username: initialUser.username,
           },
         });
-
-        if (existingUserPassword) {
-          continue;
-        }
+      }
 
 
+      const userPassword = await app.userPasswords.dbo.find({
+        filter: {
+          user: user._id,
+        },
+      });
+
+      if (!userPassword) {
         await app.userPasswords.dbo.create({
           document: {
-            user: existingUser._id,
+            user: user._id,
             passwordHash: await hashPassword(initialUser.password),
             isActive: true,
           },
         });
-
-        continue;
-
       }
-
-
-      const user = await app.users.dbo.create({
-        document: {
-          name: initialUser.name,
-          username: initialUser.username,
-        },
-      });
-
-      await app.userPasswords.dbo.create({
-        document: {
-          user: user._id,
-          passwordHash: await hashPassword(initialUser.password),
-          isActive: true,
-        },
-      });
 
 
       if (initialUser.permissions !== undefined) {
 
-        if (!Array.isArray(initialUser.permissions)) {
-          throw createError({
-            statusCode: 500,
-            statusMessage: 'invalid initial user permissions',
-          });
-        }
-
-
-        await app.authorizationTokens.dbo.create({
-          document: {
+        const authorizationToken = await app.authorizationTokens.dbo.find({
+          filter: {
             user: user._id,
-            permissions: initialUser.permissions,
           },
         });
+
+        if (!authorizationToken) {
+          await app.authorizationTokens.dbo.create({
+            document: {
+              user: user._id,
+              permissions: initialUser.permissions,
+            },
+          });
+        }
 
       }
 

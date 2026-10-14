@@ -18,7 +18,7 @@ export async function assertRateLimit(args: { event: H3Event; limit?: number; wi
     xForwardedFor: true,
   }) ?? 'unknown';
 
-  const storeKey = `${args.event.path}:${ip}`;
+  const storeKey = `${args.event.path.split('?')[0]}:${ip}`;
   const now = Date.now();
 
 

@@ -22,7 +22,7 @@ export default defineEventHandler(async event => {
 
   if (!file || !file.size) {
     throw createError({
-      statusCode: 401,
+      statusCode: 400,
       statusMessage: 'invalid file',
     });
   }

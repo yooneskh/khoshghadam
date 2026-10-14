@@ -79,10 +79,6 @@ async function handleLogin() {
         'x-captcha-id': captchaId.value,
         'x-captcha-code': captchaCode.value,
       },
-      body: {
-        username: loginForm.value.username,
-        password: loginForm.value.password,
-      },
     });
 
     const identityResponse = await ufetch('/api/authentication/identity', {
@@ -97,14 +93,19 @@ async function handleLogin() {
     useUser().value = identityResponse;
 
 
-    if (returnUrl.value) {
+    if (typeof returnUrl.value === 'string' && returnUrl.value) {
       if (returnUrl.value.startsWith('::')) {
         await navigateTo({
           name: returnUrl.value.slice(2),
         });
       }
-      else {
+      else if (returnUrl.value.startsWith('/') && !returnUrl.value.startsWith('//')) {
         await navigateTo(returnUrl.value);
+      }
+      else {
+        await navigateTo({
+          name: 'authentication.account',
+        });
       }
     }
     else {

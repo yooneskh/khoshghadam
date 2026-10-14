@@ -36,7 +36,7 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
   }
 
 
-  if (getQuery(args.event)?.single === 'xtruex') {
+  if (getQuery(args.event)?.single === 'true') {
     return app[args.resource as keyof typeof app]?.dbo?.find({
       filter: extractFilterFromEvent(args.event),
       select: extractSelectFromEvent(args.event),
@@ -153,7 +153,7 @@ function extractFilterFromEvent(event: H3Event) {
     const key = it[0] as string;
     const hasOperator = it.length >= 3;
     const operator = hasOperator ? it[1] : 'is';
-    const rawValue = hasOperator ? it[2] : it[1] as string;
+    const rawValue = hasOperator ? it.slice(2).join(':') : it[1] as string;
     const value = guessFilterValue(rawValue);
 
 
@@ -202,7 +202,7 @@ function extractFilterFromEvent(event: H3Event) {
     }
     else if (operator === 'like') {
       acc[key] = {
-        $regex: rawValue,
+        $regex: escapeRegularExpression(String(rawValue)),
         $options: 'i',
       };
     }

@@ -7,13 +7,12 @@
 
 export default defineEventHandler(async event => {
 
-  const media = await handleResourceDelete({
-    resource: 'media',
+  await assertUserPermission({
     event,
     permission: 'admin.media.delete',
   });
 
 
-  return eraseMedia(media._id);
+  return eraseMedia(getRouterParam(event, 'resourceId'));
 
 });

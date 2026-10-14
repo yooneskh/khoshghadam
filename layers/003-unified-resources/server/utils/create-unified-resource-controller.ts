@@ -218,8 +218,8 @@ export function createUnifiedResourceController<T extends object>(props: { resou
 
 
       const document = {
-        _id: generateUuid() as any,
         ...args.document,
+        _id: generateUuid() as any,
         createdAt: Date.now(),
       };
 
@@ -235,6 +235,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
 
 
       await collection.insertOne(document);
+
 
       return validatedDocument as unknown as UnifiedResourceDocument<T>;
 
@@ -282,11 +283,15 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       normalizeDocumentIds(finalDocument);
 
 
+      const setDocument = { ...(finalDocument as Record<string, any>) };
+      delete setDocument._id;
+
       await collection.updateOne({
         _id: args.resourceId as any,
       }, {
-        $set: finalDocument,
+        $set: setDocument,
       });
+
 
       return finalDocument as unknown as UnifiedResourceDocument<T>;
 
@@ -338,6 +343,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       await collection.deleteOne({
         _id: document._id,
       });
+
 
       return document as unknown as UnifiedResourceDocument<T>;
 
@@ -407,7 +413,7 @@ async function populateDocument(args: { document: any; meta: any; populate: Reco
     ];
 
     const keyExactMatch = Object.keys(args.populate).find(it => it === populatePath.join('.'));
-    const keyPreMatch = Object.keys(args.populate).find(it => it.startsWith(populatePath.join('.')));
+    const keyPreMatch = Object.keys(args.populate).find(it => it === populatePath.join('.') || it.startsWith(populatePath.join('.') + '.'));
 
     const populateFields = keyExactMatch ? args.populate[populatePath.join('.')] : keyPreMatch ? [''] : undefined;
 

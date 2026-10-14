@@ -5,18 +5,20 @@
 // to form fields and table columns.
 
 
+/* resource */
+
 import { useResourceName } from './use-resource-name';
 import { retrieveResourceSchema } from './retrieve-resource';
 
 
-export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
+export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
 
   const { resourcePath } = useResourceName({
     resource: args.resource,
   });
 
 
-  const schema = computedAsync<any>(async () => {
+  const schema = computedAsync(async () => {
 
     if (!resourcePath.value) {
       return [];
@@ -70,6 +72,7 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
 }
 
+
 function convertMetaToField(meta: any) {
 
   const field: any = {
@@ -79,6 +82,10 @@ function convertMetaToField(meta: any) {
     width: meta.width,
   };
 
+
+  if (meta.if) {
+    field.if = meta.if;
+  }
 
   if (meta.resource === 'media') {
     field.identifier = 'media';
@@ -105,6 +112,7 @@ function convertMetaToField(meta: any) {
   }
   else if (meta.type === 'boolean') {
     field.identifier = 'checkbox';
+    field.controlLabel = meta.controlLabel;
   }
   else if (meta.labelFormat) {
     field.identifier = 'date';

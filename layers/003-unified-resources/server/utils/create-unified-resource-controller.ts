@@ -30,14 +30,28 @@ type UnifiedResourceDocument<T> = AddIdToNestedArrayObjects<T> & {
 
 
 export interface ResourceMeta {
+
+  if?: any;
+
   resource?: string;
   width?: number;
+
   hidden?: boolean;
   hideInTable?: boolean;
+
   children?: Record<string, ResourceMeta>;
+
   longText?: boolean;
-  enum?: { label: string; value: string | number; }[];
+
+  enum?: {
+    label: string;
+    value: string | number;
+  }[];
+
   labelFormat?: string;
+
+  controlLabel?: string;
+
 }
 
 
@@ -52,23 +66,71 @@ export interface UnifiedResourceIndex {
 
 
 export interface UnifiedResourceController<T> {
+
   schema: () => any;
-  list: (args: { filter?: any; select?: string[]; sort?: any; skip?: any; limit?: any; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T>[]>;
-  count: (args: { filter?: any; }) => Promise<number>;
-  aggregate: (args: { pipeline: any[]; }) => Promise<any[]>;
-  find: (args: { resourceId?: string; filter?: any; select?: string[]; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T> | undefined>;
-  retrieve: (args: { resourceId?: string; filter?: any; select?: string[]; populate?: Record<string, string[]> | undefined; }) => Promise<UnifiedResourceDocument<T>>;
-  create: (args: { document: T; }) => Promise<UnifiedResourceDocument<T>>;
-  update: (args: { resourceId?: string; document: Partial<T>; }) => Promise<UnifiedResourceDocument<T>>;
-  updateQuery: (args: { resourceId?: string; query: any; }) => Promise<UnifiedResourceDocument<T>>;
-  delete: (args: { resourceId?: string; }) => Promise<UnifiedResourceDocument<T>>;
+
+  list: (args: {
+    filter?: any;
+    select?: string[];
+    sort?: any;
+    skip?: any;
+    limit?: any;
+    populate?: Record<string, string[]> | undefined;
+  }) => Promise<UnifiedResourceDocument<T>[]>;
+
+  count: (args: {
+    filter?: any;
+  }) => Promise<number>;
+
+  aggregate: (args: {
+    pipeline: any[];
+  }) => Promise<any[]>;
+
+  find: (args: {
+    resourceId?: string;
+    filter?: any;
+    select?: string[];
+    populate?: Record<string, string[]> | undefined;
+  }) => Promise<UnifiedResourceDocument<T> | undefined>;
+
+  retrieve: (args: {
+    resourceId?: string;
+    filter?: any;
+    select?: string[];
+    populate?: Record<string, string[]> | undefined;
+  }) => Promise<UnifiedResourceDocument<T>>;
+
+  create: (args: {
+    document: T;
+  }) => Promise<UnifiedResourceDocument<T>>;
+
+  update: (args: {
+    resourceId?: string;
+    document: Partial<T>;
+  }) => Promise<UnifiedResourceDocument<T>>;
+
+  updateQuery: (args: {
+    resourceId?: string;
+    query: any;
+  }) => Promise<UnifiedResourceDocument<T>>;
+
+  delete: (args: {
+    resourceId?: string;
+  }) => Promise<UnifiedResourceDocument<T>>;
+
 }
 
 
 const resourceRegistry = new Map<string, any>();
 
 
-export function createUnifiedResourceController<T extends object>(props: { resource: string; schema: any; type: Type<T>; meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>>; indexes?: UnifiedResourceIndex[]; }): UnifiedResourceController<T> {
+export function createUnifiedResourceController<T extends object>(props: {
+  resource: string;
+  schema: any;
+  type: Type<T>;
+  meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>>;
+  indexes?: UnifiedResourceIndex[];
+}): UnifiedResourceController<T> {
 
   const collectionName = props.resource;
 
@@ -110,7 +172,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return convertPropertyToSchema(props.schema, (props.type.toJsonSchema() as any)?.properties, props.meta);
 
     },
-    list: async args => {
+    list: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -130,7 +192,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return documents;
 
     },
-    count: async args => {
+    count: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -138,7 +200,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return collection.countDocuments(args.filter);
 
     },
-    aggregate: async args => {
+    aggregate: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -146,7 +208,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return collection.aggregate(args.pipeline).toArray();
 
     },
-    find: async args => {
+    find: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -179,7 +241,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return document as unknown as UnifiedResourceDocument<T>;
 
     },
-    retrieve: async args => {
+    retrieve: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -212,7 +274,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return document as unknown as UnifiedResourceDocument<T>;
 
     },
-    create: async args => {
+    create: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -240,7 +302,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return validatedDocument as unknown as UnifiedResourceDocument<T>;
 
     },
-    update: async args => {
+    update: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -296,7 +358,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return finalDocument as unknown as UnifiedResourceDocument<T>;
 
     },
-    updateQuery: async args => {
+    updateQuery: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -325,7 +387,7 @@ export function createUnifiedResourceController<T extends object>(props: { resou
       return document as unknown as UnifiedResourceDocument<T>;
 
     },
-    delete: async args => {
+    delete: async (args) => {
 
       const collection = await loadDbClient().then(it => it.collection(collectionName));
 
@@ -351,6 +413,8 @@ export function createUnifiedResourceController<T extends object>(props: { resou
   };
 
 }
+
+
 
 function selectToProjection(select?: string[]) {
   if (!select) {
@@ -378,11 +442,9 @@ function normalizeDocumentIds(value: any) {
         continue;
       }
 
-
       if (!('_id' in item)) {
         item._id = generateUuid();
       }
-
 
       normalizeDocumentIds(item);
 
@@ -414,11 +476,8 @@ async function populateDocument(args: { document: any; meta: any; populate: Reco
 
     const keyExactMatch = Object.keys(args.populate).find(it => it === populatePath.join('.'));
     const keyPreMatch = Object.keys(args.populate).find(it => it === populatePath.join('.') || it.startsWith(populatePath.join('.') + '.'));
-
     const populateFields = keyExactMatch ? args.populate[populatePath.join('.')] : keyPreMatch ? [''] : undefined;
-
     const targetMeta = args.meta[key];
-
 
     if (typeof value !== 'string' && !Array.isArray(value)) {
       continue;

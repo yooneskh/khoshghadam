@@ -16,7 +16,7 @@
         "nuxt": "4.6.1",
         "nuxt-gtag": "5.0.0",
         "nuxt-jsonld": "3.0.0",
-        "nuxt-unified-ui": "0.5.22",
+        "nuxt-unified-ui": "0.5.23",
         "sharp": "0.35.5",
         "three": "0.186.1",
         "vue": "3.5.44",
@@ -1444,7 +1444,7 @@
 
     "nuxt-site-config-kit": ["nuxt-site-config-kit@5.0.3", "", { "dependencies": { "@nuxt/kit": "^4.6.0", "site-config-stack": "5.0.3", "ufo": "^1.6.4" } }, "sha512-vM7i0ZxNegKO4ibrHagtAlK+8ZWJsQ/bzG4bzdasMK/afjdcwZSBQy63C7Q6SP2TZrc4KGM61tHtbW21K5De8Q=="],
 
-    "nuxt-unified-ui": ["nuxt-unified-ui@0.5.22", "", { "dependencies": { "@formkit/tempo": "1.1.0", "@iconify-json/lucide": "1.2.144", "@nuxt/kit": "4.6.1", "@nuxt/ui": "4.11.3", "@nuxtjs/i18n": "10.6.0", "@types/canvas-confetti": "1.9.0", "@vueuse/core": "15.0.0", "@vueuse/nuxt": "15.0.0", "canvas-confetti": "1.9.4", "radashi": "12.9.6", "unified-mongo-filter": "0.4.0" }, "peerDependencies": { "nuxt": ">=4.6.1" } }, "sha512-vqsoxoJtq+0uNZNZwD/DZHPIjbZrY7GWHhb7hGVVcBS+hpqZzletO6mFaYnV3z0n5fyPVDqaOQK/8HAMlHdF+Q=="],
+    "nuxt-unified-ui": ["nuxt-unified-ui@0.5.23", "", { "dependencies": { "@formkit/tempo": "1.1.0", "@iconify-json/lucide": "1.2.144", "@nuxt/kit": "4.6.1", "@nuxt/ui": "4.11.3", "@nuxtjs/i18n": "10.6.0", "@types/canvas-confetti": "1.9.0", "@vueuse/core": "15.0.0", "@vueuse/nuxt": "15.0.0", "canvas-confetti": "1.9.4", "radashi": "12.9.6", "unified-mongo-filter": "0.4.0" }, "peerDependencies": { "nuxt": ">=4.6.1" } }, "sha512-wfcr5VdJ3WVPvq3Mtd9nBEGSr7KOpVlSXkg7fsaXk9kU7NeIH/HxT46VnHL1clOS9Way+Etdmf47eujVgt/gJQ=="],
 
     "nuxtseo-shared": ["nuxtseo-shared@6.0.3", "", { "dependencies": { "@nuxt/kit": "^4.6.1", "consola": "^3.4.2", "defu": "^6.1.7", "ofetch": "^1.5.1", "radix3": "^1.1.2", "std-env": "^4.3.0", "ufo": "^1.6.4" }, "peerDependencies": { "@nuxt/schema": "^4.6.0 || ^5.0.0", "nuxt": "^4.6.0 || ^5.0.0", "nuxt-site-config": "^5.0.0", "vue": "^3.5.0", "zod": "^3.23.0 || ^4.0.0" }, "optionalPeers": ["nuxt-site-config", "zod"] }, "sha512-CEpw7RGKS+nzkIDK2ToFXqeUnMF7apgagyq1H4NslVmAJi3/eUL6k2Zvg5T/F4Y4WoL/uvq1XBH0b9+ujAf6iw=="],
 

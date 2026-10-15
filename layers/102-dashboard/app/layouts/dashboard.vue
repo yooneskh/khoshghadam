@@ -28,6 +28,7 @@ const userMenuItems = computed(() => {
     {
       icon: 'lucide:log-out',
       label: 'Logout',
+      onSelect: handleLogout,
       color: 'error',
     },
   ];
@@ -192,8 +193,44 @@ const navigationItems = computed(() => {
         },
       ],
     },
+    {
+      icon: 'lucide:building-2',
+      label: 'Businesses',
+      children: [
+        {
+          icon: 'lucide:building-2',
+          label: 'Businesses',
+          to: {
+            name: 'dashboard.resources.single',
+            params: {
+              resourceName: 'businesses',
+            },
+          },
+        },
+      ],
+    },
   ];
 });
+
+
+/* handlers */
+
+async function handleLogout() {
+
+  await ufetch('/api/authentication/logout', {
+    method: 'delete',
+  });
+
+
+  useToken().value = '';
+  user.value = undefined;
+
+
+  await navigateTo({
+    name: 'authentication.login',
+  });
+
+}
 
 </script>
 

@@ -270,9 +270,8 @@ defineExpose({
         </div>
       </template>
 
-      <template v-for="column in columns" :key="column.accessorKey" #[column.accessorKey+'-cell']="{ row }">
+      <template v-for="column in columns" :key="column.accessorKey + cellRefreshKey" #[column.accessorKey+'-cell']="{ row }">
         <resource-explorer-cell
-          :key="cellRefreshKey"
           :column="column"
           :row="row.original"
           :data="row.original[column.accessorKey]"

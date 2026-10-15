@@ -8,7 +8,6 @@
 const { schema, type, inferred } = parseSchema({
   'name': 'string',
   'owner': 'string',
-  'slug': 'string',
 });
 
 

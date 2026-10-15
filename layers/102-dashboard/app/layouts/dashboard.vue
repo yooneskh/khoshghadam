@@ -207,6 +207,22 @@ const navigationItems = computed(() => {
             },
           },
         },
+        {
+          icon: 'lucide:globe',
+          label: 'Webagram',
+          children: [
+            {
+              icon: 'lucide:file-text',
+              label: 'Pages',
+              to: {
+                name: 'dashboard.resources.single',
+                params: {
+                  resourceName: 'webagram-pages',
+                },
+              },
+            },
+          ],
+        },
       ],
     },
   ];

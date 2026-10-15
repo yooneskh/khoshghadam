@@ -11,7 +11,7 @@
       "source": "nuxt/ui",
       "sourceType": "github",
       "skillPath": "skills/nuxt-ui/SKILL.md",
-      "computedHash": "dc0ff4be425744b032627e2b8cc4fa5f0a063e8389df176c5ff531b053e9ff99"
+      "computedHash": "23710257054af81129f08bdf972e8c94af0fa2adfa63168b928d443d30cab90f"
     },
     "nuxt-unified-ui": {
       "source": "yooneskh/nuxt-unified-ui",

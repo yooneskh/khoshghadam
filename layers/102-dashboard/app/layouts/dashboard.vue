@@ -26,10 +26,10 @@ const userMenuItems = computed(() => {
       description: user.value?.username,
     },
     {
+      color: 'error',
       icon: 'lucide:log-out',
       label: 'Logout',
       onSelect: handleLogout,
-      color: 'error',
     },
   ];
 });
@@ -218,6 +218,16 @@ const navigationItems = computed(() => {
                 name: 'dashboard.resources.single',
                 params: {
                   resourceName: 'webagram-pages',
+                },
+              },
+            },
+            {
+              icon: 'lucide:images',
+              label: 'Posts',
+              to: {
+                name: 'dashboard.resources.single',
+                params: {
+                  resourceName: 'webagram-posts',
                 },
               },
             },

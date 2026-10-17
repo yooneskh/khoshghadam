@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "nuxt prepare",
+    "postinstall": "bun --bun nuxt prepare",
     "serve": "bun --bun nuxt dev --port 8080",
-    "build": "nuxt build"
+    "build": "bun --bun nuxt build"
   },
   "dependencies": {
     "@nuxtjs/sitemap": "9.1.0",

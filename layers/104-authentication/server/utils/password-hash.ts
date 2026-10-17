@@ -1,17 +1,15 @@
 
 /* responsibility */
 
-// Hashes passwords with bcrypt
+// Hashes passwords with argon2id
 // and verifies them against stored hashes.
-
-
-import { hash, compare } from 'bcryptjs';
+// Older bcrypt hashes stay verifiable.
 
 
 export async function hashPassword(password: string): Promise<string> {
-  return await hash(password, 12);
+  return await Bun.password.hash(password);
 }
 
 export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-  return await compare(password, hashedPassword);
+  return await Bun.password.verify(password, hashedPassword);
 }

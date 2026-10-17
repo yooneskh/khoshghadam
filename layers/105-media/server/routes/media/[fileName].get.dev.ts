@@ -5,17 +5,14 @@
 // from the media directory in development.
 
 
-import { access } from 'node:fs/promises';
-import { createReadStream } from 'node:fs';
-import { relative, resolve } from 'node:path';
-import mime from 'mime';
+const MEDIA_FILE_NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
 
 export default defineEventHandler(async event => {
 
   const fileName = getRouterParam(event, 'fileName');
 
-  if (!fileName) {
+  if (!fileName || !MEDIA_FILE_NAME_PATTERN.test(fileName)) {
     throw createError({
       statusCode: 401,
       statusMessage: 'invalid file name',
@@ -23,20 +20,9 @@ export default defineEventHandler(async event => {
   }
 
 
-  const filePath = resolve(app.media.directory, fileName);
+  const file = Bun.file(`${app.media.directory}/${fileName}`);
 
-  if (relative(app.media.directory, filePath).startsWith('..')) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'invalid file name',
-    });
-  }
-
-
-  try {
-    await access(filePath);
-  }
-  catch {
+  if (!(await file.exists())) {
     throw createError({
       statusCode: 404,
       statusMessage: 'file not found',
@@ -44,8 +30,8 @@ export default defineEventHandler(async event => {
   }
 
 
-  setResponseHeader(event, 'content-type', mime.getType(fileName) || 'application/octet-stream');
+  setResponseHeader(event, 'content-type', file.type || 'application/octet-stream');
 
-  return sendStream(event, createReadStream(filePath));
+  return sendStream(event, file.stream());
 
 });

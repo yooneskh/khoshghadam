@@ -55,7 +55,7 @@ function resolveResponseSize(event: H3Event, body: unknown): number | string {
     return 0;
   }
   else if (typeof body === 'string') {
-    return Buffer.byteLength(body);
+    return byteLength(body);
   }
   else if (body instanceof Uint8Array || body instanceof ArrayBuffer) {
     return body.byteLength;
@@ -65,7 +65,7 @@ function resolveResponseSize(event: H3Event, body: unknown): number | string {
   }
   else if (typeof body === 'object') {
     try {
-      return Buffer.byteLength(JSON.stringify(body));
+      return byteLength(JSON.stringify(body));
     }
     catch {
       return '-';
@@ -75,4 +75,9 @@ function resolveResponseSize(event: H3Event, body: unknown): number | string {
     return '-';
   }
 
+}
+
+
+function byteLength(text: string): number {
+  return new TextEncoder().encode(text).byteLength;
 }

@@ -5,10 +5,6 @@
 // and records their paths on the media document.
 
 
-import { join } from 'node:path';
-import sharp from 'sharp';
-
-
 export async function createImageMediaVariants(media: any) {
 
   const variants = [
@@ -25,19 +21,20 @@ export async function createImageMediaVariants(media: any) {
   ];
 
 
-  const sourcePath = join(app.media.directory, media.path.slice(media.path.lastIndexOf('/') + 1));
+  const sourceFileName = media.path.slice(media.path.lastIndexOf('/') + 1);
+  const sourcePath = `${app.media.directory}/${sourceFileName}`;
 
 
   for (const variant of variants) {
 
     const fileName = `${generateUuid()}.${variant.extension}`;
 
-    await sharp(sourcePath)
+    await new Bun.Image(sourcePath)
       .resize(variant.size, variant.size, {
         fit: 'inside',
       })
       .png()
-      .toFile(join(app.media.directory, fileName));
+      .write(`${app.media.directory}/${fileName}`);
 
     media = await app.media.dbo.update({
       resourceId: media._id,

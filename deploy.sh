@@ -10,7 +10,7 @@ ssh $zxc <<'EOF'
   cd /apps/khoshghadam/
   mise install
 
-  systemctl restart khoshghadam
-  systemctl is-active khoshghadam
+  # systemctl restart khoshghadam
+  # systemctl is-active khoshghadam
 
 EOF

@@ -4,28 +4,24 @@
   "type": "module",
   "scripts": {
     "postinstall": "nuxt prepare",
-    "serve": "nuxt dev --port 8080",
+    "serve": "bun --bun nuxt dev --port 8080",
     "build": "nuxt build"
   },
   "dependencies": {
     "@nuxtjs/sitemap": "9.1.0",
-    "@quentinadam/uuidv7": "0.1.9",
     "@theothergothamdev/pluralize-ts": "1.1.0",
     "@tresjs/nuxt": "5.7.3",
     "arktype": "2.2.8",
-    "bcryptjs": "3.0.3",
-    "mime": "4.1.1",
     "mongodb": "7.7.0",
     "nuxt": "4.6.2",
     "nuxt-gtag": "5.0.0",
     "nuxt-jsonld": "3.0.0",
     "nuxt-unified-ui": "0.5.25",
-    "sharp": "0.35.5",
     "three": "0.186.1",
     "vue": "3.5.44"
   },
   "devDependencies": {
-    "@types/node": "26.6.5",
+    "@types/bun": "1.4.2",
     "@types/three": "0.186.0"
   }
 }

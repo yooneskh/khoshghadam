@@ -6,9 +6,6 @@
 // on the unified app registry.
 
 
-import { join } from 'node:path';
-
-
 const { schema, type, inferred } = parseSchema({
   'owner': 'string',
   'name': 'string',
@@ -31,7 +28,7 @@ declare global {
 
 export default defineNitroPlugin(() => {
   app.media = {
-    directory: join(process.cwd(), '.data/media'),
+    directory: `${process.cwd()}/.data/media`,
     dbo: createUnifiedResourceController({
       resource: 'media',
       schema,

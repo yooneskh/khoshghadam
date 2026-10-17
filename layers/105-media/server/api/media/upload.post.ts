@@ -5,8 +5,6 @@
 // owned by the current user.
 
 
-import { mkdir, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { createImageMediaVariants } from '../../lib/media-variants-image';
 
 
@@ -40,13 +38,9 @@ export default defineEventHandler(async event => {
 
 
   const mediaFileName = `${media._id}.${file.name.slice(file.name.lastIndexOf('.') + 1)}`;
-  const mediaFilePath = join(app.media.directory, mediaFileName);
+  const mediaFilePath = `${app.media.directory}/${mediaFileName}`;
 
-  await mkdir(app.media.directory, {
-    recursive: true,
-  });
-
-  await writeFile(mediaFilePath, Buffer.from(await file.arrayBuffer()));
+  await Bun.write(mediaFilePath, file);
 
 
   try {

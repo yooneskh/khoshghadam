@@ -5,10 +5,6 @@
 // together with its stored file and variants.
 
 
-import { join } from 'node:path';
-import { unlink } from 'node:fs/promises';
-
-
 export async function eraseMedia(mediaId: string | undefined) {
 
   if (!mediaId) {
@@ -61,10 +57,10 @@ async function eraseMediaFile(path: string) {
 
 
   try {
-    await unlink(join(app.media.directory, fileName));
+    await Bun.file(`${app.media.directory}/${fileName}`).delete();
   }
   catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+    if ((error as { code?: string }).code !== 'ENOENT') {
       throw error;
     }
   }

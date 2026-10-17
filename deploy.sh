@@ -9,6 +9,7 @@ ssh $zxc <<'EOF'
 
   cd /apps/khoshghadam/
   mise install
+  mise trust
 
   # systemctl restart khoshghadam
   # systemctl is-active khoshghadam

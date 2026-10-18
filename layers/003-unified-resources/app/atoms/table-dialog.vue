@@ -22,6 +22,11 @@ const emit = defineEmits([
   'close',
 ]);
 
+
+/* cell */
+
+import ResourceExplorerCell from './resource-explorer-cell.vue';
+
 </script>
 
 
@@ -33,8 +38,15 @@ const emit = defineEmits([
           :columns="props.columns"
           :data="props.data"
           hide-pagination
-          :actions="props.tableActions"
-        />
+          :actions="props.tableActions">
+          <template v-for="column in props.columns" :key="column.accessorKey+'-cell'" #[column.accessorKey+'-cell']="{ row }">
+            <resource-explorer-cell
+              :column="column"
+              :row="row.original"
+              :data="row.original[column.accessorKey]"
+            />
+          </template>
+        </un-table>
       </un-card>
     </template>
   </u-modal>

@@ -39,6 +39,11 @@ async function handleViewItems() {
     columns: props.column.items.properties.map(it => ({
       accessorKey: it.key,
       header: radTitle(it.key),
+      resource: it.resource,
+      type: it.type,
+      items: it.items,
+      enum: it.enum,
+      labelFormat: it.labelFormat,
     })),
     data: props.data,
   });
@@ -75,12 +80,14 @@ async function handleViewItems() {
 
   <template v-else-if="props.column.type === 'array' && props.column.items.type === 'object'">
     <a class="text-primary underline cursor-pointer" @click="handleViewItems()">
-      View {{ props.column?.header || 'Items' }}
+      View {{ props.column?.header || 'Items' }} ({{ props.data?.length || 0 }})
     </a>
   </template>
 
   <template v-else-if="props.column.type === 'date' || props.column.labelFormat">
-    {{ formatDate(props.data, props.column.labelFormat === 'default' ? undefined : props.column.labelFormat) }}
+    <template v-if="!!props.data">
+      {{ formatDate(props.data, props.column.labelFormat === 'default' ? undefined : props.column.labelFormat) }}
+    </template>
   </template>
 
   <template v-else-if="props.data === true || props.data === false">
@@ -106,8 +113,13 @@ async function handleViewItems() {
   <template v-else-if="props.column.enum">
     <u-badge
       variant="subtle"
+      :color="props.column.enum?.find(it => it.value === props.data)?.color"
       :label="props.column.enum?.find(it => it.value === props.data)?.label ?? props.data"
     />
+  </template>
+
+  <template v-else-if="typeof props.data === 'number'">
+    {{ props.data.toLocaleString() }}
   </template>
 
   <template v-else>

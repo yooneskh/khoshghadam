@@ -46,6 +46,7 @@ export interface ResourceMeta {
   enum?: {
     label: string;
     value: string | number;
+    color?: string;
   }[];
 
   labelFormat?: string;

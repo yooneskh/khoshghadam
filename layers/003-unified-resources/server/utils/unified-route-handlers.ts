@@ -251,6 +251,27 @@ function extractFilterFromEvent(event: H3Event) {
         $ne: {},
       };
     }
+    else if (operator === 'exists') {
+      acc[key] = {
+        $exists: true,
+      };
+    }
+    else if (operator === 'not-exists') {
+      acc[key] = {
+        $exists: false,
+      };
+    }
+    else if (operator === 'null') {
+      acc[key] = {
+        $eq: null,
+      };
+    }
+    else if (operator === 'not-null') {
+      acc[key] = {
+        $exists: true,
+        $ne: null,
+      };
+    }
 
 
     return acc;

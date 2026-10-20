@@ -33,9 +33,43 @@ useSeoMeta({
 const resourceManagerEl = useTemplateRef('resourceManager');
 
 
+/* statistics */
+
+const statisticsEl = useTemplateRef('statistics');
+
+const statistics = [
+  {
+    resource: 'users',
+    icon: 'lucide:users',
+    title: 'Total Users',
+    color: 'primary',
+  },
+  {
+    resource: 'authorizationTokens',
+    icon: 'lucide:key-round',
+    title: 'Access Tokens',
+    color: 'info',
+  },
+  {
+    resource: 'userApiKeys',
+    icon: 'lucide:rail-symbol',
+    title: 'API Keys',
+    color: 'success',
+  },
+  {
+    resource: 'authorizationRoles',
+    icon: 'lucide:shield',
+    title: 'Roles',
+    color: 'warning',
+  },
+];
+
+
+/* handlers */
+
 async function handleOnboardUser() {
 
-  const roles = await ufetch('/api/authorization-roles', {
+  const rolesResponse = await ufetch('/api/authorization-roles', {
     query: {
       sort: 'name:asc',
     },
@@ -73,7 +107,7 @@ async function handleOnboardUser() {
         key: 'role',
         identifier: 'select',
         label: 'Role',
-        items: roles.map(it => ({
+        items: rolesResponse.map(it => ({
           value: it._id,
           label: it.name,
         })),
@@ -103,6 +137,7 @@ async function handleOnboardUser() {
 
 
         await resourceManagerEl.value?.refreshResources();
+        await statisticsEl.value?.refresh();
 
         toastSuccess({
           title: 'User onboarded successfully.',
@@ -159,23 +194,32 @@ async function handleResetPassword(user) {
 
 
 <template>
-  <resource-manager
-    ref="resourceManager"
-    resource="users"
-    :actions="[
-      {
-        variant: 'subtle',
-        icon: 'lucide:user-plus',
-        label: 'Onboard User',
-        onClick: handleOnboardUser,
-      },
-    ]"
-    :resource-actions="[
-      {
-        icon: 'lucide:key-round',
-        tooltip: 'Reset Password',
-        onClick: handleResetPassword,
-      },
-    ]"
-  />
+  <div class="space-y-3">
+
+    <resource-statistics
+      ref="statistics"
+      :statistics="statistics"
+    />
+
+    <resource-manager
+      ref="resourceManager"
+      resource="users"
+      :actions="[
+        {
+          variant: 'subtle',
+          icon: 'lucide:user-plus',
+          label: 'Onboard User',
+          onClick: handleOnboardUser,
+        },
+      ]"
+      :resource-actions="[
+        {
+          icon: 'lucide:key-round',
+          tooltip: 'Reset Password',
+          onClick: handleResetPassword,
+        },
+      ]"
+    />
+
+  </div>
 </template>

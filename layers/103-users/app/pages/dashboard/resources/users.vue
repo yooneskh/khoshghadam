@@ -67,6 +67,10 @@ const statistics = [
 
 /* handlers */
 
+async function handleRefreshed() {
+  await statisticsEl.value?.refresh();
+}
+
 async function handleOnboardUser() {
 
   const rolesResponse = await ufetch('/api/authorization-roles', {
@@ -137,7 +141,6 @@ async function handleOnboardUser() {
 
 
         await resourceManagerEl.value?.refreshResources();
-        await statisticsEl.value?.refresh();
 
         toastSuccess({
           title: 'User onboarded successfully.',
@@ -204,6 +207,7 @@ async function handleResetPassword(user) {
     <resource-manager
       ref="resourceManager"
       resource="users"
+      @refreshed="handleRefreshed"
       :actions="[
         {
           variant: 'subtle',

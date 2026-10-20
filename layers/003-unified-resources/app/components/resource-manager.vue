@@ -14,6 +14,10 @@ const props = defineProps({
   resourceActions: Array,
 });
 
+const emit = defineEmits([
+  'refreshed',
+]);
+
 
 /* resource */
 
@@ -72,6 +76,7 @@ const resourceActions = computed(() => {
 
 async function refreshResources() {
   await resourceExplorerTableEl.value?.refreshResources();
+  emit('refreshed');
 }
 
 async function handleResourceCreate() {

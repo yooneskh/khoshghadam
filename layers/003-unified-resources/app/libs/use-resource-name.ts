@@ -8,10 +8,15 @@
 import { wordToSingular, wordToPlural } from './word-pluralize';
 
 
+export function resolveResourcePath(resource: string) {
+  return radDash(wordToPlural(resource || ''));
+}
+
+
 export function useResourceName(args: { resource: MaybeRefOrGetter<string>; }) {
   return {
     resource: computed(() => radPascal(wordToSingular(toValue(args.resource) || ''))),
-    resourcePath: computed(() => radDash(wordToPlural(toValue(args.resource) || ''))),
+    resourcePath: computed(() => resolveResourcePath(toValue(args.resource) || '')),
     title: computed(() => radTitle(wordToSingular(toValue(args.resource) || ''))),
     titlePlural: computed(() => radTitle(wordToPlural(toValue(args.resource) || ''))),
   };

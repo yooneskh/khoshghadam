@@ -34,7 +34,9 @@ export interface ResourceMeta {
   if?: any;
 
   resource?: string;
+
   width?: number;
+  cellClass?: string;
 
   hidden?: boolean;
   hideInTable?: boolean;

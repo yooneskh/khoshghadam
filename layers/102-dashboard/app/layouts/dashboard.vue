@@ -155,6 +155,16 @@ const navigationItems = computed(() => {
             },
           },
         },
+        {
+          icon: 'lucide:settings',
+          label: 'Media Settings',
+          to: {
+            name: 'dashboard.manage.single',
+            params: {
+              resourceName: 'media-settings',
+            },
+          },
+        },
       ],
     },
     {

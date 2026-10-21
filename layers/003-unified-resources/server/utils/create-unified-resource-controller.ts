@@ -1,9 +1,11 @@
 
 /* responsibility */
 
-// Creates the typed Mongo controller of a resource,
-// validating, storing, and populating its documents.
+// Creates the typed Mongo controller for a resource
+// with schema, CRUD, and populate support.
 
+
+/* interface */
 
 import { type, Type } from 'arktype';
 
@@ -30,31 +32,21 @@ type UnifiedResourceDocument<T> = AddIdToNestedArrayObjects<T> & {
 
 
 export interface ResourceMeta {
-
   if?: any;
-
   resource?: string;
-
   width?: number;
   cellClass?: string;
-
   hidden?: boolean;
   hideInTable?: boolean;
-
   children?: Record<string, ResourceMeta>;
-
   longText?: boolean;
-
   enum?: {
     label: string;
     value: string | number;
     color?: string;
   }[];
-
   labelFormat?: string;
-
   controlLabel?: string;
-
 }
 
 
@@ -69,9 +61,7 @@ export interface UnifiedResourceIndex {
 
 
 export interface UnifiedResourceController<T> {
-
   schema: () => any;
-
   list: (args: {
     filter?: any;
     select?: string[];
@@ -80,49 +70,63 @@ export interface UnifiedResourceController<T> {
     limit?: any;
     populate?: Record<string, string[]> | undefined;
   }) => Promise<UnifiedResourceDocument<T>[]>;
-
   count: (args: {
     filter?: any;
   }) => Promise<number>;
-
   aggregate: (args: {
     pipeline: any[];
   }) => Promise<any[]>;
-
   find: (args: {
     resourceId?: string;
     filter?: any;
     select?: string[];
     populate?: Record<string, string[]> | undefined;
   }) => Promise<UnifiedResourceDocument<T> | undefined>;
-
   retrieve: (args: {
     resourceId?: string;
     filter?: any;
     select?: string[];
     populate?: Record<string, string[]> | undefined;
   }) => Promise<UnifiedResourceDocument<T>>;
-
   create: (args: {
     document: T;
   }) => Promise<UnifiedResourceDocument<T>>;
-
   update: (args: {
     resourceId?: string;
     document: Partial<T>;
   }) => Promise<UnifiedResourceDocument<T>>;
-
   updateQuery: (args: {
     resourceId?: string;
     query: any;
   }) => Promise<UnifiedResourceDocument<T>>;
-
   delete: (args: {
     resourceId?: string;
   }) => Promise<UnifiedResourceDocument<T>>;
-
 }
 
+
+/* schema */
+
+function convertPropertyToSchema(schema: any, properties: any, meta: any): any {
+  return Object.keys(schema).map(it => {
+
+    const key = it.replaceAll('?', '');
+
+    return {
+      key,
+      ...(properties[key]),
+      ...(meta?.[key] ?? {}),
+      items: !properties[key]?.items ? undefined : {
+        ...properties[key].items,
+        properties: !properties[key].items.properties ? undefined : convertPropertyToSchema(schema[it][0], properties[key].items.properties, meta?.[key]?.children),
+      },
+    };
+
+  });
+}
+
+
+/* resource */
 
 const resourceRegistry = new Map<string, any>();
 
@@ -150,6 +154,8 @@ export function createUnifiedResourceController<T extends object>(props: {
     }).catch(error => {
 
       console.error(`failed to ensure indexes for resource "${collectionName}"`, error);
+
+
       process.exit(1);
 
     });
@@ -158,22 +164,7 @@ export function createUnifiedResourceController<T extends object>(props: {
 
   return {
     schema: () => {
-
-      const convertPropertyToSchema = (schema: any, properties: any, meta: any): any => {
-        return Object.keys(schema).map(it => ({
-          key: it.replaceAll('?', ''),
-          ...(properties[it.replaceAll('?', '')]),
-          ...(meta?.[it.replaceAll('?', '')] ?? {}),
-          items: !properties[it.replaceAll('?', '')]?.items ? undefined : {
-            ...properties[it.replaceAll('?', '')].items,
-            properties: !properties[it.replaceAll('?', '')].items.properties ? undefined : convertPropertyToSchema(schema[it][0], properties[it.replaceAll('?', '')].items.properties, meta?.[it.replaceAll('?', '')]?.children),
-          },
-        }));
-      };
-
-
       return convertPropertyToSchema(props.schema, (props.type.toJsonSchema() as any)?.properties, props.meta);
-
     },
     list: async (args) => {
 
@@ -220,7 +211,9 @@ export function createUnifiedResourceController<T extends object>(props: {
         _id: args.resourceId as any,
       } : args.filter;
 
+
       const projection = selectToProjection(args.select);
+
 
       const document = await collection.findOne(filter, {
         projection,
@@ -253,7 +246,9 @@ export function createUnifiedResourceController<T extends object>(props: {
         _id: args.resourceId as any,
       } : args.filter;
 
+
       const projection = selectToProjection(args.select);
+
 
       const document = await collection.findOne(filter, {
         projection,
@@ -292,7 +287,7 @@ export function createUnifiedResourceController<T extends object>(props: {
       const validatedDocument = props.type(document);
 
       if (validatedDocument instanceof type.errors) {
-        throw new Error('document is invalid: ' + validatedDocument.summary);
+        throw new Error(`document is invalid: ${validatedDocument.summary}`);
       }
 
 
@@ -332,8 +327,9 @@ export function createUnifiedResourceController<T extends object>(props: {
 
       const validatedDocument = props.type(updatedDocument);
 
+
       if (validatedDocument instanceof type.errors) {
-        throw new Error('document is invalid: ' + validatedDocument.summary);
+        throw new Error(`document is invalid: ${validatedDocument.summary}`);
       }
 
 
@@ -348,8 +344,9 @@ export function createUnifiedResourceController<T extends object>(props: {
       normalizeDocumentIds(finalDocument);
 
 
-      const setDocument = { ...(finalDocument as Record<string, any>) };
-      delete setDocument._id;
+      const setDocument = radOmit(finalDocument as Record<string, any>, [
+        '_id',
+      ]);
 
       await collection.updateOne({
         _id: args.resourceId as any,
@@ -418,6 +415,7 @@ export function createUnifiedResourceController<T extends object>(props: {
 }
 
 
+/* projection */
 
 function selectToProjection(select?: string[]) {
   if (!select) {
@@ -430,6 +428,9 @@ function selectToProjection(select?: string[]) {
     ])) as any;
   }
 }
+
+
+/* document */
 
 function normalizeDocumentIds(value: any) {
 
@@ -461,7 +462,10 @@ function normalizeDocumentIds(value: any) {
 
 }
 
-async function populateDocument(args: { document: any; meta: any; populate: Record<string, string[]>; parents?: string[]; }) {
+
+/* populate */
+
+async function populateDocument(args: { document: any, meta: any, populate: Record<string, string[]>, parents?: string[] }) {
 
   if (!args.document || typeof args.document !== 'object' || Array.isArray(args.document) || !args.meta) {
     return;
@@ -476,6 +480,7 @@ async function populateDocument(args: { document: any; meta: any; populate: Reco
       ...(args.parents ?? []),
       key,
     ];
+
 
     const keyExactMatch = Object.keys(args.populate).find(it => it === populatePath.join('.'));
     const keyPreMatch = Object.keys(args.populate).find(it => it === populatePath.join('.') || it.startsWith(populatePath.join('.') + '.'));

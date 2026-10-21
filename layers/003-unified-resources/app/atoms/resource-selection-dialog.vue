@@ -23,7 +23,6 @@ const emit = defineEmits([
 /* resource */
 
 import ResourceExplorerTable from './resource-explorer-table.vue';
-import { useResourceName } from '../libs/use-resource-name';
 import { retrieveResource } from '../libs/retrieve-resource';
 import { truncateMiddle } from '../libs/truncate-middle';
 

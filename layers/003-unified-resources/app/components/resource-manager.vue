@@ -22,7 +22,6 @@ const emit = defineEmits([
 /* resource */
 
 import ResourceExplorerTable from '../atoms/resource-explorer-table.vue';
-import { useResourceName } from '../libs/use-resource-name';
 import { useResourceMeta } from '../libs/use-resource-meta';
 import { evictResource } from '../libs/retrieve-resource';
 

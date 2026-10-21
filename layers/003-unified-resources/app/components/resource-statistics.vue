@@ -11,41 +11,49 @@
 const props = defineProps({
   statistics: Array,
   layout: String,
-  title: String,
   columns: Number,
-  refreshInterval: Number,
 });
-
-const emit = defineEmits([
-  'loaded',
-  'error',
-]);
 
 
 /* statistics */
 
 import ResourceStatisticTile from '../atoms/resource-statistic-tile.vue';
-import { useResourceStatistics } from '../libs/use-resource-statistics';
+import { serializeResourceStatisticFilters } from '../libs/serialize-resource-statistic-filters';
 
 
-const { results, isStatisticsPending, refresh } = useResourceStatistics({
-  statistics: () => props.statistics,
-  onLoaded: handleLoaded,
-  onError: handleError,
+const statistics = computed(() => {
+  return props.statistics || [];
 });
 
-
-/* actions */
-
-const actions = computed(() => {
-  return [
+const statisticFetches = statistics.value.map((statistic) => {
+  return useUFetch(
+    () => `/api/${resolveResourcePath(statistic.resource)}/count`,
     {
-      variant: 'subtle',
-      icon: 'lucide:refresh-ccw',
-      onClick: refresh,
+      query: {
+        'filter': computed(() => serializeResourceStatisticFilters(statistic.filters)),
+      },
     },
-  ];
+  );
 });
+
+const results = computed(() => {
+  return statistics.value.map((config, index) => {
+    return {
+      config,
+      value: statisticFetches[index].data.value == null ? undefined : Number(statisticFetches[index].data.value),
+      error: !!statisticFetches[index].error.value,
+    };
+  });
+});
+
+const isStatisticsPending = computed(() => {
+  return statisticFetches.some(it => it.pending.value);
+});
+
+
+async function refresh() {
+  await Promise.all(statisticFetches.map(it => it.refresh()));
+}
 
 
 /* layout */
@@ -69,39 +77,6 @@ const layoutClasses = computed(() => {
 });
 
 
-/* refresh */
-
-const { pause: pauseRefresh, resume: resumeRefresh } = useIntervalFn(refresh, computed(() => props.refreshInterval ?? 0), {
-  immediate: false,
-});
-
-
-watchImmediate(
-  () => props.refreshInterval,
-  handleRefreshIntervalChange,
-);
-
-
-/* events */
-
-function handleLoaded(statistics) {
-  emit('loaded', statistics);
-}
-
-function handleError(statistics) {
-  emit('error', statistics);
-}
-
-function handleRefreshIntervalChange(interval) {
-  if (interval) {
-    resumeRefresh();
-  }
-  else {
-    pauseRefresh();
-  }
-}
-
-
 /* outlets */
 
 defineExpose({
@@ -112,29 +87,12 @@ defineExpose({
 
 
 <template>
-
-  <template v-if="props.title">
-    <un-card :title="props.title" :append-actions="actions" :aria-busy="isStatisticsPending">
-      <div :class="layoutClasses">
-        <template v-for="(statistic, index) of results" :key="index">
-          <resource-statistic-tile
-            :statistic="statistic"
-            :layout="props.layout"
-          />
-        </template>
-      </div>
-    </un-card>
-  </template>
-
-  <template v-else>
-    <div :class="layoutClasses" :aria-busy="isStatisticsPending">
-      <template v-for="(statistic, index) of results" :key="index">
-        <resource-statistic-tile
-          :statistic="statistic"
-          :layout="props.layout"
-        />
-      </template>
-    </div>
-  </template>
-
+  <div :class="layoutClasses" :aria-busy="isStatisticsPending">
+    <template v-for="(statistic, index) of results" :key="index">
+      <resource-statistic-tile
+        :statistic="statistic"
+        :layout="props.layout"
+      />
+    </template>
+  </div>
 </template>

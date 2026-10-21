@@ -27,10 +27,17 @@ const resourceName = computed(() => {
 });
 
 
+/* resource */
+
+const { titlePlural } = useResourceName({
+  resource: () => resourceName.value,
+});
+
+
 /* seo */
 
 useHead({
-  title: () => radTitle(resourceName.value),
+  title: titlePlural,
 });
 
 useSeoMeta({

@@ -22,7 +22,6 @@ const emit = defineEmits([
 /* resource */
 
 import { useResourceMeta } from '../libs/use-resource-meta';
-import { useResourceName } from '../libs/use-resource-name';
 import { retrieveResource, evictResource } from '../libs/retrieve-resource';
 import { truncateMiddle } from '../libs/truncate-middle';
 

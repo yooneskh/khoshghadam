@@ -5,13 +5,14 @@
 // from its name.
 
 
-import { wordToSingular, wordToPlural } from './word-pluralize';
+/* names */
+
+import { wordToSingular, wordToPlural } from '../libs/word-pluralize';
 
 
 export function resolveResourcePath(resource: string) {
   return radDash(wordToPlural(resource || ''));
 }
-
 
 export function useResourceName(args: { resource: MaybeRefOrGetter<string>; }) {
   return {

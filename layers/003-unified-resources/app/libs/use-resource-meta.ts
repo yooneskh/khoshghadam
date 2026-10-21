@@ -7,7 +7,6 @@
 
 /* resource */
 
-import { useResourceName } from './use-resource-name';
 import { retrieveResourceSchema } from './retrieve-resource';
 
 

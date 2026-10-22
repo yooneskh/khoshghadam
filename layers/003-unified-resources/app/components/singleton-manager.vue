@@ -29,6 +29,9 @@ const { fields } = useResourceMeta({
 
 const { data: singletonData, pending: isSingletonPending, refresh: refreshSingleton } = useUFetch(
   computed(() => `/api/${resourcePath.value}`),
+  {
+    deep: true,
+  },
 );
 
 
@@ -47,6 +50,7 @@ const actions = computed(() => {
 
   return [
     {
+      variant: 'subtle',
       icon: 'lucide:save',
       label: 'Save',
       onClick: handleSave,
@@ -94,7 +98,7 @@ defineExpose({
 
 
 <template>
-  <un-card :title="title" :actions="actions">
+  <un-card :title="title" :append-actions="actions">
 
     <template v-if="isSingletonPending && !singletonData">
       <un-spinner />

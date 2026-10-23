@@ -103,6 +103,7 @@ function convertMetaToField(meta: any) {
   else if (meta.type === 'array' && meta.items.type === 'object') {
     field.identifier = 'series';
     field.itemFields = meta.items.properties.map(convertMetaToField);
+    field.seriesColumns = meta.seriesColumns;
   }
   else if (meta.longText) {
     field.identifier = 'textarea';

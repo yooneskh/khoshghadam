@@ -39,6 +39,7 @@ export interface ResourceMeta {
   hidden?: boolean;
   hideInTable?: boolean;
   children?: Record<string, ResourceMeta>;
+  seriesColumns?: number;
   longText?: boolean;
   enum?: {
     label: string;

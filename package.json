@@ -10,18 +10,18 @@
   "dependencies": {
     "@nuxtjs/sitemap": "9.1.0",
     "@theothergothamdev/pluralize-ts": "1.1.0",
-    "@tresjs/nuxt": "5.7.3",
-    "arktype": "2.2.8",
+    "@tresjs/nuxt": "5.8.0",
+    "arktype": "2.2.9",
     "mongodb": "7.7.0",
     "nuxt": "4.6.2",
     "nuxt-gtag": "5.0.0",
     "nuxt-jsonld": "3.0.0",
-    "nuxt-unified-ui": "0.5.27",
+    "nuxt-unified-ui": "0.5.28",
     "three": "0.186.1",
     "vue": "3.5.44"
   },
   "devDependencies": {
-    "@types/bun": "1.4.2",
+    "@types/bun": "1.4.4",
     "@types/three": "0.186.0"
   }
 }

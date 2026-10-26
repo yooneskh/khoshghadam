@@ -30,7 +30,7 @@ const { data: flashCardData, pending: isFlashCardPending } = useUFetch(
   {
     query: {
       'filter': computed(() => `slug:eq:${flashCardSlug.value}`),
-      'single': 'xtruex',
+      'single': 'true',
       'populate': 'owner:name,category:name',
     },
   },
@@ -99,7 +99,26 @@ useJsonld(() => !flashCardData.value ? null : {
 });
 
 
-/* sessions */
+/* actions */
+
+const actions = computed(() => {
+  return [
+    {
+      variant: 'subtle',
+      icon: 'lucide:play',
+      label: 'Start Learning',
+      to: {
+        name: 'flash-cards.single.learn',
+        params: {
+          flashCardSlug: flashCardSlug.value,
+        },
+      },
+    },
+  ];
+});
+
+
+/* past sessions */
 
 import FlashCardPastSessions from '../../../atoms/flash-card-past-sessions.vue';
 
@@ -107,23 +126,7 @@ import FlashCardPastSessions from '../../../atoms/flash-card-past-sessions.vue';
 
 
 <template>
-  <window-base
-    pito="address-book"
-    :title="flashCardData?.name || '-'"
-    :loading="isFlashCardPending"
-    :actions="[
-      {
-        variant: 'subtle',
-        icon: 'lucide:play',
-        label: 'Start Learning',
-        to: {
-          name: 'flash-cards.single.learn',
-          params: {
-            flashCardSlug,
-          },
-        },
-      },
-    ]">
+  <window-base pito="address-book" :title="flashCardData?.name || '-'" :loading="isFlashCardPending" :actions="actions">
 
     <div class="p-3">
 
@@ -131,9 +134,9 @@ import FlashCardPastSessions from '../../../atoms/flash-card-past-sessions.vue';
         {{ flashCardData?.name }}
       </h1>
 
-      <h2 class="mt-1 text-sm">
+      <p class="mt-1 text-sm">
         {{ flashCardData?.category?.name }} - by {{ flashCardData?.owner?.name }}
-      </h2>
+      </p>
 
       <div class="flex items-center gap-3 mt-2">
         <template v-for="tag of flashCardData?.tags" :key="tag">

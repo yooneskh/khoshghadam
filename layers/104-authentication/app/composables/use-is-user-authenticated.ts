@@ -6,7 +6,11 @@
 
 
 export function useIsUserAuthenticated() {
+
+  const user = useUser();
+
   return computed(() => {
-    return !!useUser().value;
+    return !!user.value;
   });
+
 }

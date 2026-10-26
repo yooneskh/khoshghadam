@@ -34,7 +34,7 @@ const { data: flashCardData, pending: isFlashCardPending } = useUFetch(
   {
     query: {
       'filter': computed(() => `slug:eq:${flashCardSlug.value}`),
-      'single': 'xtruex',
+      'single': 'true',
       'populate': 'owner:name,category:name',
     },
   },
@@ -113,6 +113,17 @@ useJsonld(() => !flashCardData.value ? null : {
 
 const activeIndex = ref(0);
 const rotatedIndex = ref(-1);
+
+
+const learnWindowActions = computed(() => {
+  return [
+    {
+      variant: 'subtle',
+      label: activeIndex.value < flashCardData.value?.cards?.length - 1 ? 'Next' : 'Finish',
+      onClick: handleCardAdvance,
+    },
+  ];
+});
 
 
 /* session */
@@ -217,17 +228,11 @@ async function handleCardAdvance() {
     pito="address-book"
     :title="`${flashCardData?.name || '-'} Cards`"
     :loading="isFlashCardPending"
-    :actions="[
-      {
-        variant: 'subtle',
-        label: activeIndex < flashCardData?.cards.length - 1 ? 'Next' : 'Finish',
-        onClick: handleCardAdvance,
-      },
-    ]">
+    :actions="learnWindowActions">
     <div class="h-full w-full flex items-center justify-center">
       <div class="w-full flex flex-col items-center gap-3 relative overflow-hidden p-3">
 
-        <template v-for="(card, index) of flashCardData.cards" :key="card._id">
+        <template v-for="(card, index) of flashCardData?.cards" :key="card._id">
           <div
             class="w-64 h-72 absolute flex items-center justify-center transition-all duration-1000 perspective-distant"
             :class="{

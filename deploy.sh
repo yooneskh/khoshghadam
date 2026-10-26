@@ -11,7 +11,7 @@ ssh $zxc <<'EOF'
   mise install
   mise trust
 
-  # systemctl restart khoshghadam
-  # systemctl is-active khoshghadam
+  systemctl restart khoshghadam
+  systemctl is-active khoshghadam
 
 EOF

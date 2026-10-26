@@ -36,7 +36,6 @@ export async function handleResourceSchema(args: ResourceHandlerArgs) {
 
 }
 
-
 export async function handleResourceList(args: ResourceHandlerArgs) {
 
   await assertOptionalPermission(args);
@@ -62,7 +61,6 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
 
 }
 
-
 export async function handleResourceCount(args: ResourceHandlerArgs) {
 
   await assertOptionalPermission(args);
@@ -73,7 +71,6 @@ export async function handleResourceCount(args: ResourceHandlerArgs) {
   });
 
 }
-
 
 export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
 
@@ -87,7 +84,6 @@ export async function handleResourceRetrieve(args: ResourceHandlerArgs) {
 
 }
 
-
 export async function handleResourceCreate(args: ResourceHandlerArgs) {
 
   await assertOptionalPermission(args);
@@ -98,7 +94,6 @@ export async function handleResourceCreate(args: ResourceHandlerArgs) {
   });
 
 }
-
 
 export async function handleResourceUpdate(args: ResourceHandlerArgs) {
 
@@ -111,7 +106,6 @@ export async function handleResourceUpdate(args: ResourceHandlerArgs) {
   });
 
 }
-
 
 export async function handleResourceDelete(args: ResourceHandlerArgs) {
 

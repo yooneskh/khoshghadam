@@ -30,6 +30,8 @@ const itemsPerPage = ref(18);
 const currentPage = ref(1);
 const currentItems = ref(radCloneDeep(props.items || []));
 const currentItemsTitles = ref({});
+let resolveUploadDialog = null;
+let rejectUploadDialog = null;
 
 
 const { data: mediaData, pending: isMediaPending, refresh: refreshMedia } = useUFetch(
@@ -47,8 +49,51 @@ const { data: mediaCountData, refresh: refreshMediaCount } = useUFetch(
   '/api/media/count',
 );
 
+const { open: openUploadDialog, onChange: onUploadDialogChange, onCancel: onUploadDialogCancel } = useFileDialog({
+  multiple: true,
+  reset: true,
+});
+
 
 watchImmediate(currentItems, loadCurrentItemTitles);
+
+onUploadDialogChange(async fileList => {
+
+  // clearing the previous selection emits an empty change before the dialog opens
+  if (!fileList?.length || !resolveUploadDialog) {
+    return;
+  }
+
+
+  const resolve = resolveUploadDialog;
+  const reject = rejectUploadDialog;
+  resolveUploadDialog = null;
+  rejectUploadDialog = null;
+
+
+  try {
+    await uploadSelectedMedia(fileList);
+    resolve();
+  }
+  catch (error) {
+    reject(error);
+  }
+
+});
+
+onUploadDialogCancel(() => {
+
+  if (!resolveUploadDialog) {
+    return;
+  }
+
+
+  const resolve = resolveUploadDialog;
+  resolveUploadDialog = null;
+  rejectUploadDialog = null;
+  resolve();
+
+});
 
 
 async function loadCurrentItemTitles() {
@@ -69,51 +114,43 @@ async function loadCurrentItemTitles() {
   }));
 }
 
-async function handleUploadMedia() {
-  await launchFormPickerDialog({
-    icon: 'lucide:cloud-upload',
-    title: 'Upload Media',
-    subtitle: 'Select new files to upload as media',
-    fields: [
-      {
-        key: 'files',
-        identifier: 'input',
-        label: 'Files',
-        type: 'file',
-        multiple: true,
-      },
-    ],
-    submitButton: {
-      icon: 'lucide:cloud-upload',
-      label: 'Upload Files',
-      onClick: async form => {
+async function uploadSelectedMedia(fileList) {
 
-        for (const file of form.files) {
+  try {
+    for (const file of fileList) {
 
-          const body = new FormData();
-          body.append('file', file);
+      const body = new FormData();
+      body.append('file', file);
 
 
-          await ufetch('/api/media/upload', {
-            method: 'post',
-            body,
-          });
+      await ufetch('/api/media/upload', {
+        method: 'post',
+        body,
+      });
 
-        }
+    }
+  }
+  finally {
+    await Promise.all([
+      refreshMedia(),
+      refreshMediaCount(),
+    ]);
+  }
 
 
-        await Promise.all([
-          refreshMedia(),
-          refreshMediaCount(),
-        ]);
+  toastSuccess({
+    title: 'Media uploaded successfully.',
+  });
 
+}
 
-        toastSuccess({
-          title: 'Media uploaded successfully.',
-        });
+function handleUploadMedia() {
+  return new Promise((resolve, reject) => {
 
-      },
-    },
+    resolveUploadDialog = resolve;
+    rejectUploadDialog = reject;
+    openUploadDialog();
+
   });
 }
 
@@ -173,6 +210,10 @@ async function handleSubmitSelection(items) {
   emit('close', items);
 }
 
+function handleClose() {
+  emit('close');
+}
+
 function handleOpenMedia(media) {
   return launchMediaViewerDialog({
     media,
@@ -211,7 +252,7 @@ function handleOpenMedia(media) {
           {
             variant: 'ghost',
             label: $t('common.cancel'),
-            onClick: () => emit('close'),
+            onClick: handleClose,
           },
         ]"
         fluid-body>
@@ -323,7 +364,13 @@ function handleOpenMedia(media) {
             <div class="grow" />
 
             <u-select
-              :items="[6, 12, 18, 24, 30]"
+              :items="[
+                6,
+                12,
+                18,
+                24,
+                30,
+              ]"
               v-model="itemsPerPage"
             />
 

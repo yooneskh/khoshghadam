@@ -365,22 +365,12 @@ function getValueField() {
     }"
     v-model:open="isOpen">
 
-    <template v-if="filter">
-      <u-button
-        variant="subtle"
-        color="primary"
-        size="xs"
-        icon="lucide:filter"
-      />
-    </template>
-
-    <template v-else>
-      <u-button
-        variant="subtle"
-        size="xs"
-        icon="lucide:filter"
-      />
-    </template>
+    <u-button
+      variant="subtle"
+      :color="filter ? 'primary' : undefined"
+      size="xs"
+      icon="lucide:filter"
+    />
 
     <template #content>
       <div class="w-72 p-3">

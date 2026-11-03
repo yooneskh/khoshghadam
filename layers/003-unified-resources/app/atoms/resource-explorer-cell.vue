@@ -31,6 +31,15 @@ import ResourceExplorerCellRef from './resource-explorer-cell-ref.vue';
 import { launchTableDialog } from '../libs/launch-table-dialog';
 
 
+function getResourceItemKey(item, index) {
+  if (item && typeof item === 'object') {
+    return `${item._id ?? index}-${index}`;
+  }
+  else {
+    return `${item}-${index}`;
+  }
+}
+
 async function handleViewItems() {
   await launchTableDialog({
     icon: 'lucide:list',
@@ -56,7 +65,7 @@ async function handleViewItems() {
 
   <template v-if="props.column.resource">
     <div class="flex flex-wrap gap-2">
-      <template v-for="item of radCastArray(props.data || [])" :key="item">
+      <template v-for="(item, index) of radCastArray(props.data || [])" :key="getResourceItemKey(item, index)">
         <resource-explorer-cell-ref
           :column="props.column"
           :row="props.row"

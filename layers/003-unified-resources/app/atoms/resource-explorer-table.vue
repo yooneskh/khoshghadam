@@ -126,6 +126,10 @@ function handleFilterClear(column) {
   currentPage.value = 1;
 }
 
+function getResourceRowId(row, index) {
+  return String(row._id ?? index);
+}
+
 function handleFiltersClear() {
   filters.value = {};
   currentPage.value = 1;
@@ -218,7 +222,7 @@ defineExpose({
 
     </div>
 
-    <un-table :columns="columns" :loading="isResourcesPending || isResourcesCountPending" :data="resourcesData" :total-items="resourcesCountData" v-model:items-per-page="itemsPerPage" v-model:current-page="currentPage" :actions="props.actions">
+    <un-table :columns="columns" :loading="isResourcesPending || isResourcesCountPending" :data="resourcesData" :get-row-id="getResourceRowId" :total-items="resourcesCountData" v-model:items-per-page="itemsPerPage" v-model:current-page="currentPage" :actions="props.actions">
 
       <template v-for="column in columns" :key="column.accessorKey" #[column.accessorKey+'-header']>
         <div class="flex items-center gap-1">
@@ -271,6 +275,7 @@ defineExpose({
 
       <template v-for="column in columns" :key="column.accessorKey + cellRefreshKey" #[column.accessorKey+'-cell']="{ row }">
         <resource-explorer-cell
+          :key="`${row.original._id}-${column.accessorKey}`"
           :column="column"
           :row="row.original"
           :data="row.original[column.accessorKey]"

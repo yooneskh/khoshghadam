@@ -28,16 +28,35 @@ import { launchMediaViewerDialog } from '../libs/launch-media-viewer-dialog';
 
 const itemsPerPage = ref(18);
 const currentPage = ref(1);
+const search = ref('');
+const debouncedSearch = refDebounced(search, 300);
 const currentItems = ref(radCloneDeep(props.items || []));
 const currentItemsTitles = ref({});
+
 let resolveUploadDialog = null;
 let rejectUploadDialog = null;
+
+
+const mediaFilter = computed(() => {
+
+  const term = debouncedSearch.value.trim();
+
+
+  if (!term) {
+    return '';
+  }
+  else {
+    return `name:contains:${term}`;
+  }
+
+});
 
 
 const { data: mediaData, pending: isMediaPending, refresh: refreshMedia } = useUFetch(
   '/api/media',
   {
     query: {
+      'filter': mediaFilter,
       'sort': '_id:-1',
       'skip': computed(() => (currentPage.value - 1) * itemsPerPage.value),
       'limit': itemsPerPage,
@@ -47,6 +66,11 @@ const { data: mediaData, pending: isMediaPending, refresh: refreshMedia } = useU
 
 const { data: mediaCountData, refresh: refreshMediaCount } = useUFetch(
   '/api/media/count',
+  {
+    query: {
+      'filter': mediaFilter,
+    },
+  },
 );
 
 const { open: openUploadDialog, onChange: onUploadDialogChange, onCancel: onUploadDialogCancel } = useFileDialog({
@@ -55,46 +79,20 @@ const { open: openUploadDialog, onChange: onUploadDialogChange, onCancel: onUplo
 });
 
 
+watch(debouncedSearch, handleSearchChange, {
+  flush: 'sync',
+});
+
 watchImmediate(currentItems, loadCurrentItemTitles);
 
-onUploadDialogChange(async fileList => {
+onUploadDialogChange(handleUploadDialogChange);
 
-  // clearing the previous selection emits an empty change before the dialog opens
-  if (!fileList?.length || !resolveUploadDialog) {
-    return;
-  }
+onUploadDialogCancel(handleUploadDialogCancel);
 
 
-  const resolve = resolveUploadDialog;
-  const reject = rejectUploadDialog;
-  resolveUploadDialog = null;
-  rejectUploadDialog = null;
-
-
-  try {
-    await uploadSelectedMedia(fileList);
-    resolve();
-  }
-  catch (error) {
-    reject(error);
-  }
-
-});
-
-onUploadDialogCancel(() => {
-
-  if (!resolveUploadDialog) {
-    return;
-  }
-
-
-  const resolve = resolveUploadDialog;
-  resolveUploadDialog = null;
-  rejectUploadDialog = null;
-  resolve();
-
-});
-
+function handleSearchChange() {
+  currentPage.value = 1;
+}
 
 async function loadCurrentItemTitles() {
   await Promise.all(currentItems.value.map(async itemId => {
@@ -108,6 +106,7 @@ async function loadCurrentItemTitles() {
       resourcePath: 'media',
       id: itemId,
     });
+
 
     currentItemsTitles.value[itemId] = resource.name || truncateMiddle(resource._id);
 
@@ -152,6 +151,43 @@ function handleUploadMedia() {
     openUploadDialog();
 
   });
+}
+
+async function handleUploadDialogChange(fileList) {
+
+  if (!fileList?.length || !resolveUploadDialog) {
+    return;
+  }
+
+
+  const resolve = resolveUploadDialog;
+  const reject = rejectUploadDialog;
+  resolveUploadDialog = null;
+  rejectUploadDialog = null;
+
+
+  try {
+    await uploadSelectedMedia(fileList);
+    resolve();
+  }
+  catch (error) {
+    reject(error);
+  }
+
+}
+
+function handleUploadDialogCancel() {
+
+  if (!resolveUploadDialog) {
+    return;
+  }
+
+
+  const resolve = resolveUploadDialog;
+  resolveUploadDialog = null;
+  rejectUploadDialog = null;
+  resolve();
+
 }
 
 async function handleDeleteMedia(media) {
@@ -272,6 +308,17 @@ function handleOpenMedia(media) {
           </div>
         </template>
 
+        <div class="border-b border-default p-3">
+          <u-input
+            type="search"
+            leading-icon="lucide:search"
+            placeholder="Search by file name"
+            :loading="!!debouncedSearch.trim() && isMediaPending"
+            class="w-full"
+            v-model="search"
+          />
+        </div>
+
         <template v-if="!mediaData?.length && isMediaPending">
           <div class="h-32 flex items-center justify-center">
             <un-spinner />
@@ -280,7 +327,7 @@ function handleOpenMedia(media) {
 
         <template v-else-if="!mediaData?.length">
           <p class="h-32 flex items-center justify-center text-sm text-center">
-            No media has been uploaded yet.
+            {{ debouncedSearch.trim() ? 'No media found with this name.' : 'No media has been uploaded yet.' }}
           </p>
         </template>
 
@@ -306,8 +353,10 @@ function handleOpenMedia(media) {
                   </div>
                 </template>
 
-                <div class="text-xs break-all">
-                  {{ media.name }}
+                <div class="h-[3lh] text-xs" :title="media.name">
+                  <div class="line-clamp-3 break-all">
+                    {{ media.name }}
+                  </div>
                 </div>
 
                 <div class="text-xs">

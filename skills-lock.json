@@ -1,29 +1,29 @@
 {
-  "version": 1,
+  "version": 2,
   "skills": {
     "nuxt": {
       "source": "antfu/skills",
       "sourceType": "github",
       "skillPath": "skills/nuxt/SKILL.md",
-      "computedHash": "03fc229d7c6a300b2ded6d9f984b45d8a554c2c991199c54760893e627c91371"
+      "computedHash": "4c10d4e793c1d7f4308a3b66930d55d6531224ea887ae29d9bcc946cea2c8081"
     },
     "nuxt-ui": {
       "source": "nuxt/ui",
       "sourceType": "github",
       "skillPath": "skills/nuxt-ui/SKILL.md",
-      "computedHash": "deacd4aed537a3744e99618dcca2d7258aff871697d3f0c78be49ba731e60907"
+      "computedHash": "89a36be1af44314309cc668fab6294b566393e282e2526fa03c6dbc9ca9f2779"
     },
     "nuxt-unified-ui": {
       "source": "yooneskh/nuxt-unified-ui",
       "sourceType": "github",
       "skillPath": "skills/nuxt-unified-ui/SKILL.md",
-      "computedHash": "6b007bf2e60d7eff879af0d5e4863cec269191b6e80cd881a7e3a2853092002b"
+      "computedHash": "df6c5cb3a71afc2aa8eccd75e965fa6f1b969e8f1485111536f9a2697e338117"
     },
     "vueuse-functions": {
       "source": "vueuse/skills",
       "sourceType": "github",
       "skillPath": "skills/vueuse-functions/SKILL.md",
-      "computedHash": "70b65fb127323568380de490290eaf195b165da23c1f4fa27df10b386ca0dab2"
+      "computedHash": "898b0286e6c5eefab0d5cf010925d3911b2e127ea776adbf17027e2eca059888"
     }
   }
 }

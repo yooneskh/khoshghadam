@@ -1,36 +1,25 @@
 
 /* responsibility */
 
-// Creates the typed controller for one fixed singleton row
-// with schema, retrieve, and update.
+// Creates the typed controller
+// for one fixed singleton row.
 
 
 /* interface */
 
-import { type, Type } from 'arktype';
-
-
 export interface UnifiedSingletonController<T> {
   schema: UnifiedResourceController<T>['schema'];
-  retrieve: (args?: {
-    select?: string[];
-    populate?: Record<string, string[]> | undefined;
-  }) => ReturnType<UnifiedResourceController<T>['retrieve']>;
-  update: (args: {
-    document: Partial<T>;
-  }) => ReturnType<UnifiedResourceController<T>['update']>;
+  retrieve: (args?: { select?: string[], populate?: Record<string, string[]> | undefined }) => ReturnType<UnifiedResourceController<T>['retrieve']>;
+  update: (args: { document: Partial<T> }) => ReturnType<UnifiedResourceController<T>['update']>;
 }
 
 
 /* singleton */
 
-export function createUnifiedSingletonController<T extends object>(props: {
-  resource: string;
-  schema: any;
-  type: Type<T>;
-  meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>>;
-  defaults?: T;
-}): UnifiedSingletonController<T> {
+import { type, Type } from 'arktype';
+
+
+export function createUnifiedSingletonController<T extends object>(props: { resource: string, schema: any, type: Type<T>, meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>>, defaults?: T }): UnifiedSingletonController<T> {
 
   const validatedDefaults = props.type(props.defaults ?? {});
 
@@ -61,7 +50,6 @@ export function createUnifiedSingletonController<T extends object>(props: {
       filter: {},
     });
 
-
     if (existing) {
       resourceId = existing._id;
       return resourceId;
@@ -74,8 +62,6 @@ export function createUnifiedSingletonController<T extends object>(props: {
 
 
     resourceId = created._id;
-
-
     return resourceId;
 
   }

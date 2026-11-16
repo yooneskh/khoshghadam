@@ -1,21 +1,12 @@
 
 /* responsibility */
 
-// Retrieves resource schemas and documents
+// Retrieves resource documents
 // through the preemptive cache.
 
 
 import { preemptCache, evictCache } from './preemptive-cache';
 
-
-export async function retrieveResourceSchema(args: { resourcePath: string }) {
-  return preemptCache({
-    key: `--unified-resources-resource-schema-${args.resourcePath}--`,
-    run: async () => {
-      return ufetch(`/api/${args.resourcePath}/schema`);
-    },
-  });
-}
 
 export async function retrieveResource(args: { resourcePath: string, id: string, options?: any }) {
   return preemptCache({

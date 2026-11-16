@@ -24,14 +24,12 @@ const { data: sessionsData } = useUFetch(
 
 
 const flashCardSessions = computed(() => {
-
   if (!props.flashCard || !sessionsData.value) {
     return [];
   }
-
-
-  return sessionsData.value.filter(it => it.flashCard === props.flashCard._id);
-
+  else {
+    return sessionsData.value.filter(it => it.flashCard === props.flashCard._id);
+  }
 });
 
 </script>

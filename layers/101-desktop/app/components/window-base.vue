@@ -237,7 +237,7 @@ const effectiveX = computed(() => {
     return 0;
   }
   else {
-    return Math.max(0, Math.min(x.value, windowWidth.value - width.value));
+    return radClamp(x.value, 0, windowWidth.value - width.value);
   }
 });
 
@@ -246,7 +246,7 @@ const effectiveY = computed(() => {
     return 0;
   }
   else {
-    return Math.max(0, Math.min(y.value, windowHeight.value - height.value - taskBarHeight));
+    return radClamp(y.value, 0, windowHeight.value - height.value - taskBarHeight);
   }
 });
 

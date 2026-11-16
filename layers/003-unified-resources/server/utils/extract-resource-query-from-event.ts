@@ -26,7 +26,6 @@ function escapeRegularExpression(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-
 export function extractFilterFromEvent(event: H3Event): Record<string, any> | undefined {
 
   const filter = getQuery(event)?.filter ?? '';
@@ -179,7 +178,7 @@ export function extractSelectFromEvent(event: H3Event): string[] | undefined {
   }
 
 
-  return String(select).split(',').map(it => it.trim()).filter(it => Boolean(it));
+  return radSift(String(select).split(',').map(it => it.trim()));
 
 }
 
@@ -195,16 +194,7 @@ export function extractSortFromEvent(event: H3Event): Record<string, 1 | -1> | u
   }
 
 
-  return String(sort).split(',').map(it => it.split(':')).reduce((acc, it) => {
-
-    const key = it[0] as string;
-    const direction = it[1] === 'asc' ? 1 : -1;
-
-    acc[key] = direction;
-
-    return acc;
-
-  }, {} as Record<string, 1 | -1>);
+  return radObjectify(String(sort).split(',').map(it => it.split(':')), it => it[0] as string, it => it[1] === 'asc' ? 1 : -1);
 
 }
 

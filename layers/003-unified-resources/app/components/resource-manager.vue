@@ -210,7 +210,7 @@ defineExpose({
 
 
 <template>
-  <un-card :title="`Manage ${titlePlural}`" fluid-body :append-actions="actions">
+  <un-card :title="`Manage ${titlePlural}`" :append-actions="actions" fluid-body>
     <resource-explorer-table
       ref="resourceExplorerTable"
       :resource="resource"

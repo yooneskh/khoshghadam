@@ -7,7 +7,7 @@
 
 /* resource */
 
-import { retrieveResourceSchema } from './retrieve-resource';
+import { retrieveResourceSchema } from './retrieve-resource-schema';
 
 
 export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
@@ -35,12 +35,12 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
   });
 
   const fields = computed(() => {
-    return meta.value.filter(it => !it.hidden).map(convertMetaToField);
+    return radSelect(meta.value, convertMetaToField, it => !it.hidden);
   });
 
   const columns = computed(() => {
     return [
-      ...meta.value.filter(it => !it.hidden && !it.hideInTable).map(it => ({
+      ...radSelect(meta.value, it => ({
         accessorKey: it.key,
         header: radTitle(it.key),
         resource: it.resource,
@@ -50,7 +50,7 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
         items: it.items,
         enum: it.enum,
         labelFormat: it.labelFormat,
-      })),
+      }), it => !it.hidden && !it.hideInTable),
       {
         accessorKey: 'createdAt',
         header: 'Created',
@@ -72,7 +72,6 @@ export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
   };
 
 }
-
 
 function convertMetaToField(meta: any) {
 

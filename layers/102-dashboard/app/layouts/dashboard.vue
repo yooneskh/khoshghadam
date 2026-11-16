@@ -317,7 +317,7 @@ async function handleLogout() {
               <u-button
                 variant="subtle"
                 trailing-icon="lucide:chevron-down"
-                v-bind="radOmit(item, ['children'])"
+                v-bind="radOmit(item, [ 'children' ])"
               />
             </u-dropdown-menu>
           </template>

@@ -25,9 +25,10 @@ const statistics = computed(() => {
   return props.statistics || [];
 });
 
+
 const statisticFetches = statistics.value.map((statistic) => {
   return useUFetch(
-    () => `/api/${resolveResourcePath(statistic.resource)}/count`,
+    computed(() => `/api/${resolveResourcePath(statistic.resource)}/count`),
     {
       query: {
         'filter': computed(() => serializeResourceStatisticFilters(statistic.filters)),
@@ -35,6 +36,7 @@ const statisticFetches = statistics.value.map((statistic) => {
     },
   );
 });
+
 
 const results = computed(() => {
   return statistics.value.map((config, index) => {

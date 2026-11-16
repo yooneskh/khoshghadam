@@ -2,8 +2,9 @@
 
 /* responsibility */
 
-// Shows the dashboard landing page
-// with a welcome placeholder.
+// Shows the dashboard home
+// with resource counts
+// and a welcome placeholder.
 
 
 /* page */
@@ -69,9 +70,7 @@ const statistics = [
 <template>
   <div class="space-y-3">
 
-    <resource-statistics
-      :statistics="statistics"
-    />
+    <resource-statistics :statistics="statistics" />
 
     <u-empty
       variant="naked"

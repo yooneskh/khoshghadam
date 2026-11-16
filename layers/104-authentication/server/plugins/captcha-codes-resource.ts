@@ -15,7 +15,7 @@ const { schema, type, inferred } = parseSchema({
 declare global {
   interface UnifiedAppRegistry {
     captchaCodes: {
-      dbo: UnifiedResourceController<typeof inferred>
+      dbo: UnifiedResourceController<typeof inferred>;
     };
   }
 };

@@ -12,10 +12,13 @@ const { schema, type, inferred } = parseSchema({
   'category': 'string',
   'description': 'string',
   'tags?': 'string[]',
-  'cards': [{
-    'frontText': 'string',
-    'backText': 'string',
-  }, '[]'],
+  'cards': [
+    {
+      'frontText': 'string',
+      'backText': 'string',
+    },
+    '[]',
+  ],
 });
 
 

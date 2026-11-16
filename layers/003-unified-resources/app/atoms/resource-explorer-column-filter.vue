@@ -184,17 +184,12 @@ const fields = computed(() => {
   const valueField = getValueField();
 
 
-  return [
-    {
-      key: 'operator',
-      identifier: 'select',
-      items: operators.value,
-      placeholder: 'Condition',
-    },
-    ...(!valueField ? [] : [
-      valueField,
-    ]),
-  ];
+  return radConcat({
+    key: 'operator',
+    identifier: 'select',
+    items: operators.value,
+    placeholder: 'Condition',
+  }, valueField);
 
 });
 
@@ -248,7 +243,10 @@ async function handleFormChange(value) {
   }
 
 
-  const hasValue = ['collection', 'object'].includes(filterType.value) || value.value === false || value.value === 0 || !!value.value;
+  const hasValue = [
+    'collection',
+    'object',
+  ].includes(filterType.value) || value.value === false || value.value === 0 || !!value.value;
 
   if (!hasValue) {
     emit('clear');

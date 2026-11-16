@@ -1,3 +1,4 @@
+
 /* responsibility */
 
 // Returns the media settings singleton

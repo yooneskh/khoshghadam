@@ -13,16 +13,10 @@ export function serializeResourceStatisticFilters(filters?: Record<string, any>)
     return '';
   }
 
-
-  return Object.entries(filters).map(([key, filter]) => {
-
+  return radListify(filters, (key, filter) => {
     const { operator, value } = normalizeResourceStatisticFilter(filter);
-
     const serializedValue = Array.isArray(value) ? value.join(';') : (value ?? '');
-
-
     return `${key}:${operator}:${serializedValue}`;
-
   }).join(',');
 
 }

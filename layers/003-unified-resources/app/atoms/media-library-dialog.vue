@@ -145,11 +145,9 @@ async function uploadSelectedMedia(fileList) {
 
 function handleUploadMedia() {
   return new Promise((resolve, reject) => {
-
     resolveUploadDialog = resolve;
     rejectUploadDialog = reject;
     openUploadDialog();
-
   });
 }
 
@@ -218,7 +216,6 @@ async function handleDeleteMedia(media) {
             refreshMedia(),
             refreshMediaCount(),
           ]);
-
 
           toastSuccess({
             title: 'Media successfully deleted.',

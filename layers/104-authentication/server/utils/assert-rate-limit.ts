@@ -13,15 +13,12 @@ export async function assertRateLimit(args: { event: H3Event; limit?: number; wi
   const limit = args.limit ?? 20;
   const windowSeconds = args.windowSeconds ?? 60;
 
-
   const ip = getRequestIP(args.event, {
     xForwardedFor: true,
   }) ?? 'unknown';
 
   const storeKey = `${args.event.path.split('?')[0]}:${ip}`;
   const now = Date.now();
-
-
   let entry = rateLimitStore.get(storeKey);
 
   if (!entry || entry.resetAt <= now) {

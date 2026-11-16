@@ -19,7 +19,6 @@ function getAudioContext() {
     audioContext = new AudioContext();
   }
 
-
   return audioContext;
 
 }
@@ -40,11 +39,9 @@ export function playBeep(frequency, duration, gainValue) {
 
   const oscillator = context.createOscillator();
   const gain = context.createGain();
-
   oscillator.type = 'square';
   oscillator.frequency.value = frequency;
   gain.gain.value = gainValue;
-
   oscillator.connect(gain);
   gain.connect(context.destination);
   oscillator.start();

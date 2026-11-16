@@ -5,14 +5,14 @@
 // for unified resources.
 
 
+/* resource */
+
 interface ResourceHandlerArgs {
   resource: string;
   event: H3Event;
   permission?: string;
 }
 
-
-/* resource */
 
 function resourceController(resource: string) {
   return (app[resource as keyof typeof app] as { dbo?: UnifiedResourceController<any>; } | undefined)?.dbo;
@@ -28,12 +28,8 @@ async function assertOptionalPermission(args: ResourceHandlerArgs) {
 }
 
 export async function handleResourceSchema(args: ResourceHandlerArgs) {
-
   await assertOptionalPermission(args);
-
-
   return resourceController(args.resource)?.schema();
-
 }
 
 export async function handleResourceList(args: ResourceHandlerArgs) {
@@ -54,7 +50,7 @@ export async function handleResourceList(args: ResourceHandlerArgs) {
       select: extractSelectFromEvent(args.event),
       sort: extractSortFromEvent(args.event),
       skip: Math.max(0, Math.trunc(Number(getQuery(args.event)?.skip ?? 0)) || 0),
-      limit: Math.min(300, Math.max(0, Math.trunc(Number(getQuery(args.event)?.limit ?? 300)) || 300)),
+      limit: radClamp(Math.trunc(Number(getQuery(args.event)?.limit ?? 300)) || 300, 0, 300),
       populate: extractPopulateFromEvent(args.event),
     });
   }

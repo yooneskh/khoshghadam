@@ -15,9 +15,7 @@ export async function loadFlashCardJourneyStates(args: { journeys: any[], userId
   }
 
 
-  const flashCardIds = [
-    ...new Set(args.journeys.flatMap(it => it.steps?.map(it => it.flashCard) ?? [])),
-  ];
+  const flashCardIds = radUnique(args.journeys.flatMap(it => it.steps?.map(it => it.flashCard) ?? []));
 
   const flashCards = await app.flashCards.dbo.list({
     filter: {
@@ -69,12 +67,10 @@ export function deriveFlashCardJourneyState(args: { journey: any, flashCards: an
   }
 
 
-  const flashCardsById = new Map(args.flashCards.map(it => [
-    it._id,
-    it,
-  ]));
+  const flashCardsById = radMapify(args.flashCards, it => it._id);
 
   for (const step of args.journey.steps) {
+
     const flashCard = flashCardsById.get(step.flashCard);
 
     if (!flashCard) {
@@ -90,6 +86,7 @@ export function deriveFlashCardJourneyState(args: { journey: any, flashCards: an
         statusMessage: `flash card "${flashCard.slug ?? flashCard._id}" has no cards`,
       });
     }
+
   }
 
 

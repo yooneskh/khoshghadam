@@ -42,21 +42,19 @@ const { form, formTag } = useForm({
 
 
 const actions = computed(() => {
-
   if (!singletonData.value) {
     return [];
   }
-
-
-  return [
-    {
-      variant: 'subtle',
-      icon: 'lucide:save',
-      label: 'Save',
-      onClick: handleSave,
-    },
-  ];
-
+  else {
+    return [
+      {
+        variant: 'subtle',
+        icon: 'lucide:save',
+        label: 'Save',
+        onClick: handleSave,
+      },
+    ];
+  }
 });
 
 

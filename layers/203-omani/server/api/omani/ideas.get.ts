@@ -20,7 +20,6 @@ function getIdeasSort(sort: string) {
   }
 }
 
-
 export default defineEventHandler(async event => {
 
   const user = await tryAssertUser(event);
@@ -78,7 +77,6 @@ export default defineEventHandler(async event => {
 
 
   const votedIds = new Set(votes.map(it => it.idea));
-
 
   return ideas.map(it => ({
     ...it,

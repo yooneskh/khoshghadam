@@ -55,7 +55,6 @@ function formatHttpLine(fields: LogFields): string {
     fit(fields.path ?? '', columnWidths.path),
   ];
 
-
   if (fields.note !== undefined) {
     columns.push(fit(fields.note, columnWidths.note));
   }
@@ -65,10 +64,8 @@ function formatHttpLine(fields: LogFields): string {
     columns.push(`res=${pad(formatSize(fields.responseSize), columnWidths.size, 'right')}`);
   }
 
-
   columns.push(pad(formatElapsed(fields.elapsed), columnWidths.elapsed, 'right'));
   columns.push(formatDate(fields.date));
-
 
   return columns.join(' ');
 
@@ -100,7 +97,6 @@ function fit(value: string | number, width: number): string {
 
   const head = Math.floor((width - 1) / 2);
   const tail = width - 1 - head;
-
 
   return `${text.slice(0, head)}…${text.slice(text.length - tail)}`;
 
@@ -185,7 +181,7 @@ function formatElapsed(elapsed: number | undefined): string {
 }
 
 function formatDate(date: Date | string | undefined): string {
-  const iso = date instanceof Date ? date.toISOString() : date ?? new Date().toISOString();
+  const iso = radIsDate(date) ? date.toISOString() : date ?? new Date().toISOString();
   return pad(iso, columnWidths.date);
 }
 

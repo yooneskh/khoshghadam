@@ -48,11 +48,11 @@ const sort = computed(() => {
 });
 
 const filter = computed(() => {
-  return Object.entries(filters.value).map(([key, item]) => `${key}:${item.operator}:${item.value ?? ''}`).join(',');
+  return radListify(filters.value, (key, item) => `${key}:${item.operator}:${item.value ?? ''}`).join(',');
 });
 
 const activeFilters = computed(() => {
-  return Object.entries(filters.value).map(([key, item]) => ({
+  return radListify(filters.value, (key, item) => ({
     key,
     column: columns.value.find(it => it.accessorKey === key),
     filter: item,
@@ -122,8 +122,14 @@ function handleFilterApply(column, value) {
 }
 
 function handleFilterClear(column) {
-  filters.value = radOmit(filters.value, [column]);
+
+  filters.value = radOmit(filters.value, [
+    column,
+  ]);
+
+
   currentPage.value = 1;
+
 }
 
 function getResourceRowId(row, index) {
@@ -152,7 +158,7 @@ function getFilterLabel(item) {
   else if (column.type === 'date' || column.labelFormat) {
     return `${column.header} ${operator} ${formatDate(filter.value, column.labelFormat === 'default' ? undefined : column.labelFormat)}`;
   }
-  else if (filter.displayValue === true || filter.displayValue === false) {
+  else if (radIsBoolean(filter.displayValue)) {
     return `${column.header} ${operator} ${filter.displayValue ? 'True' : 'False'}`;
   }
   else {

@@ -147,18 +147,17 @@ const cardsSessions = computed(() => {
   }
 
 
-  return Object.fromEntries(
-    flashCardData.value.cards.map(card => [
-      card._id,
-      previousSessionsData.value
-        .filter(it => it.flashCard === flashCardData.value._id)
-        .map(session => ({
-          opened: session.answeredCards.find(it => it.card === card._id)?.opened,
-          createdAt: session.createdAt,
-        }))
-        .filter(it => it.opened !== undefined)
-        .toReversed(),
-    ]),
+  return radObjectify(
+    flashCardData.value.cards,
+    card => card._id,
+    card => previousSessionsData.value
+      .filter(it => it.flashCard === flashCardData.value._id)
+      .map(session => ({
+        opened: session.answeredCards.find(it => it.card === card._id)?.opened,
+        createdAt: session.createdAt,
+      }))
+      .filter(it => it.opened !== undefined)
+      .toReversed(),
   );
 
 });
@@ -224,11 +223,7 @@ async function handleCardAdvance() {
 
 
 <template>
-  <window-base
-    pito="address-book"
-    :title="`${flashCardData?.name || '-'} Cards`"
-    :loading="isFlashCardPending"
-    :actions="learnWindowActions">
+  <window-base pito="address-book" :title="`${flashCardData?.name || '-'} Cards`" :loading="isFlashCardPending" :actions="learnWindowActions">
     <div class="h-full w-full flex items-center justify-center">
       <div class="w-full flex flex-col items-center gap-3 relative overflow-hidden p-3">
 

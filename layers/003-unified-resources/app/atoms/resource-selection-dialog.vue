@@ -75,6 +75,10 @@ async function handleSubmitSelection(items) {
   emit('close', items);
 }
 
+function handleClose() {
+  emit('close');
+}
+
 </script>
 
 
@@ -99,7 +103,7 @@ async function handleSubmitSelection(items) {
           {
             variant: 'ghost',
             label: $t('common.cancel'),
-            onClick: () => emit('close'),
+            onClick: handleClose,
           },
         ]"
         fluid-body>

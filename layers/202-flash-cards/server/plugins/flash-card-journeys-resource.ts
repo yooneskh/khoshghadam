@@ -9,9 +9,12 @@ const { schema, type, inferred } = parseSchema({
   'name': 'string',
   'slug': 'string',
   'description': 'string',
-  'steps': [{
-    'flashCard': 'string',
-  }, '[]'],
+  'steps': [
+    {
+      'flashCard': 'string',
+    },
+    '[]',
+  ],
 });
 
 

@@ -1,8 +1,8 @@
 
 /* responsibility */
 
-// Lets an admin create a user with a password,
-// role, and permissions, rolling back on failure.
+// Lets an admin
+// create a user.
 
 
 export default defineEventHandler(async event => {
@@ -92,7 +92,6 @@ export default defineEventHandler(async event => {
         }),
       },
     });
-
 
     return user;
 

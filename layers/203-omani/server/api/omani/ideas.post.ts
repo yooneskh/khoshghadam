@@ -31,7 +31,7 @@ export default defineEventHandler(async event => {
   const idea = await app.omaniIdeas.dbo.create({
     document: {
       name: body.name,
-      ...(body.body === undefined ? {} : {
+      ...radShake({
         body: body.body,
       }),
       author: user._id,

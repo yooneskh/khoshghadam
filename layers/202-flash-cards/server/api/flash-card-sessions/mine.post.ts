@@ -16,10 +16,13 @@ export default defineEventHandler(async event => {
     event,
     schema: {
       'flashCard': 'string',
-      'answeredCards': [{
-        'card': 'string',
-        'opened': 'boolean',
-      }, '[]'],
+      'answeredCards': [
+        {
+          'card': 'string',
+          'opened': 'boolean',
+        },
+        '[]',
+      ],
     },
   });
 

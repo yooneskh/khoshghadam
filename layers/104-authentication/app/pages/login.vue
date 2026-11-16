@@ -93,7 +93,7 @@ async function handleLogin() {
     useUser().value = identityResponse;
 
 
-    if (typeof returnUrl.value === 'string' && returnUrl.value) {
+    if (radIsString(returnUrl.value) && returnUrl.value) {
       if (returnUrl.value.startsWith('::')) {
         await navigateTo({
           name: returnUrl.value.slice(2),

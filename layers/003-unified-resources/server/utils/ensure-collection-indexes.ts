@@ -27,7 +27,6 @@ export async function ensureCollectionIndexes(args: { collectionName: string, in
 
     const matchIndex = remainingExistingIndexes.findIndex(it => doesExistingMatchDesired(it, desiredIndex));
 
-
     if (matchIndex === -1) {
       indexesToCreate.push(desiredIndex);
     }
@@ -43,7 +42,6 @@ export async function ensureCollectionIndexes(args: { collectionName: string, in
     if (!existingIndex.name) {
       throw new Error(`resource "${args.collectionName}" has an existing index without a name`);
     }
-
 
     await collection.dropIndex(existingIndex.name);
 
@@ -75,14 +73,12 @@ function validateDesiredIndexes(collectionName: string, indexes: UnifiedResource
 
     const keySignature = serializeIndexKey(index.key);
 
-
     if (seenKeys.has(keySignature)) {
       throw new Error(`resource "${collectionName}" index key is duplicated: ${keySignature}`);
     }
 
 
     seenKeys.add(keySignature);
-
 
     if (!index.name) {
       continue;
@@ -149,7 +145,6 @@ function serializeIndexKey(key: UnifiedResourceIndex['key'] | IndexDescriptionIn
 function serializeIndexOptions(index: UnifiedResourceIndex | IndexDescriptionInfo) {
 
   const extras = index as IndexDescriptionInfo;
-
 
   return JSON.stringify({
     unique: index.unique === true,

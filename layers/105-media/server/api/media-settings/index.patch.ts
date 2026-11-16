@@ -1,3 +1,4 @@
+
 /* responsibility */
 
 // Updates the media settings singleton

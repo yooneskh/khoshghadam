@@ -101,7 +101,7 @@ async function handleViewItems() {
     </template>
   </template>
 
-  <template v-else-if="props.data === true || props.data === false">
+  <template v-else-if="radIsBoolean(props.data)">
 
     <template v-if="props.data">
       <u-badge
@@ -129,7 +129,7 @@ async function handleViewItems() {
     />
   </template>
 
-  <template v-else-if="typeof props.data === 'number'">
+  <template v-else-if="radIsNumber(props.data)">
     {{ props.data.toLocaleString() }}
   </template>
 

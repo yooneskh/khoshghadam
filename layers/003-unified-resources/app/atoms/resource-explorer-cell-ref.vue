@@ -43,31 +43,20 @@ const resourceData = computedAsync(async () => {
 
   tickle.value;
 
-
   if (!props.column.resource || !props.data) {
     return;
   }
 
 
-  try {
+  return await retrieveResource({
+    resourcePath: resourcePath.value,
+    id: props.data,
+    options: {
+      silent: true,
+    },
+  });
 
-    isLoading.value = true;
-
-
-    return await retrieveResource({
-      resourcePath: resourcePath.value,
-      id: props.data,
-      options: {
-        silent: true,
-      },
-    });
-
-  }
-  finally {
-    isLoading.value = false;
-  }
-
-});
+}, undefined, isLoading);
 
 
 async function handleResourceClick() {
@@ -109,7 +98,6 @@ async function handleResourceClick() {
         toastSuccess({
           title: `${title.value} updated successfully.`,
         });
-
 
         emit('resource:update');
 

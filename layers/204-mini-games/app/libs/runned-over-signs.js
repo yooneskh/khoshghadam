@@ -13,13 +13,10 @@ export function createSign(width, height) {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
-
-
   const ctx = canvas.getContext('2d');
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
   texture.needsUpdate = true;
-
 
   return {
     canvas,
@@ -34,7 +31,6 @@ export function fillParagraph(ctx, text, x, y, maxWidth, lineHeight) {
   const words = text.split(' ');
   let line = '';
   let cursorY = y;
-
 
   for (const word of words) {
 
@@ -51,7 +47,6 @@ export function fillParagraph(ctx, text, x, y, maxWidth, lineHeight) {
 
   }
 
-
   if (line) {
     ctx.fillText(line, x, cursorY);
   }
@@ -64,10 +59,7 @@ export function paintPanel(sign, background, draw) {
     return;
   }
 
-
   const { ctx, canvas, texture } = sign;
-
-
   ctx.fillStyle = background;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.strokeStyle = '#e07a2f';
@@ -86,10 +78,7 @@ export function paintButton(sign, label, hot) {
     return;
   }
 
-
   const { ctx, canvas, texture } = sign;
-
-
   ctx.fillStyle = hot ? '#3d8a3a' : '#1f4d1d';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.strokeStyle = '#ffe08a';

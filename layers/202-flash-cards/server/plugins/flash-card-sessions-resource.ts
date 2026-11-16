@@ -8,10 +8,13 @@
 const { schema, type, inferred } = parseSchema({
   'flashCard': 'string',
   'user': 'string',
-  'answeredCards': [{
-    'card': 'string',
-    'opened': 'boolean',
-  }, '[]'],
+  'answeredCards': [
+    {
+      'card': 'string',
+      'opened': 'boolean',
+    },
+    '[]',
+  ],
   'finishedAt?': 'number',
   'successful?': 'boolean',
 });

@@ -32,7 +32,6 @@ export function calculateFlashCardSessionCompletion(args: { session: FlashCardSe
   const finished = canonicalCardIds.length > 0 && answeredCardIds.length === canonicalCardIds.length && uniqueAnsweredCardIds.size === canonicalCardIds.length && canonicalCardIds.every(it => uniqueAnsweredCardIds.has(it));
   const successful = finished && args.session.answeredCards.every(it => it.opened === false);
 
-
   return {
     finished,
     successful,

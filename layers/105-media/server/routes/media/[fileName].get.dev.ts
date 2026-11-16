@@ -31,7 +31,6 @@ export default defineEventHandler(async event => {
 
 
   setResponseHeader(event, 'content-type', file.type || 'application/octet-stream');
-
   return sendStream(event, file.stream());
 
 });

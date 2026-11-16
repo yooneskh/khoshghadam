@@ -11,7 +11,7 @@ declare module 'ofetch' {
     silent?: boolean;
     handled?: boolean;
   }
-}
+};
 
 
 function onRequest(args: any) {

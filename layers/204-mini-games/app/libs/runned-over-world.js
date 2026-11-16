@@ -351,7 +351,6 @@ function buildLaneDashes() {
     5.76,
   ];
 
-
   for (const z of zs) {
     for (let x = -16.2; x <= 16.2; x += 1.9) {
       dashes.push({
@@ -362,7 +361,6 @@ function buildLaneDashes() {
     }
   }
 
-
   return dashes;
 
 }
@@ -371,7 +369,6 @@ function buildEdgeTeeth() {
 
   const teeth = [];
   let index = 0;
-
 
   for (let x = -17.5; x <= 17.5; x += 0.72) {
 
@@ -400,7 +397,6 @@ function buildEdgeTeeth() {
     index += 1;
 
   }
-
 
   return teeth;
 

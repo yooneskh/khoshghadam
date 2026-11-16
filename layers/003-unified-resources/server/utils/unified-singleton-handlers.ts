@@ -5,14 +5,14 @@
 // for unified singleton resources.
 
 
+/* singleton */
+
 interface SingletonHandlerArgs {
   resource: string;
   event: H3Event;
   permission?: string;
 }
 
-
-/* singleton */
 
 function singletonController(resource: string) {
   return (app[resource as keyof typeof app] as { dbo?: UnifiedSingletonController<any>; } | undefined)?.dbo;
@@ -27,20 +27,14 @@ async function assertOptionalPermission(args: SingletonHandlerArgs) {
   }
 }
 
-
 export async function handleSingletonSchema(args: SingletonHandlerArgs) {
-
   await assertOptionalPermission(args);
-
-
   return singletonController(args.resource)?.schema();
-
 }
 
 export async function handleSingletonRetrieve(args: SingletonHandlerArgs) {
 
   await assertOptionalPermission(args);
-
 
   return singletonController(args.resource)?.retrieve({
     select: extractSelectFromEvent(args.event),
@@ -52,7 +46,6 @@ export async function handleSingletonRetrieve(args: SingletonHandlerArgs) {
 export async function handleSingletonUpdate(args: SingletonHandlerArgs) {
 
   await assertOptionalPermission(args);
-
 
   return singletonController(args.resource)?.update({
     document: await readBody(args.event),

@@ -11,7 +11,6 @@ export default defineNitroPlugin(nitroApp => {
     event.context.startedAt = performance.now();
   });
 
-
   nitroApp.hooks.hook('afterResponse', (event, response) => {
 
     const startedAt = event.context.startedAt ?? performance.now();
@@ -51,10 +50,10 @@ function resolveResponseSize(event: H3Event, body: unknown): number | string {
   if (contentLength) {
     return Number(contentLength);
   }
-  else if (body === null || body === undefined) {
+  else if (radIsNullish(body)) {
     return 0;
   }
-  else if (typeof body === 'string') {
+  else if (radIsString(body)) {
     return byteLength(body);
   }
   else if (body instanceof Uint8Array || body instanceof ArrayBuffer) {
@@ -76,7 +75,6 @@ function resolveResponseSize(event: H3Event, body: unknown): number | string {
   }
 
 }
-
 
 function byteLength(text: string): number {
   return new TextEncoder().encode(text).byteLength;

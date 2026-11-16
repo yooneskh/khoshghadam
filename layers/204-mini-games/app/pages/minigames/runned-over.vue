@@ -137,6 +137,7 @@ const lookStick = ref({
   knobY: 0,
 });
 
+
 const touchStick = {
   radius: 54,
   dead: 12,
@@ -233,7 +234,7 @@ function handleMouseLook(event) {
 
 
   sim.lookYaw -= event.movementX * 0.0034;
-  sim.lookPitch = Math.min(0.5, Math.max(-0.62, sim.lookPitch - event.movementY * 0.0026));
+  sim.lookPitch = radClamp(sim.lookPitch - event.movementY * 0.0026, -0.62, 0.5);
 
 }
 
@@ -254,7 +255,6 @@ function getSurfacePoint(event) {
 
   const rect = gameSurfaceEl.value.getBoundingClientRect();
 
-
   return {
     x: event.clientX - rect.left,
     y: event.clientY - rect.top,
@@ -266,7 +266,6 @@ function clampStickKnob(dx, dy) {
 
   const length = Math.hypot(dx, dy);
   const scale = length > touchStick.radius ? touchStick.radius / length : 1;
-
 
   return {
     x: dx * scale,
@@ -282,7 +281,6 @@ function applyMoveStick(clientX, clientY) {
   const dy = clientY - (rect.top + moveStick.value.baseY);
   const knob = clampStickKnob(dx, dy);
   const length = Math.hypot(knob.x, knob.y);
-
   moveStick.value.knobX = knob.x;
   moveStick.value.knobY = knob.y;
 
@@ -295,7 +293,6 @@ function applyMoveStick(clientX, clientY) {
 
 
   const strength = (length - touchStick.dead) / (touchStick.radius - touchStick.dead);
-
   sim.touchX = (knob.x / length) * strength;
   sim.touchZ = (-knob.y / length) * strength;
 
@@ -326,7 +323,6 @@ function handleMovePointerDown(event) {
 
 
   const point = getSurfacePoint(event);
-
   sim.movePointerId = event.pointerId;
   moveStick.value.active = true;
   moveStick.value.baseX = point.x;
@@ -379,7 +375,6 @@ function handleLookPointerDown(event) {
 
 
   const point = getSurfacePoint(event);
-
   sim.lookPointerId = event.pointerId;
   sim.lookLastX = event.clientX;
   sim.lookLastY = event.clientY;
@@ -404,15 +399,13 @@ function handleLookPointerMove(event) {
 
   const dx = event.clientX - sim.lookLastX;
   const dy = event.clientY - sim.lookLastY;
-
   sim.lookYaw -= dx * 0.0072;
-  sim.lookPitch = Math.min(0.42, Math.max(-0.55, sim.lookPitch - dy * 0.0054));
+  sim.lookPitch = radClamp(sim.lookPitch - dy * 0.0054, -0.55, 0.42);
   sim.lookLastX = event.clientX;
   sim.lookLastY = event.clientY;
 
 
   const knob = clampStickKnob(lookStick.value.knobX + dx, lookStick.value.knobY + dy);
-
   lookStick.value.knobX = knob.x;
   lookStick.value.knobY = knob.y;
 
@@ -511,8 +504,8 @@ function updatePlayer(step, elapsed) {
   const blend = Math.min(1, step * 16);
 
 
-  sim.playerVx += (desiredVx - sim.playerVx) * blend;
-  sim.playerVz += (desiredVz - sim.playerVz) * blend;
+  sim.playerVx = radLerp(sim.playerVx, desiredVx, blend);
+  sim.playerVz = radLerp(sim.playerVz, desiredVz, blend);
   sim.playerX += sim.playerVx * step;
   sim.playerZ += sim.playerVz * step;
   sim.playerYaw = Math.atan2(axes.forwardX, axes.forwardZ);
@@ -533,11 +526,13 @@ function updatePlayer(step, elapsed) {
     sim.playerY = 0;
   }
   else {
+
     sim.playerY -= world.gravity * step;
 
     if (sim.playerY < -10) {
       endRun('fall');
     }
+
   }
 
 
@@ -548,7 +543,6 @@ function updatePlayer(step, elapsed) {
 
   const moving = Math.hypot(sim.playerVx, sim.playerVz) > 0.35;
   const bob = moving && sim.playerY >= 0 ? Math.sin(elapsed * 11) * 0.045 : 0;
-
   playerGroup.value.position.set(sim.playerX, sim.playerY + bob, sim.playerZ);
   playerGroup.value.rotation.y = sim.playerYaw;
   playerGroup.value.visible = phase.value !== 'over' || overReason.value === 'fall';
@@ -559,12 +553,14 @@ function updatePlayer(step, elapsed) {
 
 
   if (moving && sim.playerY >= 0 && phase.value === 'playing') {
+
     sim.dustAcc += step;
 
     if (sim.dustAcc > 0.11) {
       sim.dustAcc = 0;
       burstCrumbs(sim.playerX, 0.08, sim.playerZ, 2, '#c4b8a5', 1.1, false);
     }
+
   }
 
 }
@@ -591,12 +587,12 @@ function createHazard() {
   return {
     id: nextHazardId++,
     x: fromLeft ? -world.spawnX : world.spawnX,
-    z: world.lanes[Math.floor(Math.random() * world.lanes.length)],
+    z: radDraw(world.lanes),
     length,
     width,
     height,
     speed,
-    color: world.vehicleColors[Math.floor(Math.random() * world.vehicleColors.length)],
+    color: radDraw(world.vehicleColors),
     mesh: null,
     nearMissed: false,
   };
@@ -606,7 +602,6 @@ function createHazard() {
 function bindHazardMesh(hazard, mesh) {
 
   hazard.mesh = mesh || null;
-
 
   if (mesh) {
     mesh.position.set(hazard.x, hazard.height * 0.5, hazard.z);
@@ -618,10 +613,7 @@ function bindHazardMesh(hazard, mesh) {
 function spawnHazard() {
 
   const hazard = createHazard();
-
-  const blocked = hazards.value.some(it => {
-    return it.z === hazard.z && Math.abs(it.x - hazard.x) < it.length + hazard.length + 2.4;
-  });
+  const blocked = hazards.value.some(it => it.z === hazard.z && Math.abs(it.x - hazard.x) < it.length + hazard.length + 2.4);
 
 
   if (blocked) {
@@ -642,6 +634,7 @@ function updateHazards(step) {
 
 
   for (const hazard of hazards.value) {
+
     hazard.x += hazard.speed * step;
 
     if (hazard.mesh) {
@@ -651,6 +644,7 @@ function updateHazards(step) {
     if (Math.abs(hazard.x) < world.spawnX + 2) {
       keep.push(hazard);
     }
+
   }
 
 
@@ -685,12 +679,14 @@ function spawnTraffic(step, rate) {
 function isPlayerHit() {
 
   for (const hazard of hazards.value) {
+
     const overlapX = Math.abs(sim.playerX - hazard.x) < world.playerHalfWidth + hazard.length * 0.5;
     const overlapZ = Math.abs(sim.playerZ - hazard.z) < world.playerHalfDepth + hazard.width * 0.5;
 
     if (overlapX && overlapZ && sim.playerY > -0.15) {
       return true;
     }
+
   }
 
 
@@ -718,7 +714,6 @@ function checkNearMisses() {
 }
 
 function triggerNearMiss(hazard) {
-
   sim.timeScale = 0.32;
   sim.fovKick = 9;
   sim.shake = Math.max(sim.shake, 0.26);
@@ -732,7 +727,6 @@ function triggerNearMiss(hazard) {
   burstCrumbs(hazard.x, hazard.height * 0.4, hazard.z, 8, '#ffd27a', 4.2, true);
   playBeep(740, 0.07, 0.035);
   playBeep(980, 0.05, 0.025);
-
 }
 
 
@@ -750,6 +744,7 @@ function burstCrumbs(x, y, z, count, color, speed, spark) {
 
 
   for (let index = 0; index < count; index += 1) {
+
     const angle = Math.random() * Math.PI * 2;
     const lift = 2.4 + Math.random() * 5.5;
 
@@ -767,6 +762,7 @@ function burstCrumbs(x, y, z, count, color, speed, spark) {
       spark,
       mesh: null,
     });
+
   }
 
 
@@ -777,7 +773,6 @@ function burstCrumbs(x, y, z, count, color, speed, spark) {
 function bindCrumbMesh(crumb, mesh) {
 
   crumb.mesh = mesh || null;
-
 
   if (mesh) {
     mesh.position.set(crumb.x, crumb.y, crumb.z);
@@ -791,6 +786,7 @@ function updateCrumbs(step) {
 
 
   for (const crumb of crumbs.value) {
+
     crumb.vy -= 22 * step;
     crumb.x += crumb.vx * step;
     crumb.y += crumb.vy * step;
@@ -813,6 +809,7 @@ function updateCrumbs(step) {
     if (crumb.life > 0) {
       keep.push(crumb);
     }
+
   }
 
 
@@ -859,14 +856,13 @@ function updateCamera(step) {
   }
   else {
     const follow = Math.min(1, step * 10);
-    playerCamera.value.position.x += (targetX - playerCamera.value.position.x) * follow;
-    playerCamera.value.position.y += (targetY - playerCamera.value.position.y) * follow;
-    playerCamera.value.position.z += (targetZ - playerCamera.value.position.z) * follow;
+    playerCamera.value.position.x = radLerp(playerCamera.value.position.x, targetX, follow);
+    playerCamera.value.position.y = radLerp(playerCamera.value.position.y, targetY, follow);
+    playerCamera.value.position.z = radLerp(playerCamera.value.position.z, targetZ, follow);
   }
 
 
   const speedBoost = Math.min(7, Math.hypot(sim.playerVx, sim.playerVz) * 0.4);
-
   playerCamera.value.fov = 58 + sim.fovKick + speedBoost;
   playerCamera.value.updateProjectionMatrix();
   playerCamera.value.lookAt(lookX, lookY, lookZ);
@@ -900,10 +896,10 @@ function updateBoothCamera(step, elapsed) {
   const targetZ = lookZ - distance;
 
 
-  camera.position.x += (targetX - camera.position.x) * follow;
-  camera.position.y += (targetY - camera.position.y) * follow;
-  camera.position.z += (targetZ - camera.position.z) * follow;
-  camera.fov += (fov - camera.fov) * follow;
+  camera.position.x = radLerp(camera.position.x, targetX, follow);
+  camera.position.y = radLerp(camera.position.y, targetY, follow);
+  camera.position.z = radLerp(camera.position.z, targetZ, follow);
+  camera.fov = radLerp(camera.fov, fov, follow);
   camera.updateProjectionMatrix();
   camera.lookAt(0, lookY + breathe * 0.2, lookZ);
   camera.updateMatrixWorld();
@@ -975,6 +971,7 @@ function paintBoard() {
       ctx.fillText(`You lasted ${score.value}. Best so far is ${bestScore.value}.`, canvas.width / 2, 430);
     }
     else {
+
       ctx.fillStyle = '#ffe08a';
       ctx.font = '900 92px ui-sans-serif, system-ui';
       ctx.fillText('RUNNED OVER', canvas.width / 2, 150);
@@ -990,6 +987,7 @@ function paintBoard() {
       else {
         ctx.fillText('WASD to scoot  ·  mouse to look  ·  stay on the island', canvas.width / 2, 520);
       }
+
     }
   });
 }
@@ -1196,10 +1194,9 @@ function handleReady(context) {
 function handleLoop({ delta, elapsed }) {
 
   const raw = Math.min(delta || 0.016, 0.05);
-
   sim.elapsed = elapsed;
-  sim.timeScale += (1 - sim.timeScale) * Math.min(1, raw * 3.6);
-  sim.fovKick += (0 - sim.fovKick) * Math.min(1, raw * 5.5);
+  sim.timeScale = radLerp(sim.timeScale, 1, Math.min(1, raw * 3.6));
+  sim.fovKick = radLerp(sim.fovKick, 0, Math.min(1, raw * 5.5));
 
 
   const step = raw * sim.timeScale;
@@ -1210,9 +1207,10 @@ function handleLoop({ delta, elapsed }) {
   updateCrumbs(step);
   spawnTraffic(step, phase.value === 'playing' ? 1 : 0.62);
 
+
   sim.shake = Math.max(0, sim.shake - raw * 1.7);
   flashOpacity.value = Math.max(0, flashOpacity.value - raw * 1.05);
-  vignette.value += ((phase.value === 'playing' ? 0.32 : 0.42) - vignette.value) * Math.min(1, raw * 3);
+  vignette.value = radLerp(vignette.value, phase.value === 'playing' ? 0.32 : 0.42, Math.min(1, raw * 3));
 
   if (banner.value && elapsed > sim.bannerUntil) {
     banner.value = '';
@@ -1234,6 +1232,7 @@ function handleLoop({ delta, elapsed }) {
   sim.playTime += step;
   sim.grace = Math.max(0, sim.grace - step);
   score.value = Math.floor(sim.playTime * 10) + sim.bonusScore;
+
 
   const dusk = Math.min(0.45, sim.playTime * 0.006);
   sceneTint.value = dusk > 0.08 ? '#7f8ea0' : '#6ea3b6';

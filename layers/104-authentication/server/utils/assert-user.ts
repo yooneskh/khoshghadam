@@ -1,11 +1,11 @@
 
 /* responsibility */
 
-// Resolves the requesting user from its auth token or API key,
-// optionally filling in the user's effective permissions.
+// Resolves the requesting user
+// from its auth token or API key.
 
 
-export async function assertUser(args: { event: H3Event; fillPermissions?: boolean }) {
+export async function assertUser(args: { event: H3Event, fillPermissions?: boolean }) {
 
   const authorizationHeader = args.event.headers.get('authorization');
   const apiKeyHeader = args.event.headers.get('x-api-key');
@@ -99,8 +99,6 @@ export async function assertUser(args: { event: H3Event; fillPermissions?: boole
   if (args.fillPermissions) {
 
     filledUser.permissions = [];
-
-
     let permissions: string[] = [];
     let roles: string[] = [];
 

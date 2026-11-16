@@ -18,7 +18,6 @@ export default defineNuxtPlugin(async () => {
     });
   }
   catch {
-    // noop
   }
 
 });

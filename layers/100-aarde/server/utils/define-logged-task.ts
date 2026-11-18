@@ -5,6 +5,9 @@
 // payload, and run time after each run.
 
 
+import { writeLog } from '../libs/logger';
+
+
 export function defineLoggedTask(definition: Parameters<typeof defineTask>[0]) {
   return defineTask({
     meta: definition.meta,

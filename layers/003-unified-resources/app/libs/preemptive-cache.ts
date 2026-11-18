@@ -1,8 +1,8 @@
 
 /* responsibility */
 
-// Caches async results by key,
-// sharing in-flight promises until they settle.
+// Caches async results by key
+// and shares in-flight promises until they settle.
 
 
 const cache: Record<string, any> = {};

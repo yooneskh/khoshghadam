@@ -144,11 +144,11 @@ async function uploadSelectedMedia(fileList) {
 }
 
 function handleUploadMedia() {
-  return new Promise((resolve, reject) => {
-    resolveUploadDialog = resolve;
-    rejectUploadDialog = reject;
-    openUploadDialog();
-  });
+  const { promise, resolve, reject } = radWithResolvers();
+  resolveUploadDialog = resolve;
+  rejectUploadDialog = reject;
+  openUploadDialog();
+  return promise;
 }
 
 async function handleUploadDialogChange(fileList) {

@@ -66,7 +66,6 @@ function formatHttpLine(fields: LogFields): string {
 
   columns.push(pad(formatElapsed(fields.elapsed), columnWidths.elapsed, 'right'));
   columns.push(formatDate(fields.date));
-
   return columns.join(' ');
 
 }
@@ -97,7 +96,6 @@ function fit(value: string | number, width: number): string {
 
   const head = Math.floor((width - 1) / 2);
   const tail = width - 1 - head;
-
   return `${text.slice(0, head)}…${text.slice(text.length - tail)}`;
 
 }
@@ -124,7 +122,6 @@ function formatSize(bytes: number | string | undefined): string {
     value /= 1024;
     unit++;
   }
-
 
   return `${value.toFixed(2)}${units[unit]}B`;
 
@@ -174,7 +171,6 @@ function formatElapsed(elapsed: number | undefined): string {
     value /= limit;
 
   }
-
 
   return `${value.toFixed(2).padStart(6)}${unit}`;
 

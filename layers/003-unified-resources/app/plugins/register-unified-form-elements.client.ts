@@ -5,6 +5,8 @@
 // custom form elements.
 
 
+/* form elements */
+
 import FormElementResource from '../atoms/form-element-resource.vue';
 import FormElementTags from '../atoms/form-element-tags.vue';
 import FormElementMedia from '../atoms/form-element-media.vue';

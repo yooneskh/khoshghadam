@@ -8,7 +8,7 @@
 import MediaViewerDialog from '../atoms/media-viewer-dialog.vue';
 
 
-export function launchMediaViewerDialog(args: { media: any; }) {
+export function launchMediaViewerDialog(args: { media: any }) {
   return launchDialog({
     component: MediaViewerDialog,
     props: args,

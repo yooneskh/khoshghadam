@@ -7,6 +7,9 @@
 
 /* singleton */
 
+import { extractPopulateFromEvent, extractSelectFromEvent } from '../libs/extract-resource-query-from-event';
+
+
 interface SingletonHandlerArgs {
   resource: string;
   event: H3Event;

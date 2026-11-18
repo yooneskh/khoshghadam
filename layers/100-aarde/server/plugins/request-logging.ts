@@ -5,6 +5,9 @@
 // with its status, sizes, and elapsed time.
 
 
+import { writeLog } from '../libs/logger';
+
+
 export default defineNitroPlugin(nitroApp => {
 
   nitroApp.hooks.hook('request', event => {
@@ -45,7 +48,6 @@ export default defineNitroPlugin(nitroApp => {
 function resolveResponseSize(event: H3Event, body: unknown): number | string {
 
   const contentLength = getResponseHeader(event, 'content-length');
-
 
   if (contentLength) {
     return Number(contentLength);

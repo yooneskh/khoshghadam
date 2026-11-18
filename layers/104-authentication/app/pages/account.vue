@@ -50,8 +50,6 @@ const { form, formTag } = useForm({
 });
 
 
-/* handlers */
-
 async function handleSubmit() {
 
   await ufetch('/api/authentication/identity', {

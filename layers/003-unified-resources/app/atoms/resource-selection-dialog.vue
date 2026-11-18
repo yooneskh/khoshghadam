@@ -40,23 +40,22 @@ watchImmediate(currentItems, loadCurrentItemTitles);
 
 
 async function loadCurrentItemTitles() {
-  await Promise.all(
-    currentItems.value.map(async itemId => {
+  await Promise.all(currentItems.value.map(async itemId => {
 
-      if (currentItemsTitles.value[itemId]) {
-        return;
-      }
+    if (currentItemsTitles.value[itemId]) {
+      return;
+    }
 
 
-      const resource = await retrieveResource({
-        resourcePath: resourcePath.value,
-        id: itemId,
-      });
+    const resource = await retrieveResource({
+      resourcePath: resourcePath.value,
+      id: itemId,
+    });
 
-      currentItemsTitles.value[itemId] = resource.name || truncateMiddle(resource._id);
 
-    }),
-  );
+    currentItemsTitles.value[itemId] = resource.name || truncateMiddle(resource._id);
+
+  }));
 }
 
 async function handleSelectResource(resource) {

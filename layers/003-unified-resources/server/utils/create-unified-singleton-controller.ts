@@ -5,18 +5,16 @@
 // for one fixed singleton row.
 
 
-/* interface */
+/* singleton */
+
+import { type, Type } from 'arktype';
+
 
 export interface UnifiedSingletonController<T> {
   schema: UnifiedResourceController<T>['schema'];
   retrieve: (args?: { select?: string[], populate?: Record<string, string[]> | undefined }) => ReturnType<UnifiedResourceController<T>['retrieve']>;
   update: (args: { document: Partial<T> }) => ReturnType<UnifiedResourceController<T>['update']>;
 }
-
-
-/* singleton */
-
-import { type, Type } from 'arktype';
 
 
 export function createUnifiedSingletonController<T extends object>(props: { resource: string, schema: any, type: Type<T>, meta?: Partial<Record<Extract<keyof T, string>, ResourceMeta>>, defaults?: T }): UnifiedSingletonController<T> {
@@ -69,7 +67,7 @@ export function createUnifiedSingletonController<T extends object>(props: { reso
 
   return {
     schema: () => dbo.schema(),
-    retrieve: async (args) => {
+    retrieve: async args => {
 
       const resourceId = await ensureDocument();
 
@@ -81,7 +79,7 @@ export function createUnifiedSingletonController<T extends object>(props: { reso
       });
 
     },
-    update: async (args) => {
+    update: async args => {
 
       const resourceId = await ensureDocument();
 

@@ -15,7 +15,7 @@ export function serializeResourceStatisticFilters(filters?: Record<string, any>)
 
   return radListify(filters, (key, filter) => {
     const { operator, value } = normalizeResourceStatisticFilter(filter);
-    const serializedValue = Array.isArray(value) ? value.join(';') : (value ?? '');
+    const serializedValue = radIsArray(value) ? value.join(';') : (value ?? '');
     return `${key}:${operator}:${serializedValue}`;
   }).join(',');
 
@@ -23,7 +23,7 @@ export function serializeResourceStatisticFilters(filters?: Record<string, any>)
 
 
 function normalizeResourceStatisticFilter(filter: any) {
-  if (filter && typeof filter === 'object' && !Array.isArray(filter)) {
+  if (filter && typeof filter === 'object' && !radIsArray(filter)) {
     return {
       operator: filter.operator ?? 'is',
       value: filter.value,

@@ -5,7 +5,7 @@
 // owned by the current user.
 
 
-import { createImageMediaVariants } from '../../lib/media-variants-image';
+import { createImageMediaVariants } from '../../libs/media-variants-image';
 
 
 export default defineEventHandler(async event => {

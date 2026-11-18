@@ -5,6 +5,9 @@
 // and issues its authentication token.
 
 
+import { hashPassword } from '../../libs/password-hash';
+
+
 export default defineEventHandler(async event => {
 
   await assertRateLimit({

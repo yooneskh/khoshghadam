@@ -17,7 +17,7 @@ const props = defineProps({
 /* value */
 
 const valueText = computed(() => {
-  return props.statistic?.error || props.statistic?.value == null ? '—' : props.statistic.value.toLocaleString();
+  return props.statistic?.error || radIsNullish(props.statistic?.value) ? '—' : props.statistic.value.toLocaleString();
 });
 
 
@@ -72,7 +72,7 @@ function handleNavigate(event) {
 
           <div class="grow">
 
-            <div class="text-2xl font-semibold tabular-nums" :class="{ 'text-muted': props.statistic.error || props.statistic.value == null }">
+            <div class="text-2xl font-semibold tabular-nums" :class="{ 'text-muted': props.statistic.error || radIsNullish(props.statistic.value) }">
               {{ valueText }}
             </div>
 

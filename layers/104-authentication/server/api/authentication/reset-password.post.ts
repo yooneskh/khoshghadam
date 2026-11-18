@@ -5,6 +5,9 @@
 // and revoke their old passwords and tokens.
 
 
+import { hashPassword } from '../../libs/password-hash';
+
+
 export default defineEventHandler(async event => {
 
   await assertUserPermission({

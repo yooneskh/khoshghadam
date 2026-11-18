@@ -93,6 +93,7 @@ function convertPropertyToSchema(schema: any, properties: any, meta: any): any {
 /* resource */
 
 import { type, Type } from 'arktype';
+import { ensureCollectionIndexes } from '../libs/ensure-collection-indexes';
 
 
 const resourceRegistry = new Map<string, any>();

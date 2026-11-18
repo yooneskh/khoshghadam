@@ -7,6 +7,9 @@
 
 /* resource */
 
+import { extractFilterFromEvent, extractPopulateFromEvent, extractSelectFromEvent, extractSortFromEvent } from '../libs/extract-resource-query-from-event';
+
+
 interface ResourceHandlerArgs {
   resource: string;
   event: H3Event;

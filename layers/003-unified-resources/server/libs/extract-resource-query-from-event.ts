@@ -34,7 +34,6 @@ export function extractFilterFromEvent(event: H3Event): Record<string, any> | un
     return undefined;
   }
 
-
   return String(filter).split(',').map(it => it.split(':')).reduce((acc, it) => {
 
     const key = it[0] as string;
@@ -177,7 +176,6 @@ export function extractSelectFromEvent(event: H3Event): string[] | undefined {
     return undefined;
   }
 
-
   return radSift(String(select).split(',').map(it => it.trim()));
 
 }
@@ -192,7 +190,6 @@ export function extractSortFromEvent(event: H3Event): Record<string, 1 | -1> | u
   if (!sort) {
     return undefined;
   }
-
 
   return radObjectify(String(sort).split(',').map(it => it.split(':')), it => it[0] as string, it => it[1] === 'asc' ? 1 : -1);
 
@@ -209,10 +206,6 @@ export function extractPopulateFromEvent(event: H3Event): Record<string, string[
     return undefined;
   }
 
-
-  return Object.fromEntries(String(populate).split(',').map(it => it.split(':')).map(it => [
-    it[0],
-    (it[1] || '').split(';'),
-  ]));
+  return radObjectify(String(populate).split(',').map(it => it.split(':')), it => it[0] as string, it => (it[1] || '').split(';'));
 
 }

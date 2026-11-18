@@ -5,12 +5,15 @@
 // with their passwords and permissions.
 
 
+import { hashPassword } from '../libs/password-hash';
+
+
 export default defineNitroPlugin(() => {
   Promise.resolve().then(async () => {
 
     const initialUsers = useRuntimeConfig().initialUsers as any;
 
-    if (!Array.isArray(initialUsers) || !initialUsers?.length) {
+    if (!radIsArray(initialUsers) || !initialUsers?.length) {
       return;
     }
 
@@ -24,7 +27,7 @@ export default defineNitroPlugin(() => {
         });
       }
 
-      if (initialUser.permissions !== undefined && !Array.isArray(initialUser.permissions)) {
+      if (initialUser.permissions !== undefined && !radIsArray(initialUser.permissions)) {
         throw createError({
           statusCode: 500,
           statusMessage: 'invalid initial user permissions',

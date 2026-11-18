@@ -19,14 +19,14 @@ export default defineEventHandler(async event => {
   });
 
 
-  for (const authenticationToken of authenticationTokens) {
-    await app.authenticationTokens.dbo.update({
+  await radMap(authenticationTokens, authenticationToken => {
+    return app.authenticationTokens.dbo.update({
       resourceId: authenticationToken._id,
       document: {
         isActive: false,
       },
     });
-  }
+  });
 
 
   return true;

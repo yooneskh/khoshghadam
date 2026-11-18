@@ -29,12 +29,11 @@ export async function createImageMediaVariants(media: any) {
 
     const fileName = `${generateUuid()}.${variant.extension}`;
 
-    await new Bun.Image(sourcePath)
-      .resize(variant.size, variant.size, {
-        fit: 'inside',
-      })
-      .png()
-      .write(`${app.media.directory}/${fileName}`);
+
+    await new Bun.Image(sourcePath).resize(variant.size, variant.size, {
+      fit: 'inside',
+    }).png().write(`${app.media.directory}/${fileName}`);
+
 
     media = await app.media.dbo.update({
       resourceId: media._id,

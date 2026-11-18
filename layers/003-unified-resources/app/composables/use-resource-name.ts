@@ -14,7 +14,7 @@ export function resolveResourcePath(resource: string) {
   return radDash(wordToPlural(resource || ''));
 }
 
-export function useResourceName(args: { resource: MaybeRefOrGetter<string>; }) {
+export function useResourceName(args: { resource: MaybeRefOrGetter<string> }) {
   return {
     resource: computed(() => radPascal(wordToSingular(toValue(args.resource) || ''))),
     resourcePath: computed(() => resolveResourcePath(toValue(args.resource) || '')),

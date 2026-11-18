@@ -1,9 +1,11 @@
 
 /* responsibility */
 
-// Retrieves resource documents
+// Loads and evicts one resource document
 // through the preemptive cache.
 
+
+/* resource */
 
 import { preemptCache, evictCache } from './preemptive-cache';
 

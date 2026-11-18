@@ -10,7 +10,7 @@
 import { retrieveResourceSchema } from './retrieve-resource-schema';
 
 
-export function useResourceMeta(args: { resource: MaybeRefOrGetter<string>; }) {
+export function useResourceMeta(args: { resource: MaybeRefOrGetter<string> }) {
 
   const { resourcePath } = useResourceName({
     resource: args.resource,

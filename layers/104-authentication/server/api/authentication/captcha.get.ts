@@ -5,6 +5,9 @@
 // and stores its code for later checks.
 
 
+import { generateCaptcha } from '../../libs/generate-captcha';
+
+
 export default defineEventHandler(async event => {
 
   const captcha = await generateCaptcha();

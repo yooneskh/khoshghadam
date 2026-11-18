@@ -6,7 +6,7 @@
 
 
 import { MongoServerError, type Collection, type IndexDescriptionInfo } from 'mongodb';
-import type { UnifiedResourceIndex } from './create-unified-resource-controller';
+import type { UnifiedResourceIndex } from '../utils/create-unified-resource-controller';
 
 
 export async function ensureCollectionIndexes(args: { collectionName: string, indexes: UnifiedResourceIndex[] }) {

@@ -13,7 +13,7 @@ export async function assertUserPermission(args: { event: H3Event, permission: s
   });
 
 
-  if (!user.permissions?.length) {
+  if (radIsEmpty(user.permissions)) {
     throw createUnauthorizedError();
   }
 

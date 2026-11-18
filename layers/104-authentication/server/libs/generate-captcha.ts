@@ -168,7 +168,6 @@ function setPixel(pixels: Uint8Array, x: number, y: number, color: Color): void 
     return;
   }
 
-
   const index = (row * CAPTCHA_WIDTH + column) * 3;
   pixels[index] = color[0];
   pixels[index + 1] = color[1];
@@ -246,7 +245,6 @@ function encodeBmp(pixels: Uint8Array): Uint8Array {
   const fileSize = 54 + pixelDataSize;
   const output = new Uint8Array(fileSize);
   const view = new DataView(output.buffer);
-
   output[0] = 0x42;
   output[1] = 0x4D;
   view.setUint32(2, fileSize, true);
@@ -303,7 +301,6 @@ export async function generateCaptcha() {
 
 
   const image = await new Bun.Image(encodeBmp(pixels)).png().toBase64();
-
 
   return {
     code,

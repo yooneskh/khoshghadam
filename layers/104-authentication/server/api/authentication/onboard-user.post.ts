@@ -5,6 +5,9 @@
 // create a user.
 
 
+import { hashPassword } from '../../libs/password-hash';
+
+
 export default defineEventHandler(async event => {
 
   await assertUserPermission({
@@ -80,17 +83,13 @@ export default defineEventHandler(async event => {
     });
 
     await app.authorizationTokens.dbo.create({
-      document: {
+      document: radShake({
         user: user._id,
-        ...(!body.permissions ? {} : {
-          permissions: body.permissions,
-        }),
-        ...(!body.role ? {} : {
-          roles: [
-            body.role,
-          ],
-        }),
-      },
+        permissions: body.permissions,
+        roles: !body.role ? undefined : [
+          body.role,
+        ],
+      }),
     });
 
     return user;
